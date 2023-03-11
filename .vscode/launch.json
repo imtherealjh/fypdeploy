@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Fyp23S111Application<FYP_23_S1_11>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.uow.FYP_23_S1_11.Fyp23S111Application",
+            "projectName": "FYP_23_S1_11",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
