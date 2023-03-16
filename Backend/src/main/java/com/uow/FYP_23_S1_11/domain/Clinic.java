@@ -2,7 +2,7 @@ package com.uow.FYP_23_S1_11.domain;
 
 import java.io.Serializable;
 
-import com.uow.FYP_23_S1_11.enums.EUserRole;
+import com.uow.FYP_23_S1_11.enums.EStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,37 +10,31 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "USERACCOUNT")
+@Table(name="CLINIC")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class UserAccount implements Serializable {
+public class Clinic implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer accountId;
-    private String username;
-    private String password;
+    private Integer clinicId;
+    private String name;
+    private String location;
+    private String proofOfLicense;
     @Enumerated(EnumType.STRING)
-    private EUserRole role;
+    private EStatus approved;
 
-    public UserAccount(String username, String password, EUserRole role) {
-        this.username = username;
-        this.password = password;
-        this.role = role;
-    }
-
-    @OneToOne(mappedBy = "clinicAccount")
-    private Clinic clinic;
-
-    @OneToOne(mappedBy = "patientAccount")
-    private Patient patient;
+    @OneToOne
+    @JoinColumn(name = "clinicAccount", referencedColumnName = "accountId")
+    private UserAccount clinicAccount;
 }
