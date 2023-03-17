@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
@@ -27,9 +28,10 @@ public class UserAccountServiceImpl implements UserAccountService {
     public Boolean registerClinicAccount(ClinicRegisterRequest clinicReq) {
         ObjectMapper mapper = new ObjectMapper();
     	mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        mapper.registerModule(new JavaTimeModule());
         try {
             UserAccount newAccount = (UserAccount) mapper.convertValue(clinicReq, UserAccount.class);
-            newAccount.setRole(EUserRole.PATIENT);
+            newAccount.setRole(EUserRole.CLINIC_OWNER);
 
             UserAccount account = userAccRepo.save(newAccount);
             Clinic newClinic = (Clinic) mapper.convertValue(clinicReq, Clinic.class);
@@ -38,6 +40,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
             return true;
         } catch(Exception e) {
+            System.out.println(e);
             return false;
         }
     }

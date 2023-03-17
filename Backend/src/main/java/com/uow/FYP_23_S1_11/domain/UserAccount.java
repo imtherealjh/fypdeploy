@@ -43,4 +43,7 @@ public class UserAccount implements Serializable {
 
     @OneToOne(mappedBy = "patientAccount")
     private Patient patient;
+
+    @OneToOne(mappedBy = "doctorAccount")
+    private Doctor doctor;
 }

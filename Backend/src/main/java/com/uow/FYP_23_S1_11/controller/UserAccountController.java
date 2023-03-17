@@ -23,8 +23,13 @@ public class UserAccountController {
 
     @PostMapping("/registerClinic")
     public ResponseEntity<Boolean> registerClinic(@Valid @RequestBody ClinicRegisterRequest clinicReq) {
-        Boolean result = userAccountService.registerClinicAccount(clinicReq);
-        return ResponseEntity.ok(result);
+        try {
+            Boolean result = userAccountService.registerClinicAccount(clinicReq);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            System.out.println(e);
+            return ResponseEntity.status(404).body(false);
+        }
     }
 
     @PostMapping("/registerPatient")
