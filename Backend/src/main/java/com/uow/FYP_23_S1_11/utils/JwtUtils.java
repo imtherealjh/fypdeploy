@@ -25,11 +25,11 @@ public class JwtUtils {
     @Value("${access.jwtsecret}") private String accessTokenSecret;
     @Value("${access.jwtexpirationms}") private int accessTokenExpiry;
 
-    public String getUserFromToken(ETokenType type, String token) {
+    public String extractUserFromToken(ETokenType type, String token) {
         return extractClaims(type, token, Claims::getSubject);
     }
 
-    public String genereteToken(ETokenType type, UserDetails userDetails) {
+    public String generateToken(ETokenType type, UserDetails userDetails) {
         return generateToken(type, userDetails, new HashMap<>());
     }
 
@@ -56,6 +56,19 @@ public class JwtUtils {
         return claimsResolver.apply(claims);
     }
 
+    public boolean isTokenValid(ETokenType type, String token, UserDetails userDetails) {
+        final String validUsername = extractUserFromToken(type, token);
+        return (validUsername.equals(userDetails.getUsername()) && !isTokenExpired(type, token));
+    }
+
+    private boolean isTokenExpired(ETokenType type, String token) {
+        return extractExpiration(type, token).before(new Date());
+    }
+
+    private Date extractExpiration(ETokenType type, String token) {
+        return extractClaims(type, token, Claims::getExpiration);
+    }
+
     private Claims extractAllClaims(ETokenType type, String token) {
         return Jwts
                 .parserBuilder()
@@ -73,8 +86,11 @@ public class JwtUtils {
             secret = refreshTokenSecret;
         }
 
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        if(secret != null && !secret.trim().isEmpty()) {
+            byte[] keyBytes = Decoders.BASE64.decode(secret);
+            return Keys.hmacShaKeyFor(keyBytes);
+        }
+        return null;
     }
     
 }
