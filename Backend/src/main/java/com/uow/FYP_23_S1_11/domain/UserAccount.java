@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.uow.FYP_23_S1_11.enums.EUserRole;
 
 import jakarta.persistence.CascadeType;
@@ -41,20 +42,25 @@ public class UserAccount implements UserDetails {
     @Enumerated(EnumType.STRING)
     private EUserRole role;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "clinicAccount", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Clinic clinic;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "patientAccount", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private Patient patient;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "doctorAccount", cascade = CascadeType.ALL)
     private Doctor doctor;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "nurseAccount", cascade = CascadeType.ALL)
     private Nurse nurse;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "frontDeskAccount", cascade = CascadeType.ALL)
     private FrontDesk frontDesk;
 

@@ -2,6 +2,8 @@ package com.uow.FYP_23_S1_11.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,6 +30,7 @@ public class Specialty {
     private String type;
     private String description;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "doctorSpecialty")
     private List<Doctor> doctorList;
 }

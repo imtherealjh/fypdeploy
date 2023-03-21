@@ -3,6 +3,7 @@ package com.uow.FYP_23_S1_11.domain;
 import java.io.Serializable;
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -51,6 +52,7 @@ public class DoctorSchedule implements Serializable {
     @Temporal(TemporalType.TIME)
     private LocalTime endTime;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "doctorId")
     private Doctor doctor;

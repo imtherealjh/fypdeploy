@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
@@ -64,14 +65,18 @@ public class Clinic implements Serializable {
     @OneToOne
     @MapsId
     @JoinColumn(name = "clinicId", referencedColumnName = "accountId")
+    @JsonIgnore
     private UserAccount clinicAccount;
 
     @OneToMany(mappedBy = "doctorClinic", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Doctor> doctor;
 
     @OneToMany(mappedBy = "nurseClinic", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Nurse> nurse;
 
     @OneToMany(mappedBy = "frontDeskClinic", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<FrontDesk> frontDesk;
 }

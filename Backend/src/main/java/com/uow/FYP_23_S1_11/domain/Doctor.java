@@ -2,6 +2,9 @@ package com.uow.FYP_23_S1_11.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,16 +37,20 @@ public class Doctor {
 
     @OneToOne
     @JoinColumn(name = "doctorAccount", referencedColumnName = "accountId")
+    @JsonIgnore
     private UserAccount doctorAccount;
 
     @ManyToOne
     @JoinColumn(name = "doctorClinic", referencedColumnName = "clinicId")
+    @JsonIgnore
     private Clinic doctorClinic;
 
+    @JsonManagedReference
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "doctor_specialty", joinColumns = @JoinColumn(name = "doctorId"), inverseJoinColumns = @JoinColumn(name = "specialtyId"))
     private List<Specialty> doctorSpecialty;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<DoctorSchedule> doctorSchedule;
 }

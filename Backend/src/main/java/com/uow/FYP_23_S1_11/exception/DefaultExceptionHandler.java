@@ -11,10 +11,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
-  @ExceptionHandler({ AuthenticationException.class, AccessDeniedException.class })
-  @ResponseBody
-  public ResponseEntity<ApiError> handleAuthenticationException(Exception ex) {
-    ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex);
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
-  }
+    @ExceptionHandler({ AuthenticationException.class, AccessDeniedException.class })
+    @ResponseBody
+    public ResponseEntity<ApiError> handleAuthenticationException(Exception ex) {
+      ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex);
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
+    }
 }
