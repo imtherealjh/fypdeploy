@@ -1,5 +1,7 @@
 package com.uow.FYP_23_S1_11.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,27 +32,32 @@ import com.uow.FYP_23_S1_11.utils.JwtUtils;
 @Service
 @Transactional
 public class UserAccountServiceImpl implements UserAccountService {
-    @Autowired private UserAccountRepository userAccRepo;
-    @Autowired private ClinicRepository clincRepo;
-    @Autowired private PatientRepository patientRepo;
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private JwtUtils jwtUtils;
+    @Autowired
+    private UserAccountRepository userAccRepo;
+    @Autowired
+    private ClinicRepository clincRepo;
+    @Autowired
+    private PatientRepository patientRepo;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Override
     public AuthResponse authenticate(LoginRequest loginRequest) {
-        //using built-in authentication manager to validate the login request
+        // using built-in authentication manager to validate the login request
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                loginRequest.getUsername(), 
-                loginRequest.getPassword()
-            )
-        );
+                new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()));
         var user = userAccRepo.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
         String refreshToken = jwtUtils.generateToken(ETokenType.REFRESH_TOKEN, user);
         String accessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
-        return AuthResponse.builder()
+        return AuthResponse
+                .builder()
                 .refreshToken(refreshToken)
                 .accessToken(accessToken)
                 .build();
@@ -62,15 +69,16 @@ public class UserAccountServiceImpl implements UserAccountService {
             String refreshToken = accessTokenReq.getRefreshToken();
             ETokenType type = ETokenType.REFRESH_TOKEN;
             String username = jwtUtils.extractUserFromToken(type, refreshToken);
-            if(username != null) {
+            if (username != null) {
                 UserDetails userDetails = userAccRepo.findByUsername(username)
-                                    .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
-                if(jwtUtils.isTokenValid(type, refreshToken, userDetails)) {
+                        .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
+                if (jwtUtils.isTokenValid(type, refreshToken, userDetails)) {
                     String newAccessToken = jwtUtils.generateToken(type, userDetails);
-                    return AuthResponse.builder()
-                                .refreshToken(null)
-                                .accessToken(newAccessToken)
-                                .build();
+                    return AuthResponse
+                            .builder()
+                            .refreshToken(null)
+                            .accessToken(newAccessToken)
+                            .build();
                 }
             }
             return null;
@@ -80,22 +88,35 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
+    public UserAccount registerAccount(UserAccount account, EUserRole userRole) {
+        Optional<UserAccount> user = userAccRepo.findByUsername(account.getUsername());
+        if (user.isPresent()) {
+            throw new IllegalArgumentException("Username has already been registered...");
+        }
+
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setRole(userRole);
+
+        return userAccRepo.save(account);
+    }
+
+    @Override
     public Boolean registerClinicAccount(ClinicRegisterRequest clinicReq) {
         ObjectMapper mapper = new ObjectMapper();
-    	mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.registerModule(new JavaTimeModule());
         try {
             UserAccount newAccount = (UserAccount) mapper.convertValue(clinicReq, UserAccount.class);
-            newAccount.setPassword(passwordEncoder.encode(clinicReq.getPassword()));
-            newAccount.setRole(EUserRole.CLINIC_OWNER);
+            UserAccount registeredAccount = registerAccount(newAccount, EUserRole.CLINIC_OWNER);
 
-            UserAccount account = userAccRepo.save(newAccount);
             Clinic newClinic = (Clinic) mapper.convertValue(clinicReq, Clinic.class);
-            newClinic.setClinicAccount(account);
+            newClinic.setClinicAccount(registeredAccount);
             clincRepo.save(newClinic);
 
             return true;
-        } catch(Exception e) {
+        } catch (IllegalArgumentException e) {
+            return false;
+        } catch (Exception e) {
             System.out.println(e);
             return false;
         }
@@ -104,22 +125,19 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public Boolean registerPatientAccount(PatientRegisterRequest patientReq) {
         ObjectMapper mapper = new ObjectMapper();
-    	mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try {
             UserAccount newAccount = (UserAccount) mapper.convertValue(patientReq, UserAccount.class);
-            newAccount.setPassword(passwordEncoder.encode(patientReq.getPassword()));
-            newAccount.setRole(EUserRole.PATIENT);
+            UserAccount registeredAccount = registerAccount(newAccount, EUserRole.PATIENT);
 
-            UserAccount account = userAccRepo.save(newAccount);
             Patient newPatient = (Patient) mapper.convertValue(patientReq, Patient.class);
-            newPatient.setPatientAccount(account);
+            newPatient.setPatientAccount(registeredAccount);
             patientRepo.save(newPatient);
 
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
-
 
 }

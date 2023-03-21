@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.uow.FYP_23_S1_11.enums.EUserRole;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,6 +18,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,19 +35,28 @@ public class UserAccount implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer accountId;
+    @Column(nullable = false, unique = true)
     private String username;
     private String password;
     @Enumerated(EnumType.STRING)
     private EUserRole role;
 
-    @OneToOne(mappedBy = "clinicAccount")
+    @OneToOne(mappedBy = "clinicAccount", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private Clinic clinic;
 
-    @OneToOne(mappedBy = "patientAccount")
+    @OneToOne(mappedBy = "patientAccount", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
     private Patient patient;
 
-    @OneToOne(mappedBy = "doctorAccount")
+    @OneToOne(mappedBy = "doctorAccount", cascade = CascadeType.ALL)
     private Doctor doctor;
+
+    @OneToOne(mappedBy = "nurseAccount", cascade = CascadeType.ALL)
+    private Nurse nurse;
+
+    @OneToOne(mappedBy = "frontDeskAccount", cascade = CascadeType.ALL)
+    private FrontDesk frontDesk;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

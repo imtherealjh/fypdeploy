@@ -18,4 +18,6 @@ public class PatientFeedbackRequest {
     private Integer ratings;
     @JsonProperty("feedback")
     private String feedback;
+    @JsonProperty("patientId")
+    private Integer patientId;
 }

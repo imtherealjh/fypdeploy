@@ -1,7 +1,7 @@
 package com.uow.FYP_23_S1_11.enums;
 
 public enum EStatus {
-    PENDING("PENDING"), APPROVED("APPROVED"), SYSTEM_ADMIN("SYS_ADMIN");
+    PENDING("PENDING"), APPROVED("APPROVED");
 
     private final String name;
 

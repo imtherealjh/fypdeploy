@@ -11,13 +11,14 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.uow.FYP_23_S1_11.enums.EStatus;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -36,7 +37,7 @@ import lombok.Setter;
 @Setter
 public class Clinic implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name="clinicId")
     private Integer clinicId;
     private String name;
     private String location;
@@ -51,13 +52,26 @@ public class Clinic implements Serializable {
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @Temporal(TemporalType.TIME)
     private LocalTime closingHrs;
+    @JsonFormat(pattern="HH:mm")
+    @JsonSerialize(using= LocalTimeSerializer.class)
+    @JsonDeserialize(using = LocalTimeDeserializer.class)
+    @Temporal(TemporalType.TIME)
+    private LocalTime apptDuration;
+    @Column(length = 35)
     @Enumerated(EnumType.STRING)
-    private EStatus approved;
+    private EStatus status = EStatus.PENDING;
 
     @OneToOne
-    @JoinColumn(name = "clinicAccount", referencedColumnName = "accountId")
+    @MapsId
+    @JoinColumn(name = "clinicId", referencedColumnName = "accountId")
     private UserAccount clinicAccount;
 
-    @OneToMany(mappedBy = "clinic")
+    @OneToMany(mappedBy = "doctorClinic", cascade = CascadeType.ALL)
     private List<Doctor> doctor;
+
+    @OneToMany(mappedBy = "nurseClinic", cascade = CascadeType.ALL)
+    private List<Nurse> nurse;
+
+    @OneToMany(mappedBy = "frontDeskClinic", cascade = CascadeType.ALL)
+    private List<FrontDesk> frontDesk;
 }

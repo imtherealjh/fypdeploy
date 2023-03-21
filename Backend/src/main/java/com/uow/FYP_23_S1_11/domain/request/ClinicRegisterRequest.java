@@ -2,7 +2,6 @@ package com.uow.FYP_23_S1_11.domain.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,6 +26,9 @@ public class ClinicRegisterRequest {
     @JsonFormat(pattern="HH:mm")
     @JsonProperty("closingHrs")
     private String closingHrs;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    @JsonProperty("apptDuration")
+    private String apptDuration;
     @JsonProperty("licenseBase64")
     private String licenseBase64;
 }

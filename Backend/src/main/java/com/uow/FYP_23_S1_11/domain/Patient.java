@@ -4,11 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -27,7 +27,7 @@ import lombok.Setter;
 @Setter
 public class Patient implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "patientId")
     private Integer patientId;
     private String name;
     @Temporal(TemporalType.DATE)
@@ -37,7 +37,8 @@ public class Patient implements Serializable {
     private Integer contact;
 
     @OneToOne
-    @JoinColumn(name = "patientAccount", referencedColumnName = "accountId")
+    @MapsId
+    @JoinColumn(name = "patientId", referencedColumnName = "accountId")
     private UserAccount patientAccount;
 
     @OneToMany(mappedBy = "patient")
