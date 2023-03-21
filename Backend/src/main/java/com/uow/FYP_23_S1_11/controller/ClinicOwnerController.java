@@ -3,6 +3,7 @@ package com.uow.FYP_23_S1_11.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,7 @@ import jakarta.validation.Valid;
 @Validated
 @RestController
 @RequestMapping(value = "/api/clinic-owner", produces = { MediaType.APPLICATION_JSON_VALUE })
+@PreAuthorize("hasRole('CLINIC_OWNER')")
 @SecurityRequirement(name = "bearerAuth")
 public class ClinicOwnerController {
     @Autowired private ClinicOwnerService clincOwnerService;
