@@ -1,5 +1,6 @@
 package com.uow.FYP_23_S1_11.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.Specialty;
@@ -42,8 +44,13 @@ public class AuthController {
     }
 
     @GetMapping("/getDoctorsByClinicSpecialty")
-    public ResponseEntity<List<Doctor>> getDoctorsByClinicSpecialty( @RequestParam String clinicId, @RequestParam String specialty) {
+    public ResponseEntity<List<Doctor>> getDoctorsByClinicSpecialty(@RequestParam Integer clinicId, @RequestParam String specialty) {
         return ResponseEntity.ok(patientService.getAllDoctorsByClinicSpecialty(clinicId, specialty));
+    }
+
+    @GetMapping("/getDoctorAvailability")
+    public ResponseEntity<List<Appointment>> getAvailableAppointment(@RequestParam Integer doctorId, @RequestParam String date) {
+        return ResponseEntity.ok(patientService.getDoctorAvailableAppointment(doctorId, date));
     }
 
     @PostMapping("/login")

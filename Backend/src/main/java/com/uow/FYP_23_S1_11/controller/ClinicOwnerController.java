@@ -22,13 +22,14 @@ import jakarta.validation.Valid;
 @Validated
 @RestController
 @RequestMapping(value = "/api/clinic-owner", produces = { MediaType.APPLICATION_JSON_VALUE })
-@PreAuthorize("hasRole('CLINIC_OWNER')")
+@PreAuthorize("hasAuthority('CLINIC_OWNER')")
 @SecurityRequirement(name = "bearerAuth")
 public class ClinicOwnerController {
     @Autowired private ClinicOwnerService clincOwnerService;
 
     @PostMapping("/insertDoctorSchedule")
     public ResponseEntity<Boolean> insertDoctorSchedule(@Valid @RequestBody DoctorScheduleRequest doctorScheduleRequest) {
+        System.out.println(doctorScheduleRequest.getDoctorId());
         return ResponseEntity.ok(clincOwnerService.insertDoctorSchedule(doctorScheduleRequest));
     }
 

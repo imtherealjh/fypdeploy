@@ -4,22 +4,24 @@ import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.uow.FYP_23_S1_11.enums.EStatus;
+import com.uow.FYP_23_S1_11.enums.EApprovalStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -38,7 +40,7 @@ import lombok.Setter;
 @Setter
 public class Clinic implements Serializable {
     @Id
-    @Column(name="clinicId")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer clinicId;
     private String name;
     private String location;
@@ -60,11 +62,10 @@ public class Clinic implements Serializable {
     private LocalTime apptDuration;
     @Column(length = 35)
     @Enumerated(EnumType.STRING)
-    private EStatus status = EStatus.PENDING;
+    private EApprovalStatus status = EApprovalStatus.PENDING;
 
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "clinicId", referencedColumnName = "accountId")
+    @JoinColumn(name = "clinicAccount", referencedColumnName = "accountId")
     @JsonIgnore
     private UserAccount clinicAccount;
 
@@ -79,4 +80,8 @@ public class Clinic implements Serializable {
     @OneToMany(mappedBy = "frontDeskClinic", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<FrontDesk> frontDesk;
+
+    @OneToMany(mappedBy = "apptClinic")
+    @JsonIgnore
+    private List<Appointment> clinicsAppt;
 }

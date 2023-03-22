@@ -1,11 +1,11 @@
 package com.uow.FYP_23_S1_11.enums;
 
-public enum EStatus {
+public enum EApprovalStatus {
     PENDING("PENDING"), APPROVED("APPROVED");
 
     private final String name;
 
-    EStatus(String name) {
+    EApprovalStatus(String name) {
         this.name = name;
     }
 

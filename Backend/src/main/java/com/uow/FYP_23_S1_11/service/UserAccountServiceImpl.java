@@ -23,7 +23,7 @@ import com.uow.FYP_23_S1_11.domain.request.LoginRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientRegisterRequest;
 import com.uow.FYP_23_S1_11.domain.response.AuthResponse;
 import com.uow.FYP_23_S1_11.enums.ETokenType;
-import com.uow.FYP_23_S1_11.enums.EUserRole;
+import com.uow.FYP_23_S1_11.enums.ERole;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
 import com.uow.FYP_23_S1_11.repository.PatientRepository;
 import com.uow.FYP_23_S1_11.repository.UserAccountRepository;
@@ -88,7 +88,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public UserAccount registerAccount(UserAccount account, EUserRole userRole) {
+    public UserAccount registerAccount(UserAccount account, ERole userRole) {
         Optional<UserAccount> user = userAccRepo.findByUsername(account.getUsername());
         if (user.isPresent()) {
             throw new IllegalArgumentException("Username has already been registered...");
@@ -107,7 +107,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         mapper.registerModule(new JavaTimeModule());
         try {
             UserAccount newAccount = (UserAccount) mapper.convertValue(clinicReq, UserAccount.class);
-            UserAccount registeredAccount = registerAccount(newAccount, EUserRole.CLINIC_OWNER);
+            UserAccount registeredAccount = registerAccount(newAccount, ERole.CLINIC_OWNER);
 
             Clinic newClinic = (Clinic) mapper.convertValue(clinicReq, Clinic.class);
             newClinic.setClinicAccount(registeredAccount);
@@ -128,7 +128,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try {
             UserAccount newAccount = (UserAccount) mapper.convertValue(patientReq, UserAccount.class);
-            UserAccount registeredAccount = registerAccount(newAccount, EUserRole.PATIENT);
+            UserAccount registeredAccount = registerAccount(newAccount, ERole.PATIENT);
 
             Patient newPatient = (Patient) mapper.convertValue(patientReq, Patient.class);
             newPatient.setPatientAccount(registeredAccount);

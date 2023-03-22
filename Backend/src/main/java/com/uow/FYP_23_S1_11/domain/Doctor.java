@@ -1,5 +1,6 @@
 package com.uow.FYP_23_S1_11.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -28,7 +29,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Doctor {
+public class Doctor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer doctorId;
@@ -45,7 +46,7 @@ public class Doctor {
     @JsonIgnore
     private Clinic doctorClinic;
 
-    @JsonManagedReference
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "doctor_specialty", joinColumns = @JoinColumn(name = "doctorId"), inverseJoinColumns = @JoinColumn(name = "specialtyId"))
     private List<Specialty> doctorSpecialty;
@@ -53,4 +54,8 @@ public class Doctor {
     @JsonManagedReference
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     private List<DoctorSchedule> doctorSchedule;
+
+    @OneToMany(mappedBy = "apptDoctor")
+    @JsonIgnore
+    private List<Appointment> doctorAppt;
 }

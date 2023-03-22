@@ -1,5 +1,7 @@
 package com.uow.FYP_23_S1_11.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,12 +10,15 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.PatientFeedback;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackRequest;
+import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
+import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackRepository;
@@ -35,6 +40,8 @@ public class PatientServiceImpl implements PatientService {
     private ClinicRepository clinicRepo;
     @Autowired
     private DoctorRepository doctorRepo;
+    @Autowired
+    private AppointmentRepository apptRepo;
 
     @Override
     public List<Specialty> getAllSpecialty() {
@@ -47,8 +54,15 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Doctor> getAllDoctorsByClinicSpecialty(String clincId, String specialty) {
+    public List<Doctor> getAllDoctorsByClinicSpecialty(Integer clincId, String specialty) {
         return doctorRepo.findByClinicSpecialty(clincId, specialty);
+    }
+
+    @Override
+    public List<Appointment> getDoctorAvailableAppointment(Integer doctorId, String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+        LocalDate parseDate = LocalDate.parse(date, formatter);
+        return apptRepo.findAvailableApptByDoctorAndDay(doctorId, EAppointmentStatus.AVAILABLE, parseDate);
     }
 
     @Override
@@ -70,6 +84,12 @@ public class PatientServiceImpl implements PatientService {
             System.out.println(e);
             return false;
         }
+    }
+
+    @Override
+    public Boolean bookAvailableAppointment() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'bookAvailableAppointment'");
     }
 
 }

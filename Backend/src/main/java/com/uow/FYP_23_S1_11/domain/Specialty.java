@@ -1,8 +1,7 @@
 package com.uow.FYP_23_S1_11.domain;
 
+import java.io.Serializable;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,14 +22,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Specialty {
+public class Specialty implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int specialtyId;
     private String type;
     private String description;
 
-    @JsonBackReference
     @ManyToMany(mappedBy = "doctorSpecialty")
     private List<Doctor> doctorList;
 }

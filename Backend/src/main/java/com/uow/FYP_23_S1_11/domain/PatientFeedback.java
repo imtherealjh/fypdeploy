@@ -1,5 +1,7 @@
 package com.uow.FYP_23_S1_11.domain;
 
+import java.io.Serializable;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,7 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PatientFeedback {
+public class PatientFeedback implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer feedbackId;

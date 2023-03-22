@@ -10,6 +10,6 @@ import com.uow.FYP_23_S1_11.domain.Clinic;
 
 @Repository
 public interface ClinicRepository extends JpaRepository<Clinic, Integer> {
-    @Query("SELECT C FROM Clinic C WHERE C.clinicId IN (SELECT d.doctorClinic FROM Doctor d INNER JOIN d.doctorSpecialty ds where ds.type=?1)")
+    @Query("SELECT DISTINCT C FROM Clinic C WHERE C.clinicId IN (SELECT d.doctorClinic FROM Doctor d INNER JOIN d.doctorSpecialty ds where ds.type=?1)")
     List<Clinic> findBySpecialty(String specialty);
 }

@@ -22,7 +22,7 @@ import com.uow.FYP_23_S1_11.domain.request.DoctorScheduleRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
-import com.uow.FYP_23_S1_11.enums.EUserRole;
+import com.uow.FYP_23_S1_11.enums.ERole;
 import com.uow.FYP_23_S1_11.repository.DoctorRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorScheduleRepository;
 import com.uow.FYP_23_S1_11.repository.FrontDeskRepository;
@@ -57,7 +57,7 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
             Clinic clinic = userAccount.getClinic();
 
             UserAccount newAccount = (UserAccount) mapper.convertValue(registerDoctorRequest, UserAccount.class);
-            UserAccount registeredAccount = userAccountService.registerAccount(newAccount, EUserRole.DOCTOR);
+            UserAccount registeredAccount = userAccountService.registerAccount(newAccount, ERole.DOCTOR);
 
             Doctor newDoctor = (Doctor) mapper.convertValue(registerDoctorRequest, Doctor.class);
             List<Specialty> specialty = registerDoctorRequest.getSpecialty().stream()
@@ -85,7 +85,7 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
             Clinic clinic = userAccount.getClinic();
 
             UserAccount newAccount = (UserAccount) mapper.convertValue(registerNurseReq, UserAccount.class);
-            UserAccount registeredAccount = userAccountService.registerAccount(newAccount, EUserRole.NURSE);
+            UserAccount registeredAccount = userAccountService.registerAccount(newAccount, ERole.NURSE);
 
             Nurse nurse = (Nurse) mapper.convertValue(registerNurseReq, Nurse.class);
             nurse.setNurseAccount(registeredAccount);
@@ -109,7 +109,7 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
             Clinic clinic = userAccount.getClinic();
 
             UserAccount newAccount = (UserAccount) mapper.convertValue(registerFrontDeskReq, UserAccount.class);
-            UserAccount registeredAccount = userAccountService.registerAccount(newAccount, EUserRole.FRONT_DESK);
+            UserAccount registeredAccount = userAccountService.registerAccount(newAccount, ERole.FRONT_DESK);
 
             FrontDesk frontDesk = (FrontDesk) mapper.convertValue(registerFrontDeskReq, FrontDesk.class);
             frontDesk.setFrontDeskAccount(registeredAccount);
@@ -125,6 +125,8 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
 
     @Override
     public Boolean insertDoctorSchedule(DoctorScheduleRequest doctorScheduleReq) {
+        //TODO: implement checker for whether doctor is the same clinic as owner
+        //TODO: implement to check whether schedule conflicts with original schedule and if it is before opening hours or after closing hours
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.registerModule(new JavaTimeModule());
@@ -138,6 +140,7 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
             doctorScheduleRepo.save(newSchedule);
             return true;
         } catch (IllegalArgumentException e) {
+            System.out.println(e);
             return false;
         } catch (Exception e) {
             System.out.println(e);

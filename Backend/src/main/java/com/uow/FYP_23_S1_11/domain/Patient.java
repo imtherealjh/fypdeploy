@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import jakarta.persistence.Column;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -27,7 +29,7 @@ import lombok.Setter;
 @Setter
 public class Patient implements Serializable {
     @Id
-    @Column(name = "patientId")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer patientId;
     private String name;
     @Temporal(TemporalType.DATE)
@@ -37,10 +39,13 @@ public class Patient implements Serializable {
     private Integer contact;
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "patientId", referencedColumnName = "accountId")
     private UserAccount patientAccount;
 
     @OneToMany(mappedBy = "patient")
     private List<PatientFeedback> patientFeedback;
+
+    @OneToMany(mappedBy = "apptPatient")
+    @JsonIgnore
+    private List<Appointment> patientAppt;
 }

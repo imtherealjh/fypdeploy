@@ -2,6 +2,7 @@ package com.uow.FYP_23_S1_11;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,8 @@ public class InitialSetup {
         specialtyList.add(Specialty.builder().type("Urology").build());
 
         List<Specialty> alreadyExist = specialtyRepo.findByTypeIn(specialtyList.stream().map(x -> x.getType()).collect(Collectors.toList()));
-        specialtyList = specialtyList.stream().filter(e -> alreadyExist.contains(e)).collect(Collectors.toList());
+        Set<String> existType = alreadyExist.stream().map(Specialty::getType).collect(Collectors.toSet());
+        specialtyList = specialtyList.stream().filter(e -> !existType.contains(e.getType())).collect(Collectors.toList());
         specialtyRepo.saveAll(specialtyList);
     }
 }
