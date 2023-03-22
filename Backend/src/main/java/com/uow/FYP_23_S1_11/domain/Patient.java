@@ -39,7 +39,7 @@ public class Patient implements Serializable {
     private Integer contact;
 
     @OneToOne
-    @JoinColumn(name = "patientId", referencedColumnName = "accountId")
+    @JoinColumn(name = "patientAccount", referencedColumnName = "accountId")
     private UserAccount patientAccount;
 
     @OneToMany(mappedBy = "patient")
