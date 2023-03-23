@@ -21,8 +21,8 @@ import jakarta.validation.Valid;
 
 @Validated
 @RestController
-@RequestMapping(value = "/api/clinic-owner", produces = { MediaType.APPLICATION_JSON_VALUE })
-@PreAuthorize("hasAuthority('CLINIC_OWNER')")
+@RequestMapping(value = "/api/clinicOwner", produces = { MediaType.APPLICATION_JSON_VALUE })
+// @PreAuthorize("hasAuthority('CLINIC_OWNER')")
 @SecurityRequirement(name = "bearerAuth")
 public class ClinicOwnerController {
     @Autowired private ClinicOwnerService clincOwnerService;
@@ -43,8 +43,8 @@ public class ClinicOwnerController {
         return ResponseEntity.ok(clincOwnerService.registerNurse(registerNurseReq));
     }
 
-    @PostMapping("/registerFrontDesk")
-    public ResponseEntity<Boolean> registerFrontDesk(@Valid @RequestBody RegisterFrontDeskRequest registerFrontDeskReq) {
+    @PostMapping("/registerClerk")
+    public ResponseEntity<Boolean> registerClerk(@Valid @RequestBody RegisterFrontDeskRequest registerFrontDeskReq) {
         return ResponseEntity.ok(clincOwnerService.registerFrontDesk(registerFrontDeskReq));
     }
 }

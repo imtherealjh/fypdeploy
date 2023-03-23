@@ -11,17 +11,20 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.uow.FYP_23_S1_11.repository.UserAccountRepository;
 
 @Configuration
 public class AppConfig {
-    @Autowired private UserAccountRepository userAccountRepository;
+    @Autowired
+    private UserAccountRepository userAccountRepository;
 
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userAccountRepository.findByUsername(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found!!!!"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found!!!!"));
     }
 
     @Bean
@@ -41,4 +44,5 @@ public class AppConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

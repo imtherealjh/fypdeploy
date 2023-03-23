@@ -18,7 +18,10 @@ public class RegisterDoctorRequest {
     private String username;
     @JsonProperty("password")
     private String password;
+    @JsonProperty("name")
     private String name;
+    @JsonProperty("profile")
     private String profile;
+    @JsonProperty("specialty")
     private List<String> specialty;
 }
