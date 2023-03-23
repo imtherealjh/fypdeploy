@@ -16,10 +16,12 @@ import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.PatientFeedback;
+import com.uow.FYP_23_S1_11.domain.PatientMedicalRecords;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
@@ -164,5 +166,21 @@ public class PatientServiceImpl implements PatientService {
         }
     }
     
+    @Override
+    public Boolean insertMedicalRecords(PatientMedicalRecordsRequest request) {
+        try{
+        ObjectMapper mapper = new ObjectMapper();
+        PatientMedicalRecords patientMedicalRecords = (PatientMedicalRecords) mapper.convertValue(request, PatientMedicalRecords.class);
+        patientMedicalRecords.setCurrentIllnesses("1");
+        patientMedicalRecords.setPastIllnesses("1");
+        patientMedicalRecords.setHereditaryIllnesses("1");
+        patientMedicalRecords.setAllergies("1");
+        return true;
+        
+    } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }    
 
 }
