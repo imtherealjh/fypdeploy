@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediApp</title>
+  <link href="/css/styles.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Header -->
+  <header>
+    <img src="logo.jpg" alt="Logo">
+  </header>
+
+  <!-- Navigation buttons -->
+  <div class="container">
+    <div class="buttons">
+      <a href="help.html" class="btn btn-primary" role="button">Help</a>
+      <a href="contact.html" class="btn btn-primary" role="button">Subscribe</a>
+      <button id="loginBtn" class="btn btn-primary">Log In</button>
+    </div>
+  </div>
+
+  <!-- Login modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <form id="loginForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="video-container">
+    <video src="video.mp4" controls></video>
+
+    <div class="content-container">
+      <div class="content">
+        <h2>Trusted By Leading Medical Institutions</h2>
+        <div class="image-grid">
+          <div class="image-grid">
+            <img src="https://via.placeholder.com/150" alt="Placeholder 1">
+            <img src="https://via.placeholder.com/150" alt="Placeholder 2">
+            <img src="https://via.placeholder.com/150" alt="Placeholder 3">
+            <img src="https://via.placeholder.com/150" alt="Placeholder 4">
+            <img src="https://via.placeholder.com/150" alt="Placeholder 5">
+            <img src="https://via.placeholder.com/150" alt="Placeholder 6">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  </div>
+
+  <div class="content-buttons">
+    <button id="signupPatientBtn" class="btn btn-darker-blue">Sign Up For Patient</button>
+    <button id="signupClinicBtn" class="btn btn-darker-blue">Sign Up For Clinic</button>
+    <button class="btn btn-darker-blue">Contact Us</button>
+  </div>
+  </div>
+  </div>
+
+  <!-- Custom JavaScript -->
+  <script src="/js/login.js"></script>
+</body>
+
+</html>

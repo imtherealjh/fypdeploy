@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Doctor's Dashboard</title>
+	<link rel="stylesheet" href="doctordashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+
+	<header>
+		<div class="logo">
+            <img src="logo.jpg" alt="Logo">
+        </div>
+		<div class="app-name">Medical Appointment App</div>
+		<div class="user-profile">User Profile</div>
+	</header>
+
+	<div class="main-content">
+		<div class="section">
+			<h2>Patient List</h2>
+			<ul class="card">
+				<li>John Doe</li>
+				<li>Jane Smith</li>
+				<li>Bob Johnson</li>
+			</ul>
+		</div>
+
+		<div class="section">
+			<h2>Appointment Schedule</h2>
+			<table class="card">
+				<thead>
+					<tr>
+						<th>Date</th>
+						<th>Time</th>
+						<th>Patient</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>April 5</td>
+						<td>10:00am</td>
+						<td>John Doe</td>
+					</tr>
+					<tr>
+						<td>April 8</td>
+						<td>2:30pm</td>
+						<td>Jane Smith</td>
+					</tr>
+					<tr>
+						<td>April 12</td>
+						<td>11:15am</td>
+						<td>Bob Johnson</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div class="section">
+			<h2>Task List</h2>
+			<ul class="card">
+				<li>Write prescription for John Doe</li>
+				<li>Review Jane Smith's test results</li>
+				<li>Respond to Bob Johnson's inquiry</li>
+			</ul>
+			<button class="button" onclick="completeTask()">Mark Task Complete</button>
+		</div>
+
+		<div class="section communication-tools">
+            <h2>Communication Tools</h2>
+            <ul class="communication-list">
+                <li><i class="fa fa-envelope"></i><span>Send message to John Doe</span></li>
+                <li><i class="fa fa-video-camera"></i><span>Start video consultation with Jane Smith</span></li>
+                <li><i class="fa fa-file"></i><span>Send prescription request to Bob Johnson's pharmacy</span></li>
+            </ul>
+            <button class="button-primary" onclick="sendMessage()">Send Message</button>
+        </div>
+        
+        
+
+		<div class="section">
+			<h2>Analytics</h2>
+			<p class="card">No data available.</p>
+		</div>
+
+		<div class="section">
+			<h2>Resource Center</h2>
+			<ul class="card">
+				<li>Medical journals</li>
+				<li>Reference materials</li>
+				<li>Educational resources</li>
+			</ul>
+			<button class="button" onclick="downloadResource()">Download Resource</button>
+		</div>
+
+		<div class="section">
+			<div class="calendar-container">
+				<div class="calendar-header">
+					<h2>Calendar</h2>
+					<button class="button">Add Event</button>
+				</div>
+				<div class="calendar-body">
+					<div class="calendar-day">Mon</div>
+					<div class="calendar-day">Tue</div>
+					<div class="calendar-day">Wed</div>
+					<div class="calendar-day">Thu</div>
+					<div class="calendar-day">Fri</div>
+					<div class="calendar-day">Sat</div>
+					<div class="calendar-day">Sun</div>
+					<div class="calendar-day">1</div>
+					<div class="calendar-day">2</div>
+					<div class="calendar-day">3</div>
+					<div class="calendar-day">4</div>
+					<div class="calendar-day">5</div>
+					<div class="calendar-day">6</div>
+					<div class="calendar-day today">7</div>
+					<div class="calendar-day">8</div>
+					<div class="calendar-day">9</div>
+					<div class="calendar-day">10</div>
+					<div class="calendar-day">11</div>
+					<div class="calendar-day">12</div>
+					<div class="calendar-day">13</div>
+					<div class="calendar-day">14</div>
+					<div class="calendar-day">15</div>
+					<div class="calendar-day">16</div>
+					<div class="calendar-day">17</div>
+					<div class="calendar-day">18</div>
+					<div class="calendar-day">19</div>
+					<div class="calendar-day">20</div>
+					<div class="calendar-day">21</div>
+					<div class="calendar-day">22</div>
+					<div class="calendar-day">23</div>
+					<div class="calendar-day">24</div>
+					<div class="calendar-day">25</div>
+					<div class="calendar-day">26</div>
+					<div class="calendar-day">27</div>
+					<div class="calendar-day">28</div>
+					<div class="calendar-day">29</div>
+					<div class="calendar-day">30</div>
+				</div>
+			</div>
+		</div>
+	</div>
+    <footer>
+        <a href="#">Home</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+    </footer>
+    
+    <script>
+        function completeTask() {
+            alert("Task marked as complete!");
+        }
+    
+        function sendMessage() {
+            alert("Message sent!");
+        }
+    
+        function downloadResource() {
+            alert("Resource downloaded!");
+        }
+    </script>
+    </body>
+    </html>
