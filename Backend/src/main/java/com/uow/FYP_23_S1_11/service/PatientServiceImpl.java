@@ -2,6 +2,7 @@ package com.uow.FYP_23_S1_11.service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -86,6 +87,32 @@ public class PatientServiceImpl implements PatientService {
         } catch (Exception e) {
             System.out.println(e);
             return false;
+        }
+    }
+
+    @Override
+    public List<Appointment> getBookedAppointments() {
+        try {
+            UserAccount currentUser = Constants.getAuthenticatedUser();
+            Patient patient = currentUser.getPatient();
+            return apptRepo.findByApptPatient(patient);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ArrayList<Appointment>();
+        }
+    }
+
+    @Override
+    public Appointment getAppointmentById(Integer apptId) {
+        try {
+            Optional<Appointment> apptOptional = apptRepo.findById(apptId);
+            if(apptOptional.isEmpty()) {
+                throw new IllegalArgumentException("Appointment does not exist");
+            }
+            return apptOptional.get();
+        } catch (Exception e) {
+            System.out.println(e);
+            return new Appointment();
         }
     }
 

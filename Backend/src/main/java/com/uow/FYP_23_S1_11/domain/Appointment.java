@@ -57,7 +57,6 @@ public class Appointment implements Serializable {
     
     @ManyToOne
     @JoinColumn(name="doctorId", referencedColumnName="doctorId")
-    @JsonIgnore
     private Doctor apptDoctor;
 
     @ManyToOne

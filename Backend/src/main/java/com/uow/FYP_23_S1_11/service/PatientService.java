@@ -15,6 +15,8 @@ public interface PatientService {
     public List<Doctor> getAllDoctorsByClinicSpecialty(Integer clincId, String specialty);
     public List<Appointment> getDoctorAvailableAppointment(Integer doctorId, String date);
     public Boolean bookAvailableAppointment(BookUpdateAppointmentRequest bookApptReq);
+    public List<Appointment> getBookedAppointments();
+    public Appointment getAppointmentById(Integer apptId);
     public Boolean updateAppointment(Integer originalApptId, BookUpdateAppointmentRequest updateApptReq);
     public Boolean deleteAppointment(Integer apptId);
     public Boolean insertFeedback(PatientFeedbackRequest request);
