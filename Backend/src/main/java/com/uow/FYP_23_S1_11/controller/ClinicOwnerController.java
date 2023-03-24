@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uow.FYP_23_S1_11.domain.request.DoctorScheduleRequest;
+import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.GenerateClinicAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
+import com.uow.FYP_23_S1_11.service.ClerkService;
 import com.uow.FYP_23_S1_11.service.ClinicOwnerService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -26,6 +29,7 @@ import jakarta.validation.Valid;
 @SecurityRequirement(name = "bearerAuth")
 public class ClinicOwnerController {
     @Autowired private ClinicOwnerService clincOwnerService;
+    @Autowired private ClerkService clerkService;
 
     @PostMapping("/insertDoctorSchedule")
     public ResponseEntity<Boolean> insertDoctorSchedule(@Valid @RequestBody DoctorScheduleRequest doctorScheduleRequest) {
@@ -46,5 +50,15 @@ public class ClinicOwnerController {
     @PostMapping("/registerClerk")
     public ResponseEntity<Boolean> registerClerk(@Valid @RequestBody RegisterFrontDeskRequest registerFrontDeskReq) {
         return ResponseEntity.ok(clincOwnerService.registerFrontDesk(registerFrontDeskReq));
+    }
+
+    @PostMapping("/generateClinicAppointmentSlots")
+    public ResponseEntity<Boolean> generateClinicAppointmentSlots(@RequestBody GenerateClinicAppointmentRequest generateClinicAppointmentReq) {
+        return ResponseEntity.ok(clerkService.generateClinicAppointmentSlots(generateClinicAppointmentReq));
+    }
+
+    @PostMapping("/generateAppointmentSlots")
+    public ResponseEntity<Boolean> generateDoctorAppointmentSlots(@RequestBody GenerateAppointmentRequest generateAppointmentReq) {
+        return ResponseEntity.ok(clerkService.generateDoctorAppointmentSlots(generateAppointmentReq));
     }
 }
