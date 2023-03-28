@@ -1,32 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const loginBtn = document.getElementById("loginBtn");
-  const loginModal = document.getElementById("loginModal");
-  const closeModal = document.querySelector(".close");
   const loginForm = document.getElementById("loginForm");
-  const signupPatientBtn = document.getElementById("signupPatientBtn");
-  const signupClinicBtn = document.getElementById("signupClinicBtn");
-
-  signupClinicBtn.addEventListener("click", function () {
-    window.location = "/signupClinic.html";
-  })
-
-  signupPatientBtn.addEventListener("click", function () {
-    window.location = "/signupPatient.html";
-  })
-
-  loginBtn.addEventListener("click", function () {
-    loginModal.style.display = "block";
-  });
-
-  closeModal.addEventListener("click", function () {
-    loginModal.style.display = "none";
-  });
-
-  window.addEventListener("click", function (event) {
-    if (event.target == loginModal) {
-      loginModal.style.display = "none";
-    }
-  });
 
   loginForm.addEventListener("submit", function (event) {
     event.preventDefault();

@@ -9,8 +9,8 @@
         integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/register.css">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/carousel.css">
 </head>
 
 <body>
@@ -23,68 +23,46 @@
                 <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
             </div>
         </header>
-        <main class="d-flex align-items-center flex-column  ">
-            <div class="video-container w-100">
-                <video src="video.mp4" controls></video>
-                <div>
-                    <p>
-                        Your Best Value Proposition
-                    </p>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                        laboris nisi
-                        ut aliquip ex ea commodo consequat.
-                    </p>
-                </div>
-            </div>
-            <div class="d-flex align-items-center flex-column my-5 w-100">
-                <p>Trusted by Leading Medical Institution</p>
-                <div class="d-flex justify-content-center wrapper w-100">
-                    <i class="fa-solid fa-angle-left"></i>
-                    <div class="d-flex carousel gap-2">
-                        <img class="rounded-circle" src="https://via.placeholder.com/100" alt="Placeholder 1">
-                        <img class="rounded-circle" src="https://via.placeholder.com/100" alt="Placeholder 2">
-                        <img class="rounded-circle" src="https://via.placeholder.com/100" alt="Placeholder 3">
-                        <img class="rounded-circle" src="https://via.placeholder.com/100" alt="Placeholder 4">
-                        <img class="rounded-circle" src="https://via.placeholder.com/100" alt="Placeholder 5">
-                        <img class="rounded-circle" src="https://via.placeholder.com/100" alt="Placeholder 6">
+        <main class="my-5">
+            <div class="register d-flex flex-column align-items-center mx-4">
+                <h1 class="w-100"><span>CREATE ACCOUNT</span></h1>
+                <form class="d-flex flex-column align-items-center w-100 pt-4" method="POST">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="username" placeholder="username...">
+                        <label for="username">Username</label>
                     </div>
-                    <i class="fa-solid fa-angle-right"></i>
-                </div>
-            </div>
-            <div class="register">
-                <div class="btnSet">
-                    <button id="patientBtn" value="patient" class="btn btn-outline-dark btn-lg"
-                        type="button">Patients</button>
-                    <button value="clinic" class="btn btn-outline-dark btn-lg" type="button">Clinics</button>
-                </div>
-                <div class="d-flex my-5">
-                    <div id="patient">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore
-                            et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                            nisi
-                            ut
-                            aliquip ex ea commodo consequat.</p>
-                        <div>
-                            <button id="registerPatientBtn" class="btn btn-dark btn-lg" type="button">Sign Up</button>
-                            <button class="btn btn-outline-dark btn-lg" type="button">Contact Us</button>
-                        </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="password" placeholder="password...">
+                        <label for="password">Password</label>
                     </div>
-                    <div id="clinic">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-                            labore
-                            et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                            nisi
-                            ut
-                            aliquip ex ea commodo consequat. CLINIC</p>
-                        <div>
-                            <button id="registerClinicBtn" class="btn btn-dark btn-lg" type="button">Sign Up</button>
-                            <button class="btn btn-outline-dark btn-lg" type="button">Contact Us</button>
-                        </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="name" placeholder="name...">
+                        <label for="name">Name</label>
                     </div>
-                </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="email" placeholder="email...">
+                        <label for="email">Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="address" placeholder="address...">
+                        <label for="address">Address</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="contact" placeholder="contact...">
+                        <label for="contact">Contact</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="date" class="form-control" id="date" placeholder="date...">
+                        <label for="date">Date Of Birth</label>
+                    </div>
+                    <div class="d-grid">
+                        <button style="background-color: #128983;" class="btn btn-success btn-lg">Register</button>
+                    </div>  
+                    <div class="my-4">
+                        Already have an account? Login here!
+                    </div>
+                </form>
+                
             </div>
         </main>
         <footer>
@@ -143,16 +121,16 @@
                         <label for="loginUsername" class="form-label">Username</label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-user"></i></span>
-                            <input type="text" name="username" class="form-control" aria-label="Username"
-                                aria-describedby="basic-addon1">
+                            <input id="loginUsername" type="text" name="username" class="form-control"
+                                aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="loginPassword" class="form-label">Password</label>
                         <div class="input-group">
                             <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-lock"></i></span>
-                            <input type="password" name="password" class="form-control" aria-label="Username"
-                                aria-describedby="basic-addon1">
+                            <input id="loginPassword" type="password" name="password" class="form-control"
+                                aria-label="Username" aria-describedby="basic-addon1">
                         </div>
                     </div>
                     <div>
@@ -166,9 +144,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
-    <script type="text/javascript" src="js/utils.js"></script>
-    <script type="text/javascript" src="js/carousel.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/registerPatient.js"></script>
     <script type="text/javascript" src="js/login.js"></script>
 </body>
 
