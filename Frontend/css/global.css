@@ -11,8 +11,12 @@ body {
 }
 
 img.logo {
-    width: calc(6vmin + 3vmax + 60px);
-    height: calc(6vmin + 3vmax + 60px);
+    width: calc(3vmin + 0.5vmax + 100px);
+    height: calc(3vmin + 0.5vmax + 100px);
+}
+
+header {
+    position: relative;
 }
 
 header > .navbar {
@@ -24,10 +28,4 @@ header > .navbar > button {
     border: none;
     padding: 2px 7.5px;
     background-color: #D9D9D9;
-}
-
-header > .navbar > button:last-child {
-    padding: 5px 15px;
-    background-color: black;
-    color: white;
 }

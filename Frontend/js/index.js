@@ -16,11 +16,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const clinicBtn = document.getElementById("registerClinicBtn");
 
     patientBtn.addEventListener("click", () => {
-        window.location = "registerPatient.html";
+        window.location = "register_patient.html";
     });
 
     clinicBtn.addEventListener("click", () => {
-        window.location = "registerClinic.html";
+        window.location = "register_clinic.html";
     });
 
     document.getElementById("patientBtn").click();

@@ -1,3 +1,9 @@
+header > .navbar > button:last-child {
+    padding: 5px 15px;
+    background-color: black;
+    color: white;
+}
+
 .d-flex::-webkit-scrollbar {
     display: none;
 }
@@ -57,6 +63,6 @@ footer a {
 }
 
 footer img.logo {
-    width: calc(5vmin + 2vmax + 45px);
-    height: calc(5vmin + 2vmax + 45px);
+    width: calc(3vmin + 0.25vmax + 60px);
+    height: calc(3vmin + 0.25vmax + 60px);
 }
