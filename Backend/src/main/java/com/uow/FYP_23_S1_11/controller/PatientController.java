@@ -19,8 +19,6 @@ import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
 import com.uow.FYP_23_S1_11.service.PatientService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -82,8 +80,4 @@ public class PatientController {
         return ResponseEntity.ok(patientService.deleteAppointment(apptId));
     }
 
-    @PostMapping("/insertMedicalRecords")
-    public ResponseEntity<Boolean> insertMedicalRecords(@RequestBody PatientMedicalRecordsRequest patientMedicalRecordsRequest) {
-        return ResponseEntity.ok(patientService.insertMedicalRecords(patientMedicalRecordsRequest));
-    }
 }
