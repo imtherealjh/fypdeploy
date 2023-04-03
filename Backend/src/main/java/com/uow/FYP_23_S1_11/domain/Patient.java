@@ -51,9 +51,9 @@ public class Patient implements Serializable {
     @JsonIgnore
     private List<Appointment> patientAppt;
 
-//    @JsonIgnore
-//    @OneToOne(mappedBy = "medicalRecordId", cascade = CascadeType.ALL)
-//    private PatientMedicalRecords patientMedicalRecords;
+    @JsonIgnore
+    @OneToOne(mappedBy = "patientmd", cascade = CascadeType.ALL)
+    private PatientMedicalRecords patientMedicalRecords;
  
 //@OneToOne
 //@JoinTable(name = "MY_JOIN_TABLE",

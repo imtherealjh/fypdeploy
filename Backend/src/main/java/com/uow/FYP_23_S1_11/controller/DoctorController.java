@@ -38,10 +38,10 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.insertMedicalRecords(patientMedicalRecordsRequest));
     }
 
-//    @GetMapping("/getByPatientId")
-//    public ResponseEntity<List<PatientMedicalRecords>> getByPatientId(@RequestParam Integer patientId) {
-//        return ResponseEntity.ok(doctorService.getByPatientId(patientId));
-//    }
+    @GetMapping("/getByMedicalRecordsId")
+    public ResponseEntity<List<PatientMedicalRecords>> getByMedicalRecordsId(@RequestParam Integer medicalRecordId) {
+        return ResponseEntity.ok(doctorService.getByMedicalRecordsId(medicalRecordId));
+    }
 
     @PostMapping("/updateMedicalRecords")
     public ResponseEntity<Boolean> updateMedicalRecords(@RequestParam Integer medicalRecordsId,

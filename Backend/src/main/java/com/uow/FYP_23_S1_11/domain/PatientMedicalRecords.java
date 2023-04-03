@@ -39,7 +39,7 @@ public class PatientMedicalRecords implements Serializable{
     @NotBlank(message = "Allergies field is mandatory, replace with a NIL if there's no allergies")
     private String allergies;
 
-//    @OneToOne
-//    @JoinColumn(name = "patient", referencedColumnName = "patientId")
-//    private Patient patient;
+    @OneToOne
+    @JoinColumn(name = "patientmd", referencedColumnName = "patientId")
+    private Patient patientmd;
 }

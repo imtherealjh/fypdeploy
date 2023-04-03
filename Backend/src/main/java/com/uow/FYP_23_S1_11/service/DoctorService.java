@@ -7,6 +7,6 @@ import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
 
 public interface DoctorService {
     public Boolean insertMedicalRecords(PatientMedicalRecordsRequest request);
-//    public List<PatientMedicalRecords> getByPatientId(Integer patientId);
+    public List<PatientMedicalRecords> getByMedicalRecordsId(Integer medicalRecordsId);
     public Boolean updateMedicalRecords(Integer medicalRecordsId, PatientMedicalRecordsRequest updateMedicalRecordsRequest);
 }

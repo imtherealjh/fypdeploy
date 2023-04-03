@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -56,10 +56,10 @@ public class DoctorServiceImpl implements DoctorService{
         }
     }    
     
-//    @Override
-//    public List<PatientMedicalRecords> getByPatientId(Integer patientId) {
-//        return patientMedicalRecordsRepo.findByPatientId(patientId);
-//    }
+    @Override
+    public List<PatientMedicalRecords> getByMedicalRecordsId(Integer medicalRecordId) {
+        return patientMedicalRecordsRepo.findByMedicalRecordId(medicalRecordId);
+    }
 
 @Override
 public Boolean updateMedicalRecords(Integer medicalRecordsId, PatientMedicalRecordsRequest updateMedicalRecordsRequest) {
