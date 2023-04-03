@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -36,4 +38,8 @@ public class PatientMedicalRecords implements Serializable{
 
     @NotBlank(message = "Allergies field is mandatory, replace with a NIL if there's no allergies")
     private String allergies;
+
+//    @OneToOne
+//    @JoinColumn(name = "patient", referencedColumnName = "patientId")
+//    private Patient patient;
 }

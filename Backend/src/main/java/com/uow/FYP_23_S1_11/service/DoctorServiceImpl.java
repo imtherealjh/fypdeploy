@@ -27,7 +27,7 @@ import jakarta.transaction.Transactional;
 public class DoctorServiceImpl implements DoctorService{
 
     @Autowired
-    private PatientMedicalRecordsRepository patientMedicalRecordsRepository;
+    private PatientMedicalRecordsRepository patientMedicalRecordsRepo;
     
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -47,10 +47,7 @@ public class DoctorServiceImpl implements DoctorService{
         try{
         ObjectMapper mapper = new ObjectMapper();
         PatientMedicalRecords patientMedicalRecords = (PatientMedicalRecords) mapper.convertValue(request, PatientMedicalRecords.class);
-        patientMedicalRecords.setCurrentIllnesses(request.getCurrentIllnesses());
-        patientMedicalRecords.setPastIllnesses(request.getPastIllnesses());
-        patientMedicalRecords.setHereditaryIllnesses(request.getHereditaryIllnesses());
-        patientMedicalRecords.setAllergies(request.getAllergies());
+        patientMedicalRecordsRepo.save(patientMedicalRecords);
         return true;
         
     } catch (Exception e) {
@@ -61,18 +58,19 @@ public class DoctorServiceImpl implements DoctorService{
     
 //    @Override
 //    public List<PatientMedicalRecords> getByPatientId(Integer patientId) {
-//        return patientMedicalRecordsRepository.findByPatientId(patientId);
+//        return patientMedicalRecordsRepo.findByPatientId(patientId);
 //    }
 
 @Override
 public Boolean updateMedicalRecords(Integer medicalRecordsId, PatientMedicalRecordsRequest updateMedicalRecordsRequest) {
     try {
-        Optional<PatientMedicalRecords> originalMedicalRecord = patientMedicalRecordsRepository.findById(medicalRecordsId);
+        Optional<PatientMedicalRecords> originalMedicalRecord = patientMedicalRecordsRepo.findById(medicalRecordsId);
         PatientMedicalRecords origPatientMedicalRecords = originalMedicalRecord.get();
         origPatientMedicalRecords.setCurrentIllnesses(updateMedicalRecordsRequest.getCurrentIllnesses());
         origPatientMedicalRecords.setPastIllnesses(updateMedicalRecordsRequest.getPastIllnesses());
         origPatientMedicalRecords.setHereditaryIllnesses(updateMedicalRecordsRequest.getHereditaryIllnesses());
         origPatientMedicalRecords.setAllergies(updateMedicalRecordsRequest.getAllergies());
+        patientMedicalRecordsRepo.save(origPatientMedicalRecords);
         return true;
 
         
