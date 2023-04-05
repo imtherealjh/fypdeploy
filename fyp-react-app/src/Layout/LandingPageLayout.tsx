@@ -98,7 +98,7 @@ export default function LandingPageLayout() {
           <LoginForm />
         </Modal>
       </NavBar>
-      <section className="m-3">
+      <section className="mx-3">
         <main className="my-3">
           <Outlet />
         </main>

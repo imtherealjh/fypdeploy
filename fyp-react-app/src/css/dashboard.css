@@ -1,1 +1,16 @@
+.dashboard > * {
+  flex: 1;
+}
 
+.dashboard > *:first-child {
+  flex-grow: 0.2;
+}
+
+.dashboard > main > .content > * {
+  padding: 0.8rem;
+}
+
+.dashboard > main > .content > h1 {
+  border-bottom: 2px solid black;
+  font-weight: bold;
+}

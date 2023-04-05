@@ -20,7 +20,7 @@ export default function DashboardLayout({ children }: Props) {
           <CgProfile />
         </button>
       </NavBar>
-      <section className="dashboard mt-3">
+      <section className="dashboard d-flex flex-row mt-3">
         {children}
         <main>
           <Outlet />

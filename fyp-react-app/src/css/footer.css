@@ -1,7 +1,6 @@
 footer {
   display: flex;
   height: 100%;
-  flex-grow: 1;
   flex-wrap: wrap;
   gap: 1rem;
 }
