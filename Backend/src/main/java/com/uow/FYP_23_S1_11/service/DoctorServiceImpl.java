@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,7 +27,7 @@ import jakarta.transaction.Transactional;
 public class DoctorServiceImpl implements DoctorService {
 
     @Autowired
-    private PatientMedicalRecordsRepository patientMedicalRecordsRepository;
+    private PatientMedicalRecordsRepository patientMedicalRecordsRepo;
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -47,10 +47,7 @@ public class DoctorServiceImpl implements DoctorService {
             ObjectMapper mapper = new ObjectMapper();
             PatientMedicalRecords patientMedicalRecords = (PatientMedicalRecords) mapper.convertValue(request,
                     PatientMedicalRecords.class);
-            patientMedicalRecords.setCurrentIllnesses(request.getCurrentIllnesses());
-            patientMedicalRecords.setPastIllnesses(request.getPastIllnesses());
-            patientMedicalRecords.setHereditaryIllnesses(request.getHereditaryIllnesses());
-            patientMedicalRecords.setAllergies(request.getAllergies());
+            patientMedicalRecordsRepo.save(patientMedicalRecords);
             return true;
 
         } catch (Exception e) {
@@ -59,24 +56,24 @@ public class DoctorServiceImpl implements DoctorService {
         }
     }
 
-    // @Override
-    // public List<PatientMedicalRecords> getByPatientId(Integer patientId) {
-    // return patientMedicalRecordsRepository.findByPatientId(patientId);
-    // }
+    @Override
+    public List<PatientMedicalRecords> getByMedicalRecordsId(Integer medicalRecordId) {
+        return patientMedicalRecordsRepo.findByMedicalRecordId(medicalRecordId);
+    }
 
     @Override
     public Boolean updateMedicalRecords(Integer medicalRecordsId,
             PatientMedicalRecordsRequest updateMedicalRecordsRequest) {
         try {
-            Optional<PatientMedicalRecords> originalMedicalRecord = patientMedicalRecordsRepository
+            Optional<PatientMedicalRecords> originalMedicalRecord = patientMedicalRecordsRepo
                     .findById(medicalRecordsId);
             PatientMedicalRecords origPatientMedicalRecords = originalMedicalRecord.get();
             origPatientMedicalRecords.setCurrentIllnesses(updateMedicalRecordsRequest.getCurrentIllnesses());
             origPatientMedicalRecords.setPastIllnesses(updateMedicalRecordsRequest.getPastIllnesses());
             origPatientMedicalRecords.setHereditaryIllnesses(updateMedicalRecordsRequest.getHereditaryIllnesses());
             origPatientMedicalRecords.setAllergies(updateMedicalRecordsRequest.getAllergies());
+            patientMedicalRecordsRepo.save(origPatientMedicalRecords);
             return true;
-
         } catch (Exception e) {
             System.out.println(e);
             return false;
