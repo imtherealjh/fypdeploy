@@ -1,0 +1,22 @@
+.homepage-wrapper > .video-container {
+  display: grid;
+  grid-template: auto / 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.homepage-wrapper > .video-container > video {
+  height: 100%;
+  width: 100%;
+}
+
+.homepage-wrapper .register-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media screen and (max-width: 768px) {
+  .homepage-wrapper .video-container {
+    grid-template: 1fr 0.5fr / auto;
+  }
+}

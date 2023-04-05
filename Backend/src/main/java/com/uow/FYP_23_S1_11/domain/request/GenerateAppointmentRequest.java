@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class LoginRequest {
-    private String username;
-    private String password;
+public class GenerateAppointmentRequest {
+    private Integer doctorId;
+    private String generatedDate;
 }
