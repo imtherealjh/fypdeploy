@@ -27,25 +27,27 @@ public class DoctorController {
 
     @Autowired
     private DoctorService doctorService;
-    
+
     @GetMapping("/secure")
     public ResponseEntity<String> getSecureRoute() {
         return ResponseEntity.ok("Secure endpoint");
     }
 
     @PostMapping("/insertMedicalRecords")
-    public ResponseEntity<Boolean> insertMedicalRecords(@Valid @RequestBody PatientMedicalRecordsRequest patientMedicalRecordsRequest) {
+    public ResponseEntity<Boolean> insertMedicalRecords(
+            @Valid @RequestBody PatientMedicalRecordsRequest patientMedicalRecordsRequest) {
         return ResponseEntity.ok(doctorService.insertMedicalRecords(patientMedicalRecordsRequest));
     }
 
-//    @GetMapping("/getByPatientId")
-//    public ResponseEntity<List<PatientMedicalRecords>> getByPatientId(@RequestParam Integer patientId) {
-//        return ResponseEntity.ok(doctorService.getByPatientId(patientId));
-//    }
+    // @GetMapping("/getByPatientId")
+    // public ResponseEntity<List<PatientMedicalRecords>>
+    // getByPatientId(@RequestParam Integer patientId) {
+    // return ResponseEntity.ok(doctorService.getByPatientId(patientId));
+    // }
 
     @PostMapping("/updateMedicalRecords")
     public ResponseEntity<Boolean> updateMedicalRecords(@RequestParam Integer medicalRecordsId,
             @RequestBody PatientMedicalRecordsRequest patientMedicalRecordsRequest) {
         return ResponseEntity.ok(doctorService.updateMedicalRecords(medicalRecordsId, patientMedicalRecordsRequest));
-}
+    }
 }

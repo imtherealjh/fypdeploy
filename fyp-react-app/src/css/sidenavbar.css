@@ -1,0 +1,45 @@
+.side-navbar {
+  position: relative;
+  float: left;
+  background-color: #edf0f7;
+  border-right: 2px solid black;
+  height: 82.5svh;
+}
+
+.side-navbar ul {
+  padding-left: 0 !important;
+  list-style: none;
+}
+
+.side-navbar ul li {
+  padding: 0.5rem;
+}
+
+.side-navbar ul li.active {
+  background-color: #e2e7f0;
+  z-index: 1;
+}
+
+.side-navbar a {
+  text-decoration: none;
+}
+
+.side-navbar ul li.active button {
+  color: #2d3648;
+}
+
+.side-navbar ul li button {
+  border: none;
+  background-color: transparent;
+  display: block;
+  color: #717d96;
+  width: 100%;
+  padding: 0.5rem 1rem;
+}
+
+.side-navbar ul .bottom {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-top: 2px solid black;
+}
