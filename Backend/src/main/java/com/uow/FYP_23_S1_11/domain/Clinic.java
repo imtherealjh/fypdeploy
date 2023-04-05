@@ -21,6 +21,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -83,4 +85,9 @@ public class Clinic implements Serializable {
     @OneToMany(mappedBy = "apptClinic")
     @JsonIgnore
     private List<Appointment> clinicsAppt;
+
+    @ManyToMany(cascade = CascadeType.ALL)//mappedBy = "educationalMaterial")
+    @JoinTable(name = "edu_Material", joinColumns = @JoinColumn(name = "clinicId"), inverseJoinColumns = @JoinColumn(name = "materialId"))
+    private List<EducationalMaterial> eduMatList;
+
 }
