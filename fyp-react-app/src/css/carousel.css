@@ -1,0 +1,21 @@
+.wrapper {
+  position: relative;
+}
+
+.wrapper .carousel {
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  scroll-behavior: smooth;
+  font-size: 0;
+  margin: 0 auto;
+}
+
+.carousel.dragging {
+  cursor: grab;
+  scroll-behavior: auto;
+}
+
+.carousel.dragging img {
+  pointer-events: none;
+}

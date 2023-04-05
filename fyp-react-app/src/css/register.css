@@ -1,0 +1,67 @@
+.register h1 {
+  position: relative;
+  text-align: center;
+  margin: 0;
+}
+
+.register h1::before,
+.register h1::after {
+  content: "";
+  background: black;
+  position: absolute;
+  bottom: 0;
+  height: 50%;
+  width: 1px;
+}
+
+.register h1::before {
+  left: 0;
+}
+
+.register h1::after {
+  right: 0;
+  left: auto;
+}
+
+.register h1 span {
+  padding: 10px;
+  background-color: #f2f2f2;
+}
+
+.register h1 span:before,
+.register h1 span:after {
+  border-top: 1px solid black;
+  display: block;
+  height: 1px;
+  content: " ";
+  width: 50%;
+  position: absolute;
+  top: 50%;
+  z-index: -1;
+}
+
+.register h1 span:before {
+  left: 0;
+}
+
+.register h1 span:after {
+  right: 0;
+  left: auto;
+}
+
+.register.d-flex form {
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+
+.register.d-flex form > * {
+  width: 65%;
+}
+
+.register.d-flex form > *:last-child {
+  text-align: center;
+}
+
+.register.d-flex {
+  border-bottom: 1px solid black;
+}

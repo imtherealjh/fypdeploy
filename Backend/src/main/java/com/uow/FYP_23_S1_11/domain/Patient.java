@@ -6,11 +6,13 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -48,4 +50,20 @@ public class Patient implements Serializable {
     @OneToMany(mappedBy = "apptPatient")
     @JsonIgnore
     private List<Appointment> patientAppt;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "patientmd", cascade = CascadeType.ALL)
+    private PatientMedicalRecords patientMedicalRecords;
+ 
+//@OneToOne
+//@JoinTable(name = "MY_JOIN_TABLE",
+//        joinColumns = {
+//                @JoinColumn(name = "Patient", referencedColumnName = "patientId")
+//        },
+//        inverseJoinColumns = {
+//               @JoinColumn(name = "patientMedicalRecords", referencedColumnName = "medicalRecordId", unique = true)
+//        }
+//)
+//private PatientMedicalRecords patientMedicalRecords;
+
 }

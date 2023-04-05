@@ -1,0 +1,24 @@
+nav img {
+  width: clamp(120px, 11vmax, 10rem);
+  height: clamp(120px, 11vmax, 10rem);
+}
+
+nav ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #d9d9d9;
+  padding: 0.5rem;
+  list-style: none;
+}
+
+nav ul li button {
+  border: none;
+  margin: 0 0.1rem;
+  padding: 0.15rem 0.4rem;
+  background-color: transparent;
+}
+
+nav ul li button svg {
+  font-size: 1.5rem;
+}
