@@ -29,6 +29,10 @@ import com.uow.FYP_23_S1_11.repository.PatientFeedbackRepository;
 import com.uow.FYP_23_S1_11.repository.PatientRepository;
 import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
 
+//
+import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
+import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -46,6 +50,9 @@ public class PatientServiceImpl implements PatientService {
     private DoctorRepository doctorRepo;
     @Autowired
     private AppointmentRepository apptRepo;
+    //
+    @Autowired
+    private EduMaterialRepository eduMaterialRepo;
 
     @Override
     public List<Specialty> getAllSpecialty() {
@@ -189,6 +196,26 @@ public class PatientServiceImpl implements PatientService {
             System.out.println(e);
             return false;
         }
-    }  
+    } 
+    
+    //
+    @Override
+    public List<EducationalMaterial> getAllEduMaterial() {
+        return eduMaterialRepo.findAll();
+    }
 
+    @Override
+    public EducationalMaterial getEduMaterialById(Integer materialId) {
+        try {
+            Optional<EducationalMaterial> materialOptional = eduMaterialRepo.findById(materialId);
+            if(materialOptional.isEmpty()) {
+                throw new IllegalArgumentException("Educational material does not exist..");
+            }
+            return materialOptional.get();
+        } catch (Exception e) {
+            System.out.println(e);
+            return new EducationalMaterial();
+        }
+    }
+    
 }
