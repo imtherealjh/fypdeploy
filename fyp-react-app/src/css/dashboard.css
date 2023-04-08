@@ -2,15 +2,32 @@
   flex: 1;
 }
 
-.dashboard > *:first-child {
+.dashboard > :first-child {
   flex-grow: 0.2;
 }
 
-.dashboard > main > .content > * {
+.dashboard > main > * {
   padding: 0.8rem;
 }
 
-.dashboard > main > .content > h1 {
+.dashboard > main > div:has(h1) {
   border-bottom: 2px solid black;
   font-weight: bold;
+}
+
+.dashboard > main h1 {
+  margin: 0;
+}
+
+.dashboard > main button {
+  border: none;
+  margin: 0 0.1rem;
+  padding: 0.15rem 0.4rem;
+  background-color: transparent;
+}
+
+@media screen and (max-width: 500px) {
+  .dashboard > :first-child {
+    flex-grow: 1;
+  }
 }

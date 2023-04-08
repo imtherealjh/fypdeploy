@@ -2,7 +2,6 @@ export default function dashboard_home() {
   return (
     <>
       <div className="content d-flex flex-column">
-        <h1>Dashboard</h1>
         <div>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad

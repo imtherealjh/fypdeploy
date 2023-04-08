@@ -2,3 +2,23 @@ body {
   margin: 1rem 0;
   background-color: #f2f2f2;
 }
+
+.divider-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 0.5;
+  line-height: 100%;
+}
+
+.divider-wrapper > .vertical-divider {
+  width: 1px;
+  height: 100%;
+  background-color: black;
+}
+
+.divider-wrapper > .horizontal-divider {
+  width: 100%;
+  height: 1px;
+  background-color: black;
+}

@@ -1,4 +1,4 @@
-nav img {
+nav > a > img {
   width: clamp(120px, 11vmax, 10rem);
   height: clamp(120px, 11vmax, 10rem);
 }

@@ -2,8 +2,11 @@ import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 import "../css/footer.css";
 import { CgCopyright } from "react-icons/cg";
+import { useWindowDimensions } from "../utils/hooks";
 
-export default function footer() {
+export default function Footer() {
+  const { width } = useWindowDimensions();
+
   return (
     <>
       <footer>
@@ -20,9 +23,13 @@ export default function footer() {
             aliquip ex ea commodo consequat.
           </p>
         </div>
-        <div className="divider-wrapper">
-          <div className="divider"></div>
-        </div>
+        {width > 445 && (
+          <>
+            <div className="divider-wrapper">
+              <div className="vertical-divider"></div>
+            </div>
+          </>
+        )}
         <div>
           <div className="product-details d-flex justify-content-between">
             <div>

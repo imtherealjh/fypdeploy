@@ -42,3 +42,9 @@
   width: 100%;
   border-top: 2px solid black;
 }
+
+@media screen and (max-width: 500px) {
+  .side-navbar {
+    position: fixed;
+  }
+}

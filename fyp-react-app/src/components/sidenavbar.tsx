@@ -9,7 +9,7 @@ interface Props {
 export default function SideBar({ navList }: Props) {
   return (
     <>
-      <div className="side-navbar">
+      <div id="side-navbar" className="side-navbar">
         <ul>
           {navList.map((navItem, index) => (
             <NavLink key={"side-navbar" + index} to={navItem.link} end>
