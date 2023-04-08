@@ -27,6 +27,13 @@ import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorScheduleRepository;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
+import com.uow.FYP_23_S1_11.domain.request.EducationalMaterialRequest;
+import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
+
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -38,6 +45,10 @@ public class ClerkServiceImpl implements ClerkService {
     private DoctorRepository doctorRepo;
     @Autowired
     private DoctorScheduleRepository doctorScheduleRepo;
+
+    //
+    @Autowired
+    private EduMaterialRepository eduMaterialRepo;//
 
     private List<Appointment> generateTimeSlots(Doctor doctor, LocalDate date) {
         DayOfWeek dow = date.getDayOfWeek();
@@ -114,6 +125,58 @@ public class ClerkServiceImpl implements ClerkService {
                 apptRepo.saveAll(generatedSlots);
             }
             
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    //
+    @Override
+    public Boolean createEduMaterial(EducationalMaterialRequest request) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        try {
+            EducationalMaterial educationalMaterial = (EducationalMaterial) mapper.convertValue(request, EducationalMaterial.class);
+            eduMaterialRepo.save(educationalMaterial);
+
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean deleteEduMaterial(Integer materialId) {
+        try {
+            UserAccount currentUser = Constants.getAuthenticatedUser();
+            Optional<EducationalMaterial> materialOptional = eduMaterialRepo.findById(materialId);
+            if(materialOptional.isEmpty()) {
+                throw new IllegalArgumentException("Educational Material does not exist...");
+            }
+            EducationalMaterial eduMat = materialOptional.get();
+            eduMaterialRepo.delete(eduMat);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    } 
+
+    @Override
+    public Boolean updateEduMaterial(Integer materialId, EducationalMaterialRequest request) {
+        try {
+            UserAccount currentUser = Constants.getAuthenticatedUser();
+            Optional<EducationalMaterial> materialOptional = eduMaterialRepo.findById(materialId);
+            if(materialOptional.isEmpty()) {
+                throw new IllegalArgumentException("Educational Material does not exist...");
+            }
+            EducationalMaterial eduMat = materialOptional.get();
+            eduMat.setTitle(request.getTitle());
+            eduMat.setContent(request.getContent());
+            eduMaterialRepo.save(eduMat);
             return true;
         } catch (Exception e) {
             System.out.println(e);

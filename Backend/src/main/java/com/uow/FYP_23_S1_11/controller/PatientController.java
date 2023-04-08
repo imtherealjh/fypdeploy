@@ -17,9 +17,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
+import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.service.PatientService;
+
+
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -78,6 +81,17 @@ public class PatientController {
     @DeleteMapping("/deleteAppointment")
     public ResponseEntity<Boolean> deleteAppointment(@RequestParam Integer apptId) {
         return ResponseEntity.ok(patientService.deleteAppointment(apptId));
+    }
+
+    //
+    @GetMapping("/getAllEduMaterial")
+    public ResponseEntity<List<EducationalMaterial>> getAllEduMaterial() {
+        return ResponseEntity.ok(patientService.getAllEduMaterial());
+    }
+
+    @GetMapping("/getEduMaterialById")
+    public ResponseEntity<EducationalMaterial> getEduMaterialById(@RequestParam Integer id) {
+        return ResponseEntity.ok(patientService.getEduMaterialById(id));
     }
 
 }
