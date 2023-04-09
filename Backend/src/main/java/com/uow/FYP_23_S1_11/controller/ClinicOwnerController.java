@@ -3,7 +3,6 @@ package com.uow.FYP_23_S1_11.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,11 +27,14 @@ import jakarta.validation.Valid;
 // @PreAuthorize("hasAuthority('CLINIC_OWNER')")
 @SecurityRequirement(name = "bearerAuth")
 public class ClinicOwnerController {
-    @Autowired private ClinicOwnerService clincOwnerService;
-    @Autowired private ClerkService clerkService;
+    @Autowired
+    private ClinicOwnerService clincOwnerService;
+    @Autowired
+    private ClerkService clerkService;
 
     @PostMapping("/insertDoctorSchedule")
-    public ResponseEntity<Boolean> insertDoctorSchedule(@Valid @RequestBody DoctorScheduleRequest doctorScheduleRequest) {
+    public ResponseEntity<Boolean> insertDoctorSchedule(
+            @Valid @RequestBody DoctorScheduleRequest doctorScheduleRequest) {
         System.out.println(doctorScheduleRequest.getDoctorId());
         return ResponseEntity.ok(clincOwnerService.insertDoctorSchedule(doctorScheduleRequest));
     }
@@ -53,12 +55,14 @@ public class ClinicOwnerController {
     }
 
     @PostMapping("/generateClinicAppointmentSlots")
-    public ResponseEntity<Boolean> generateClinicAppointmentSlots(@RequestBody GenerateClinicAppointmentRequest generateClinicAppointmentReq) {
+    public ResponseEntity<Boolean> generateClinicAppointmentSlots(
+            @RequestBody GenerateClinicAppointmentRequest generateClinicAppointmentReq) {
         return ResponseEntity.ok(clerkService.generateClinicAppointmentSlots(generateClinicAppointmentReq));
     }
 
     @PostMapping("/generateAppointmentSlots")
-    public ResponseEntity<Boolean> generateDoctorAppointmentSlots(@RequestBody GenerateAppointmentRequest generateAppointmentReq) {
+    public ResponseEntity<Boolean> generateDoctorAppointmentSlots(
+            @RequestBody GenerateAppointmentRequest generateAppointmentReq) {
         return ResponseEntity.ok(clerkService.generateDoctorAppointmentSlots(generateAppointmentReq));
     }
 }
