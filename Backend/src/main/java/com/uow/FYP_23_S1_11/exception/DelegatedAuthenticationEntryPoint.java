@@ -1,4 +1,4 @@
-package com.uow.FYP_23_S1_11.auth;
+package com.uow.FYP_23_S1_11.exception;
 
 import java.io.IOException;
 
@@ -24,5 +24,5 @@ public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoi
             AuthenticationException authException) throws IOException, ServletException {
         resolver.resolveException(request, response, null, authException);
     }
-    
+
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.validation.FieldError;
 
 import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
+import com.uow.FYP_23_S1_11.exception.MedicalRecordsNotFoundException;
 import com.uow.FYP_23_S1_11.repository.PatientMedicalRecordsRepository;
 import com.uow.FYP_23_S1_11.domain.PatientMedicalRecords;
 
@@ -28,18 +29,6 @@ public class DoctorServiceImpl implements DoctorService {
 
     @Autowired
     private PatientMedicalRecordsRepository patientMedicalRecordsRepo;
-
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        return errors;
-    }
 
     @Override
     public Boolean insertMedicalRecords(PatientMedicalRecordsRequest request) {
@@ -57,26 +46,47 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<PatientMedicalRecords> getByMedicalRecordsId(Integer medicalRecordId) {
-        return patientMedicalRecordsRepo.findByMedicalRecordId(medicalRecordId);
-    }
-
-    @Override
     public Boolean updateMedicalRecords(Integer medicalRecordsId,
-            PatientMedicalRecordsRequest updateMedicalRecordsRequest) {
+            PatientMedicalRecordsRequest updateMedicalRecordsRequest) throws MedicalRecordsNotFoundException {
         try {
             Optional<PatientMedicalRecords> originalMedicalRecord = patientMedicalRecordsRepo
                     .findById(medicalRecordsId);
-            PatientMedicalRecords origPatientMedicalRecords = originalMedicalRecord.get();
-            origPatientMedicalRecords.setCurrentIllnesses(updateMedicalRecordsRequest.getCurrentIllnesses());
-            origPatientMedicalRecords.setPastIllnesses(updateMedicalRecordsRequest.getPastIllnesses());
-            origPatientMedicalRecords.setHereditaryIllnesses(updateMedicalRecordsRequest.getHereditaryIllnesses());
-            origPatientMedicalRecords.setAllergies(updateMedicalRecordsRequest.getAllergies());
-            patientMedicalRecordsRepo.save(origPatientMedicalRecords);
-            return true;
+
+            if (originalMedicalRecord.isEmpty() == false) {
+                ObjectMapper mapper = new ObjectMapper();
+                PatientMedicalRecords patientMedicalRecords = (PatientMedicalRecords) mapper.convertValue(
+                        updateMedicalRecordsRequest,
+                        PatientMedicalRecords.class);
+                patientMedicalRecordsRepo.save(patientMedicalRecords);
+                return true;
+                // PatientMedicalRecords origPatientMedicalRecords =
+                // originalMedicalRecord.get();
+                // origPatientMedicalRecords.setCurrentIllnesses(updateMedicalRecordsRequest.getCurrentIllnesses());
+                // origPatientMedicalRecords.setPastIllnesses(updateMedicalRecordsRequest.getPastIllnesses());
+                // origPatientMedicalRecords.setHereditaryIllnesses(updateMedicalRecordsRequest.getHereditaryIllnesses());
+                // origPatientMedicalRecords.setAllergies(updateMedicalRecordsRequest.getAllergies());
+                // patientMedicalRecordsRepo.save(origPatientMedicalRecords);
+                // return true;
+            } else {
+                throw new MedicalRecordsNotFoundException("Medical Records not found with id " + medicalRecordsId);
+            }
+
         } catch (Exception e) {
             System.out.println(e);
             return false;
+        }
+
+    }
+
+    @Override
+    public List<PatientMedicalRecords> getByMedicalRecordsId(Integer medicalRecordId)
+            throws MedicalRecordsNotFoundException {
+        List<PatientMedicalRecords> patientMedicalRecords = patientMedicalRecordsRepo
+                .findByMedicalRecordId(medicalRecordId);
+        if (patientMedicalRecords.isEmpty() == false) {
+            return patientMedicalRecords;
+        } else {
+            throw new MedicalRecordsNotFoundException("Medical Records not found with id " + medicalRecordId);
         }
 
     }

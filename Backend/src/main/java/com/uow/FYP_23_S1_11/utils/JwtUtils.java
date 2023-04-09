@@ -20,10 +20,14 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtils {
-    @Value("${refresh.jwtsecret}") private String refreshTokenSecret;
-    @Value("${refresh.jwtexpirationms}") private int refreshTokenExpiry;
-    @Value("${access.jwtsecret}") private String accessTokenSecret;
-    @Value("${access.jwtexpirationms}") private int accessTokenExpiry;
+    @Value("${refresh.jwtsecret}")
+    private String refreshTokenSecret;
+    @Value("${refresh.jwtexpirationms}")
+    private int refreshTokenExpiry;
+    @Value("${access.jwtsecret}")
+    private String accessTokenSecret;
+    @Value("${access.jwtexpirationms}")
+    private int accessTokenExpiry;
 
     public String extractUserFromToken(ETokenType type, String token) {
         return extractClaims(type, token, Claims::getSubject);
@@ -35,9 +39,9 @@ public class JwtUtils {
 
     public String generateToken(ETokenType type, UserDetails userDetails, Map<String, Object> extraClaims) {
         int expiry = 0;
-        if(type == ETokenType.ACCESS_TOKEN) {
+        if (type == ETokenType.ACCESS_TOKEN) {
             expiry = accessTokenExpiry;
-        } else if(type == ETokenType.REFRESH_TOKEN) {
+        } else if (type == ETokenType.REFRESH_TOKEN) {
             expiry = refreshTokenExpiry;
         }
 
@@ -80,17 +84,17 @@ public class JwtUtils {
 
     private Key getSignInKey(ETokenType type) {
         String secret = "";
-        if(type == ETokenType.ACCESS_TOKEN) {
+        if (type == ETokenType.ACCESS_TOKEN) {
             secret = accessTokenSecret;
-        } else if(type == ETokenType.REFRESH_TOKEN) {
+        } else if (type == ETokenType.REFRESH_TOKEN) {
             secret = refreshTokenSecret;
         }
 
-        if(secret != null && !secret.trim().isEmpty()) {
+        if (secret != null && !secret.trim().isEmpty()) {
             byte[] keyBytes = Decoders.BASE64.decode(secret);
             return Keys.hmacShaKeyFor(keyBytes);
         }
         return null;
     }
-    
+
 }

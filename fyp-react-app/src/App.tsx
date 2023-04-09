@@ -3,8 +3,8 @@ import Home from "./pages/Home";
 import DoctorHome from "./pages/doctor/Home";
 import RegisterPatient from "./pages/RegisterPatient";
 import RegisterClinic from "./pages/RegisterClinic";
-import LandingPageLayout from "./Layout/LandingPageLayout";
-import DashboardLayout from "./Layout/DashboardLayout";
+import LandingPageLayout from "./layout/LandingPageLayout";
+import DashboardLayout from "./layout/DashboardLayout";
 import SideBar from "./components/sidenavbar";
 
 const DoctorSideBar = [

@@ -10,9 +10,12 @@ import com.uow.FYP_23_S1_11.enums.ERole;
 
 public interface UserAccountService {
     public AuthResponse authenticate(LoginRequest loginReq);
+
     public AuthResponse regenerateAccessToken(AccessTokenRequest accessTokenReq);
+
     public UserAccount registerAccount(UserAccount account, ERole userRole);
+
     public Boolean registerClinicAccount(ClinicRegisterRequest clinicReq);
+
     public Boolean registerPatientAccount(PatientRegisterRequest patientReq);
-    
 }

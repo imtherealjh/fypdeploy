@@ -1,13 +1,13 @@
 package com.uow.FYP_23_S1_11.domain;
 
-import java.io.Serializable;
+import com.uow.FYP_23_S1_11.enums.ETokenType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,22 +15,21 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "PATIENT_MEDICAL_RECORDS")
+@Table(name = "TOKEN")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-
-public class PatientMedicalRecords implements Serializable {
+public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer medicalRecordId;
-    private String currentIllnesses;
-    private String pastIllnesses;
-    private String hereditaryIllnesses;
-    private String allergies;
+    private int id;
+    private ETokenType type;
+    private String token;
+    private Boolean expired;
+    private Boolean revoked;
 
-    @OneToOne
-    @JoinColumn(name = "patientmd", referencedColumnName = "patientId")
-    private Patient patientmd;
+    @ManyToOne
+    @JoinColumn(name = "accountId", referencedColumnName = "accountId")
+    private UserAccount tokenAccount;
 }

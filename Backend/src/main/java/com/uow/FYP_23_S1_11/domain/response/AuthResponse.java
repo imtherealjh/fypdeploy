@@ -12,6 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthResponse {
+    private String role;
     private String refreshToken;
     private String accessToken;
 }

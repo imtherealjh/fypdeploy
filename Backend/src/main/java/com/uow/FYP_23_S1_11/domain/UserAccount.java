@@ -18,6 +18,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -40,6 +41,9 @@ public class UserAccount implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private ERole role;
+
+    @OneToMany(mappedBy = "tokenAccount", cascade = CascadeType.ALL)
+    private List<Token> userTokens;
 
     @JsonIgnore
     @OneToOne(mappedBy = "clinicAccount", cascade = CascadeType.ALL)

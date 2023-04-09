@@ -47,17 +47,19 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public AuthResponse authenticate(LoginRequest loginRequest) {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+
         // using built-in authentication manager to validate the login request
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()));
-        var user = userAccRepo.findByUsername(loginRequest.getUsername())
+                new UsernamePasswordAuthenticationToken(username, password));
+        var user = userAccRepo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
         String refreshToken = jwtUtils.generateToken(ETokenType.REFRESH_TOKEN, user);
         String accessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
         return AuthResponse
                 .builder()
+                .role(user.getRole().name())
                 .refreshToken(refreshToken)
                 .accessToken(accessToken)
                 .build();

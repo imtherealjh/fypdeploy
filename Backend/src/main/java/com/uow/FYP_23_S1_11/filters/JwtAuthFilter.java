@@ -1,4 +1,4 @@
-package com.uow.FYP_23_S1_11.auth;
+package com.uow.FYP_23_S1_11.filters;
 
 import static com.uow.FYP_23_S1_11.Constants.*;
 
@@ -24,26 +24,29 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
-    @Autowired private JwtUtils jwtUtils;
-    @Autowired private UserDetailsService userDetailsService;
+    @Autowired
+    private JwtUtils jwtUtils;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
             String accessToken = parseJwt(request);
-            if(accessToken != null) {
+            if (accessToken != null) {
                 String username = jwtUtils.extractUserFromToken(ETokenType.ACCESS_TOKEN, accessToken);
-                if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-                    if(jwtUtils.isTokenValid(ETokenType.ACCESS_TOKEN, accessToken, userDetails)) {
-                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    if (jwtUtils.isTokenValid(ETokenType.ACCESS_TOKEN, accessToken, userDetails)) {
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
                     }
                 }
             }
-        } catch(Exception e) {  
+        } catch (Exception e) {
             throw new ServletException(e.getMessage(), e);
         }
         filterChain.doFilter(request, response);
@@ -56,5 +59,5 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         return null;
     }
-    
+
 }

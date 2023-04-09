@@ -1,7 +1,5 @@
 footer {
   display: flex;
-  height: 100%;
-  flex-grow: 1;
   flex-wrap: wrap;
   gap: 1rem;
 }
@@ -19,20 +17,6 @@ footer > *:last-child {
   flex-grow: 2;
 }
 
-footer .divider-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-grow: 0.5;
-  line-height: 100%;
-}
-
-footer .divider-wrapper > .divider {
-  width: 1px;
-  height: 100%;
-  background-color: black;
-}
-
 footer img {
   width: clamp(100px, 9vmax, 8rem);
   height: clamp(100px, 9vmax, 8rem);
@@ -46,10 +30,4 @@ footer > div:last-child > div:last-child > div {
 
 footer > div:last-child > div:last-child > div svg {
   font-size: 1rem;
-}
-
-@media screen and (max-width: 445px) {
-  .divider-wrapper {
-    display: none !important;
-  }
 }

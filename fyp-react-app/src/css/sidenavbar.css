@@ -1,9 +1,8 @@
 .side-navbar {
   position: relative;
-  float: left;
   background-color: #edf0f7;
   border-right: 2px solid black;
-  height: 82.5svh;
+  height: 78svh;
 }
 
 .side-navbar ul {
@@ -42,4 +41,10 @@
   bottom: 0;
   width: 100%;
   border-top: 2px solid black;
+}
+
+@media screen and (max-width: 500px) {
+  .side-navbar {
+    position: fixed;
+  }
 }

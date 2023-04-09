@@ -1,4 +1,4 @@
-package com.uow.FYP_23_S1_11.auth;
+package com.uow.FYP_23_S1_11.exception;
 
 import java.io.IOException;
 
@@ -24,5 +24,5 @@ public class DelegatedAcessDeniedHandler implements AccessDeniedHandler {
             AccessDeniedException accessDeniedException) throws IOException, ServletException {
         resolver.resolveException(request, response, null, accessDeniedException);
     }
-    
+
 }
