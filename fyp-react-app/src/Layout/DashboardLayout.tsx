@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { CgBell, CgProfile, CgMenu } from "react-icons/cg";
 import NavBar from "../components/navbar";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 import "../css/dashboard.css";
 import Dropdown from "../components/dropdown";
@@ -11,19 +11,9 @@ interface Props {
   children: ReactNode;
 }
 
-const acceptedLink = [
-  { name: "Dashboard", link: "" },
-  { name: "Appointment", link: "appointments" },
-  { name: "Patient List", link: "patients" },
-  { name: "Feed Back", link: "feedbacks" },
-  { name: "FAQ", link: "faq" },
-  { name: "Contact Us", link: "contact-us" },
-];
-
 export default function DashboardLayout({ children }: Props) {
   const { width } = useWindowDimensions();
-  const [show, setShow] = useState(width > 500);
-  const [activeBtn, setActiveBtn] = useState(0);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     setShow(width > 500);
@@ -51,42 +41,14 @@ export default function DashboardLayout({ children }: Props) {
   return (
     <>
       <NavBar homePagePath="/doctor">
-        <Dropdown
-          buttonContent={<CgBell />}
-          menuContent={null}
-          onClick={() => {
-            setActiveBtn(1);
-          }}
-          onOutsideClick={() => {
-            setActiveBtn(0);
-          }}
-          open={activeBtn === 1}
-        />
-        ,
-        <Dropdown
-          buttonContent={<CgProfile />}
-          menuContent={profileContent}
-          onClick={() => setActiveBtn(2)}
-          onOutsideClick={() => {
-            setActiveBtn(0);
-          }}
-          open={activeBtn === 2}
-        />
+        <Dropdown buttonContent={<CgBell />} menuContent={null} />
+        <Dropdown buttonContent={<CgProfile />} menuContent={profileContent} />
       </NavBar>
       <section className="dashboard d-flex flex-row mt-3">
         {show && children}
         <main>
           <div className="d-flex justify-content-between align-content-center">
-            <h1>
-              {
-                acceptedLink.find((obj) => {
-                  return (
-                    `/doctor${obj.link !== "" ? `/${obj.link}` : ""}` ===
-                    useLocation().pathname
-                  );
-                })?.name
-              }
-            </h1>
+            <h1>{useLocation().state}</h1>
             {width <= 500 && (
               <>
                 <button

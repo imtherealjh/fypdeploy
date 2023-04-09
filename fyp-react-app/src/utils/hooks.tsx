@@ -19,10 +19,7 @@ export function useStateRef<S>(
 export function useWindowDimensions() {
   function getWindowDimensions() {
     const { innerWidth: width, innerHeight: height } = window;
-    return {
-      width,
-      height,
-    };
+    return { width, height };
   }
 
   const [windowDimensions, setWindowDimensions] = useState(
@@ -48,7 +45,7 @@ export function useOutsideClick(
   useEffect(() => {
     const handleClickOutside = (evt: any) => {
       if (ref.current && !ref.current.contains(evt.target)) {
-        callback(); //Do what you want to handle in the callback
+        callback();
       }
     };
     document.addEventListener("mousedown", handleClickOutside);

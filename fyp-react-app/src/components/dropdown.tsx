@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 
 import "../css/dropdown.css";
 import { useOutsideClick } from "../utils/hooks";
@@ -6,34 +6,26 @@ import { useOutsideClick } from "../utils/hooks";
 interface Props {
   buttonContent: ReactNode;
   menuContent: ReactNode;
-  open: true | false;
-  onClick: () => void;
-  onOutsideClick: () => void;
 }
 
-export default function Dropdown({
-  buttonContent,
-  menuContent,
-  open,
-  onClick,
-  onOutsideClick,
-}: Props) {
+export default function Dropdown({ buttonContent, menuContent }: Props) {
   const ref = useRef<any>(null);
+  const [visible, setVisiblity] = useState(false);
 
-  useOutsideClick(ref, onOutsideClick);
+  useOutsideClick(ref, () => setVisiblity(false));
 
   return (
     <>
       <div className="dropdown">
         <button
-          onClick={onClick}
           type="button"
+          onClick={() => setVisiblity(true)}
           aria-haspopup="true"
-          aria-expanded={open}
+          aria-expanded={visible}
         >
           {buttonContent}
         </button>
-        {open && (
+        {visible && (
           <>
             <div ref={ref} className="dropdown-menu-content">
               <div className="content">{menuContent}</div>
