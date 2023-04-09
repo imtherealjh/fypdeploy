@@ -39,4 +39,5 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
     ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex);
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
   }
+
 }
