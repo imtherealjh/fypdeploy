@@ -3,7 +3,6 @@ package com.uow.FYP_23_S1_11.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,19 +21,21 @@ import com.uow.FYP_23_S1_11.domain.request.EducationalMaterialRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
-@RequestMapping(value="/api/clerk", produces = { MediaType.APPLICATION_JSON_VALUE })
+@RequestMapping(value = "/api/clerk", produces = { MediaType.APPLICATION_JSON_VALUE })
 @SecurityRequirement(name = "bearerAuth")
 public class ClerkController {
-    @Autowired 
+    @Autowired
     private ClerkService clerkService;
 
     @PostMapping("/generateClinicAppointmentSlots")
-    public ResponseEntity<Boolean> generateClinicAppointmentSlots(@RequestBody GenerateClinicAppointmentRequest generateClinicAppointmentReq) {
+    public ResponseEntity<Boolean> generateClinicAppointmentSlots(
+            @RequestBody GenerateClinicAppointmentRequest generateClinicAppointmentReq) {
         return ResponseEntity.ok(clerkService.generateClinicAppointmentSlots(generateClinicAppointmentReq));
     }
 
     @PostMapping("/generateAppointmentSlots")
-    public ResponseEntity<Boolean> generateDoctorAppointmentSlots(@RequestBody GenerateAppointmentRequest generateAppointmentReq) {
+    public ResponseEntity<Boolean> generateDoctorAppointmentSlots(
+            @RequestBody GenerateAppointmentRequest generateAppointmentReq) {
         return ResponseEntity.ok(clerkService.generateDoctorAppointmentSlots(generateAppointmentReq));
     }
 
@@ -43,10 +44,11 @@ public class ClerkController {
     public ResponseEntity<Boolean> createEduMaterial(@RequestBody EducationalMaterialRequest eduMaterialRequest) {
         return ResponseEntity.ok(clerkService.createEduMaterial(eduMaterialRequest));
     }
-    
-    //Required??
+
+    // Required??
     @PostMapping("/updateEduMaterial")
-    public ResponseEntity<Boolean> updateEduMaterial(@RequestParam Integer materialId, EducationalMaterialRequest eduMaterialRequest) {
+    public ResponseEntity<Boolean> updateEduMaterial(@RequestParam Integer materialId,
+            EducationalMaterialRequest eduMaterialRequest) {
         return ResponseEntity.ok(clerkService.updateEduMaterial(materialId, eduMaterialRequest));
     }
 

@@ -19,7 +19,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.uow.FYP_23_S1_11.auth.JwtAuthFilter;
+import com.uow.FYP_23_S1_11.filters.JwtAuthFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -27,8 +27,6 @@ import com.uow.FYP_23_S1_11.auth.JwtAuthFilter;
 public class SecurityConfig {
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
-    @Autowired
-    private AuthenticationProvider customProvider;
     @Autowired
     @Qualifier("delegatedAuthenticationEntryPoint")
     private AuthenticationEntryPoint authEntryPoint;
@@ -53,7 +51,6 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authenticationProvider(customProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -62,7 +59,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        
+
         configuration.setAllowedOrigins(Arrays.asList("http://127.0.0.1:8887"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowCredentials(true);

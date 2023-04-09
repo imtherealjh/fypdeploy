@@ -26,7 +26,7 @@ export default function SideBar({ navList }: Props) {
             </NavLink>
           ))}
           <div className="bottom">
-            <NavLink key="side-navbar-last-item-1" to="faq" state={"FAQ"} end>
+            <NavLink key="side-navbar-last-item-1" to="faq" state="FAQ" end>
               {({ isActive }) => (
                 <li className={isActive ? "active" : ""}>
                   <button type="button">FAQ</button>
@@ -37,7 +37,7 @@ export default function SideBar({ navList }: Props) {
             <NavLink
               key="side-navbar-last-item-2"
               to="contact-us"
-              state={"Contact Us"}
+              state="Contact Us"
               end
             >
               {({ isActive }) => (

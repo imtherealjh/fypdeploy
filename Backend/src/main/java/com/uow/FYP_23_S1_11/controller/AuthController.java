@@ -18,9 +18,10 @@ import com.uow.FYP_23_S1_11.service.UserAccountService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value="/api/auth", produces={MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(value = "/api/auth", produces = { MediaType.APPLICATION_JSON_VALUE })
 public class AuthController {
-    @Autowired private UserAccountService userAccountService;
+    @Autowired
+    private UserAccountService userAccountService;
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> authenticate(@Valid @RequestBody LoginRequest loginRequest) {
