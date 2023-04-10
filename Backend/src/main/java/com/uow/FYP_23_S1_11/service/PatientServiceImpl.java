@@ -17,6 +17,10 @@ import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.PatientFeedback;
+import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
+import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
+import com.uow.FYP_23_S1_11.domain.PatientFeedbackNurse;
+import com.uow.FYP_23_S1_11.domain.PatientFeedbackFrontDesk;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
@@ -31,7 +35,16 @@ import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
 
 //
 import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
+import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
+import com.uow.FYP_23_S1_11.repository.PatientFeedbackDoctorRepository;
+import com.uow.FYP_23_S1_11.repository.PatientFeedbackNurseRepository;
+import com.uow.FYP_23_S1_11.repository.PatientFeedbackFrontDeskRepository;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
+
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackNurseRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackFrontDeskRequest;
 
 import jakarta.transaction.Transactional;
 
@@ -53,6 +66,14 @@ public class PatientServiceImpl implements PatientService {
     //
     @Autowired
     private EduMaterialRepository eduMaterialRepo;
+    @Autowired
+    private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
+    @Autowired
+    private PatientFeedbackDoctorRepository patientFeedbackDoctorRepo;
+    @Autowired
+    private PatientFeedbackNurseRepository patientFeedbackNurseRepo;
+    @Autowired
+    private PatientFeedbackFrontDeskRepository patientFeedbackFrontDeskRepo;
 
     @Override
     public List<Specialty> getAllSpecialty() {
@@ -113,7 +134,7 @@ public class PatientServiceImpl implements PatientService {
     public Appointment getAppointmentById(Integer apptId) {
         try {
             Optional<Appointment> apptOptional = apptRepo.findById(apptId);
-            if(apptOptional.isEmpty()) {
+            if (apptOptional.isEmpty()) {
                 throw new IllegalArgumentException("Appointment does not exist");
             }
             return apptOptional.get();
@@ -128,9 +149,9 @@ public class PatientServiceImpl implements PatientService {
         try {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
-            //TODO: need to check if current appointment is booked
+            // TODO: need to check if current appointment is booked
             Optional<Appointment> apptOptional = apptRepo.findById(bookApptReq.getApptId());
-            if(apptOptional.isEmpty()) {
+            if (apptOptional.isEmpty()) {
                 throw new IllegalArgumentException("No available appointment...");
             }
             Appointment appt = apptOptional.get();
@@ -151,13 +172,13 @@ public class PatientServiceImpl implements PatientService {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
             Optional<Appointment> optionalOrigAppt = apptRepo.findById(originalApptId);
-            if(optionalOrigAppt.isEmpty()) {
+            if (optionalOrigAppt.isEmpty()) {
                 throw new IllegalArgumentException("Appointment not found...");
             }
 
             Appointment origAppt = optionalOrigAppt.get();
-            if(patient.getPatientId() == origAppt.getApptPatient().getPatientId()) {
-                if(originalApptId == updateApptReq.getApptId()) {
+            if (patient.getPatientId() == origAppt.getApptPatient().getPatientId()) {
+                if (originalApptId == updateApptReq.getApptId()) {
                     origAppt.setDescription(updateApptReq.getDescription());
                     apptRepo.save(origAppt);
                 } else {
@@ -168,7 +189,7 @@ public class PatientServiceImpl implements PatientService {
                     bookAvailableAppointment(updateApptReq);
                 }
             }
-            
+
             return true;
         } catch (Exception e) {
             return false;
@@ -181,11 +202,11 @@ public class PatientServiceImpl implements PatientService {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
             Optional<Appointment> apptOptional = apptRepo.findById(apptId);
-            if(apptOptional.isEmpty()) {
+            if (apptOptional.isEmpty()) {
                 throw new IllegalArgumentException("No available appointment...");
             }
             Appointment appt = apptOptional.get();
-            if(patient.getPatientId() == appt.getApptPatient().getPatientId()) {
+            if (patient.getPatientId() == appt.getApptPatient().getPatientId()) {
                 appt.setStatus(EAppointmentStatus.AVAILABLE);
                 appt.setDescription(null);
                 appt.setApptPatient(null);
@@ -196,8 +217,8 @@ public class PatientServiceImpl implements PatientService {
             System.out.println(e);
             return false;
         }
-    } 
-    
+    }
+
     //
     @Override
     public List<EducationalMaterial> getAllEduMaterial() {
@@ -208,7 +229,7 @@ public class PatientServiceImpl implements PatientService {
     public EducationalMaterial getEduMaterialById(Integer materialId) {
         try {
             Optional<EducationalMaterial> materialOptional = eduMaterialRepo.findById(materialId);
-            if(materialOptional.isEmpty()) {
+            if (materialOptional.isEmpty()) {
                 throw new IllegalArgumentException("Educational material does not exist..");
             }
             return materialOptional.get();
@@ -217,5 +238,64 @@ public class PatientServiceImpl implements PatientService {
             return new EducationalMaterial();
         }
     }
-    
+
+    @Override
+    public Boolean insertClinicFeedback(PatientFeedbackClinicRequest request) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            PatientFeedbackClinic patientFeedbackClinic = (PatientFeedbackClinic) mapper.convertValue(request,
+                    PatientFeedbackClinic.class);
+            patientFeedbackClinicRepo.save(patientFeedbackClinic);
+            return true;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean insertDoctorFeedback(PatientFeedbackDoctorRequest request) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            PatientFeedbackDoctor patientFeedbackDoctor = (PatientFeedbackDoctor) mapper.convertValue(request,
+                    PatientFeedbackDoctor.class);
+            patientFeedbackDoctorRepo.save(patientFeedbackDoctor);
+            return true;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean insertNurseFeedback(PatientFeedbackNurseRequest request) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            PatientFeedbackNurse patientFeedbackNurse = (PatientFeedbackNurse) mapper.convertValue(request,
+                    PatientFeedbackNurse.class);
+            patientFeedbackNurseRepo.save(patientFeedbackNurse);
+            return true;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean insertFrontDeskFeedback(PatientFeedbackFrontDeskRequest request) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            PatientFeedbackFrontDesk patientFeedbackFrontDesk = (PatientFeedbackFrontDesk) mapper.convertValue(request,
+                    PatientFeedbackFrontDesk.class);
+            patientFeedbackFrontDeskRepo.save(patientFeedbackFrontDesk);
+            return true;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
 }

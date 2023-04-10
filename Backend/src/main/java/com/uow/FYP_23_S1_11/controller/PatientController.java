@@ -20,9 +20,11 @@ import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackNurseRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackFrontDeskRequest;
 import com.uow.FYP_23_S1_11.service.PatientService;
-
-
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -94,4 +96,27 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getEduMaterialById(id));
     }
 
+    @PostMapping("/insertPatientClinicFeedback")
+    public ResponseEntity<Boolean> insertPatientClinicFeedback(
+            @Valid @RequestBody PatientFeedbackClinicRequest patientFeedbackClinicRequest) {
+        return ResponseEntity.ok(patientService.insertClinicFeedback(patientFeedbackClinicRequest));
+    }
+
+    @PostMapping("/insertPatientDoctorFeedback")
+    public ResponseEntity<Boolean> insertPatientDoctorFeedback(
+            @Valid @RequestBody PatientFeedbackDoctorRequest patientFeedbackDoctorRequest) {
+        return ResponseEntity.ok(patientService.insertDoctorFeedback(patientFeedbackDoctorRequest));
+    }
+
+    @PostMapping("/insertPatientNurseFeedback")
+    public ResponseEntity<Boolean> insertPatientNurseFeedback(
+            @Valid @RequestBody PatientFeedbackNurseRequest patientFeedbackNurseRequest) {
+        return ResponseEntity.ok(patientService.insertNurseFeedback(patientFeedbackNurseRequest));
+    }
+
+    @PostMapping("/insertPatientFrontDeskFeedback")
+    public ResponseEntity<Boolean> insertPatientFrontDeskFeedback(
+            @Valid @RequestBody PatientFeedbackFrontDeskRequest patientFeedbackFrontDeskRequest) {
+        return ResponseEntity.ok(patientService.insertFrontDeskFeedback(patientFeedbackFrontDeskRequest));
+    }
 }
