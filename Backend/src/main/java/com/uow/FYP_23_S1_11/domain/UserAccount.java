@@ -41,6 +41,7 @@ public class UserAccount implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private ERole role;
+    private Boolean isEnabled = false;
 
     @OneToMany(mappedBy = "tokenAccount", cascade = CascadeType.ALL)
     private List<Token> userTokens;
@@ -87,6 +88,6 @@ public class UserAccount implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled();
     }
 }

@@ -1,5 +1,9 @@
 package com.uow.FYP_23_S1_11.service;
 
+import java.io.IOException;
+
+import com.fasterxml.jackson.core.exc.StreamWriteException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.AccessTokenRequest;
 import com.uow.FYP_23_S1_11.domain.request.ClinicRegisterRequest;
@@ -8,8 +12,12 @@ import com.uow.FYP_23_S1_11.domain.request.PatientRegisterRequest;
 import com.uow.FYP_23_S1_11.domain.response.AuthResponse;
 import com.uow.FYP_23_S1_11.enums.ERole;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 public interface UserAccountService {
-    public AuthResponse authenticate(LoginRequest loginReq);
+    public void authenticate(LoginRequest loginReq, HttpServletRequest request,
+            HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException;
 
     public AuthResponse regenerateAccessToken(AccessTokenRequest accessTokenReq);
 

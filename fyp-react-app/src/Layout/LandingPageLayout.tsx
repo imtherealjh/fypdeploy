@@ -4,10 +4,14 @@ import NavBar from "../components/navbar";
 import Footer from "../components/footer";
 import { Outlet } from "react-router-dom";
 import { CgLock, CgProfile } from "react-icons/cg";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import useAuth from "../hooks/useAuth";
 
 function LoginForm() {
   const [inputs, setInputs] = useState([]);
+  const { setAuth } = useAuth();
+
+  setAuth();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;

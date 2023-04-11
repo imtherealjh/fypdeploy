@@ -1,8 +1,10 @@
 package com.uow.FYP_23_S1_11.service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.exc.StreamWriteException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -29,6 +33,10 @@ import com.uow.FYP_23_S1_11.repository.PatientRepository;
 import com.uow.FYP_23_S1_11.repository.UserAccountRepository;
 import com.uow.FYP_23_S1_11.utils.JwtUtils;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 @Service
 @Transactional
 public class UserAccountServiceImpl implements UserAccountService {
@@ -46,7 +54,8 @@ public class UserAccountServiceImpl implements UserAccountService {
     private JwtUtils jwtUtils;
 
     @Override
-    public AuthResponse authenticate(LoginRequest loginRequest) {
+    public void authenticate(LoginRequest loginRequest, HttpServletRequest request,
+            HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
@@ -55,14 +64,26 @@ public class UserAccountServiceImpl implements UserAccountService {
                 new UsernamePasswordAuthenticationToken(username, password));
         var user = userAccRepo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
+
+        if (!user.isEnabled()) {
+
+        }
+
         String refreshToken = jwtUtils.generateToken(ETokenType.REFRESH_TOKEN, user);
         String accessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
-        return AuthResponse
+
+        Cookie cookie = new Cookie("token", refreshToken);
+        cookie.setHttpOnly(true);
+
+        AuthResponse auth = AuthResponse
                 .builder()
                 .role(user.getRole().name())
-                .refreshToken(refreshToken)
                 .accessToken(accessToken)
                 .build();
+
+        response.addCookie(cookie);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), auth);
     }
 
     @Override
