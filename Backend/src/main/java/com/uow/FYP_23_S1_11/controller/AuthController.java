@@ -34,12 +34,15 @@ public class AuthController {
     public void authenticate(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request,
             HttpServletResponse response, @CookieValue(value = "token", defaultValue = "") String token)
             throws StreamWriteException, DatabindException, IOException {
+        System.out.println("I am at login...");
         userAccountService.authenticate(loginRequest, request, response, token);
     }
 
-    @PostMapping("/requestAccessToken")
-    public ResponseEntity<AuthResponse> requestAccessToken(@Valid @RequestBody AccessTokenRequest accessTokenRequest) {
-        return ResponseEntity.ok(userAccountService.regenerateAccessToken(accessTokenRequest));
+    @PostMapping("/refresh")
+    public void refresh(HttpServletRequest request,
+            HttpServletResponse response, @CookieValue(value = "token", defaultValue = "") String token)
+            throws StreamWriteException, DatabindException, IOException {
+        userAccountService.refresh(request, response, token);
     }
 
     @PostMapping("/registerClinic")

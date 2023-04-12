@@ -2,16 +2,16 @@ import logo from "../assets/logo.png";
 import Modal from "../components/modal";
 import NavBar from "../components/navbar";
 import Footer from "../components/footer";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { CgLock, CgProfile } from "react-icons/cg";
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import useAuth from "../hooks/useAuth";
+import { axiosPrivate } from "../api/axios";
 
 function LoginForm() {
-  const [inputs, setInputs] = useState([]);
+  const [inputs, setInputs] = useState<{username: string; password: string}>({username:"", password:""});
+  const navigate = useNavigate();
   const { setAuth } = useAuth();
-
-  setAuth();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
@@ -19,9 +19,25 @@ function LoginForm() {
     setInputs((values) => ({ ...values, [name]: value }));
   };
 
-  const handleLogin = (event: FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    alert(inputs);
+
+    const {username, password} = inputs;
+
+    const response =  await axiosPrivate.post("/auth/login", {
+      username: username,
+      password: password
+    })
+
+    const {role, accessToken} = await response.data;
+    setAuth({ role: role, accessToken: accessToken});
+
+    switch(role.toLowerCase()) {
+      case "doctor":
+        navigate("/doctor");
+      default:
+        navigate("/");
+    }
   };
 
   return (

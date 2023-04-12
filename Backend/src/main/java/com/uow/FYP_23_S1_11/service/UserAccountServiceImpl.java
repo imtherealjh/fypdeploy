@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
-import com.uow.FYP_23_S1_11.domain.request.AccessTokenRequest;
 import com.uow.FYP_23_S1_11.domain.request.ClinicRegisterRequest;
 import com.uow.FYP_23_S1_11.domain.request.LoginRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientRegisterRequest;
@@ -40,6 +39,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 @Transactional
 public class UserAccountServiceImpl implements UserAccountService {
+
     @Autowired
     private UserAccountRepository userAccRepo;
     @Autowired
@@ -53,6 +53,9 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Value("${refresh.jwtexpirationms}")
+    private int refreshTokenExpiry;
+
     @Override
     public void authenticate(LoginRequest loginRequest, HttpServletRequest request,
             HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
@@ -62,18 +65,17 @@ public class UserAccountServiceImpl implements UserAccountService {
         // using built-in authentication manager to validate the login request
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password));
+
         var user = userAccRepo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
-
-        if (!user.isEnabled()) {
-
-        }
 
         String refreshToken = jwtUtils.generateToken(ETokenType.REFRESH_TOKEN, user);
         String accessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
 
         Cookie cookie = new Cookie("token", refreshToken);
+        cookie.setSecure(true);
         cookie.setHttpOnly(true);
+        cookie.setMaxAge(refreshTokenExpiry);
 
         AuthResponse auth = AuthResponse
                 .builder()
@@ -87,27 +89,36 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public AuthResponse regenerateAccessToken(AccessTokenRequest accessTokenReq) {
-        try {
-            String refreshToken = accessTokenReq.getRefreshToken();
+    public void refresh(HttpServletRequest request,
+            HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
+        if (token != "") {
             ETokenType type = ETokenType.REFRESH_TOKEN;
-            String username = jwtUtils.extractUserFromToken(type, refreshToken);
+            String username = jwtUtils.extractUserFromToken(type, token);
             if (username != null) {
-                UserDetails userDetails = userAccRepo.findByUsername(username)
+                UserAccount user = userAccRepo.findByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
-                if (jwtUtils.isTokenValid(type, refreshToken, userDetails)) {
-                    String newAccessToken = jwtUtils.generateToken(type, userDetails);
-                    return AuthResponse
+                if (jwtUtils.isTokenValid(type, token, user)) {
+                    String newAccessToken = jwtUtils.generateToken(type, user);
+
+                    Cookie cookie = new Cookie("token", token);
+                    cookie.setSecure(true);
+                    cookie.setHttpOnly(true);
+                    cookie.setMaxAge(refreshTokenExpiry);
+
+                    AuthResponse auth = AuthResponse
                             .builder()
-                            .refreshToken(null)
+                            .role(user.getRole().name())
                             .accessToken(newAccessToken)
                             .build();
+
+                    response.addCookie(cookie);
+                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    new ObjectMapper().writeValue(response.getOutputStream(), auth);
                 }
             }
-            return null;
-        } catch (Exception e) {
-            return null;
+
         }
+
     }
 
     @Override

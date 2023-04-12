@@ -88,6 +88,6 @@ public class UserAccount implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.isEnabled();
+        return true;
     }
 }

@@ -1,4 +1,5 @@
-nav > a > img {
+nav > a > img,
+nav form img {
   width: clamp(120px, 11vmax, 10rem);
   height: clamp(120px, 11vmax, 10rem);
 }
