@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
 import DoctorHome from "./pages/doctor/Home";
 import RegisterPatient from "./pages/RegisterPatient";
@@ -27,6 +27,17 @@ function App() {
 
           <Route
             path="/doctor/*"
+            element={
+              <DashboardLayout>
+                <SideBar navList={DoctorSideBar} />
+              </DashboardLayout>
+            }
+          >
+            <Route index path="" element={<DoctorHome />} />
+          </Route>
+
+          <Route
+            path="/clinic/*"
             element={
               <DashboardLayout>
                 <SideBar navList={DoctorSideBar} />

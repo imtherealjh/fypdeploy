@@ -9,35 +9,38 @@ import useAuth from "../hooks/useAuth";
 import { axiosPrivate } from "../api/axios";
 
 function LoginForm() {
-  const [inputs, setInputs] = useState<{username: string; password: string}>({username:"", password:""});
   const navigate = useNavigate();
+
+  const [inputs, setInputs] = useState<{ username: string; password: string }>({
+    username: "",
+    password: "",
+  });
+
   const { setAuth } = useAuth();
+
+  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    // navigate("doctor", { replace: true });
+
+    const { username, password } = inputs;
+    const response = await axiosPrivate.post("/auth/login", {
+      username: username,
+      password: password,
+    });
+
+    const { role, accessToken } = await response.data;
+    setAuth({ role: role, accessToken: accessToken });
+
+    if (role.toLowerCase() == "doctor") {
+      navigate("doctor", { replace: true });
+    }
+  };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
     const value = event.target.value;
     setInputs((values) => ({ ...values, [name]: value }));
-  };
-
-  const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const {username, password} = inputs;
-
-    const response =  await axiosPrivate.post("/auth/login", {
-      username: username,
-      password: password
-    })
-
-    const {role, accessToken} = await response.data;
-    setAuth({ role: role, accessToken: accessToken});
-
-    switch(role.toLowerCase()) {
-      case "doctor":
-        navigate("/doctor");
-      default:
-        navigate("/");
-    }
   };
 
   return (

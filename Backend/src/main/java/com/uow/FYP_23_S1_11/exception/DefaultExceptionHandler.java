@@ -7,12 +7,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -30,14 +26,6 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
         .collect(Collectors.toList());
     ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST, errorList);
     return handleExceptionInternal(ex, errorDetails, headers, errorDetails.getStatus(), request);
-  }
-
-  @ExceptionHandler({ AuthenticationException.class, AccessDeniedException.class })
-  @ResponseBody
-  public ResponseEntity<ApiError> handleAuthenticationException(Exception ex) {
-    System.out.println(ex.getLocalizedMessage());
-    ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getMessage(), ex);
-    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiError);
   }
 
 }

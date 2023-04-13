@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,9 +37,11 @@ import com.uow.FYP_23_S1_11.utils.JwtUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
+@Slf4j
 public class UserAccountServiceImpl implements UserAccountService {
 
     @Autowired
@@ -72,10 +76,15 @@ public class UserAccountServiceImpl implements UserAccountService {
         String refreshToken = jwtUtils.generateToken(ETokenType.REFRESH_TOKEN, user);
         String accessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
 
-        Cookie cookie = new Cookie("token", refreshToken);
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setAttribute("SameSite", "None");
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
-        cookie.setMaxAge(refreshTokenExpiry);
+        cookie.setMaxAge(refreshTokenExpiry / 1000);
+
+        response.addCookie(cookie);
+
+        log.error("Initial cookie {} :", refreshToken);
 
         AuthResponse auth = AuthResponse
                 .builder()
@@ -83,7 +92,6 @@ public class UserAccountServiceImpl implements UserAccountService {
                 .accessToken(accessToken)
                 .build();
 
-        response.addCookie(cookie);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), auth);
     }
@@ -91,19 +99,14 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Override
     public void refresh(HttpServletRequest request,
             HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
+
         if (token != "") {
-            ETokenType type = ETokenType.REFRESH_TOKEN;
-            String username = jwtUtils.extractUserFromToken(type, token);
+            String username = jwtUtils.extractUserFromToken(ETokenType.REFRESH_TOKEN, token);
             if (username != null) {
                 UserAccount user = userAccRepo.findByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
-                if (jwtUtils.isTokenValid(type, token, user)) {
-                    String newAccessToken = jwtUtils.generateToken(type, user);
-
-                    Cookie cookie = new Cookie("token", token);
-                    cookie.setSecure(true);
-                    cookie.setHttpOnly(true);
-                    cookie.setMaxAge(refreshTokenExpiry);
+                if (jwtUtils.isTokenValid(ETokenType.REFRESH_TOKEN, token, user)) {
+                    String newAccessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
 
                     AuthResponse auth = AuthResponse
                             .builder()
@@ -111,7 +114,6 @@ public class UserAccountServiceImpl implements UserAccountService {
                             .accessToken(newAccessToken)
                             .build();
 
-                    response.addCookie(cookie);
                     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                     new ObjectMapper().writeValue(response.getOutputStream(), auth);
                 }
