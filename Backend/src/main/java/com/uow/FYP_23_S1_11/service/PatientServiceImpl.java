@@ -19,8 +19,6 @@ import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.PatientFeedback;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
-import com.uow.FYP_23_S1_11.domain.PatientFeedbackNurse;
-import com.uow.FYP_23_S1_11.domain.PatientFeedbackFrontDesk;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
@@ -37,8 +35,6 @@ import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
 import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackDoctorRepository;
-import com.uow.FYP_23_S1_11.repository.PatientFeedbackNurseRepository;
-import com.uow.FYP_23_S1_11.repository.PatientFeedbackFrontDeskRepository;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
@@ -70,10 +66,6 @@ public class PatientServiceImpl implements PatientService {
     private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
     @Autowired
     private PatientFeedbackDoctorRepository patientFeedbackDoctorRepo;
-    @Autowired
-    private PatientFeedbackNurseRepository patientFeedbackNurseRepo;
-    @Autowired
-    private PatientFeedbackFrontDeskRepository patientFeedbackFrontDeskRepo;
 
     @Override
     public List<Specialty> getAllSpecialty() {
@@ -261,36 +253,6 @@ public class PatientServiceImpl implements PatientService {
             PatientFeedbackDoctor patientFeedbackDoctor = (PatientFeedbackDoctor) mapper.convertValue(request,
                     PatientFeedbackDoctor.class);
             patientFeedbackDoctorRepo.save(patientFeedbackDoctor);
-            return true;
-
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-    }
-
-    @Override
-    public Boolean insertNurseFeedback(PatientFeedbackNurseRequest request) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            PatientFeedbackNurse patientFeedbackNurse = (PatientFeedbackNurse) mapper.convertValue(request,
-                    PatientFeedbackNurse.class);
-            patientFeedbackNurseRepo.save(patientFeedbackNurse);
-            return true;
-
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-    }
-
-    @Override
-    public Boolean insertFrontDeskFeedback(PatientFeedbackFrontDeskRequest request) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            PatientFeedbackFrontDesk patientFeedbackFrontDesk = (PatientFeedbackFrontDesk) mapper.convertValue(request,
-                    PatientFeedbackFrontDesk.class);
-            patientFeedbackFrontDeskRepo.save(patientFeedbackFrontDesk);
             return true;
 
         } catch (Exception e) {

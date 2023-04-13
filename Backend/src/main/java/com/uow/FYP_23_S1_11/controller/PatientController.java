@@ -107,16 +107,4 @@ public class PatientController {
             @Valid @RequestBody PatientFeedbackDoctorRequest patientFeedbackDoctorRequest) {
         return ResponseEntity.ok(patientService.insertDoctorFeedback(patientFeedbackDoctorRequest));
     }
-
-    @PostMapping("/insertPatientNurseFeedback")
-    public ResponseEntity<Boolean> insertPatientNurseFeedback(
-            @Valid @RequestBody PatientFeedbackNurseRequest patientFeedbackNurseRequest) {
-        return ResponseEntity.ok(patientService.insertNurseFeedback(patientFeedbackNurseRequest));
-    }
-
-    @PostMapping("/insertPatientFrontDeskFeedback")
-    public ResponseEntity<Boolean> insertPatientFrontDeskFeedback(
-            @Valid @RequestBody PatientFeedbackFrontDeskRequest patientFeedbackFrontDeskRequest) {
-        return ResponseEntity.ok(patientService.insertFrontDeskFeedback(patientFeedbackFrontDeskRequest));
-    }
 }

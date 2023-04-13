@@ -6,14 +6,11 @@ import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
-import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackNurseRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackFrontDeskRequest;
 
 public interface PatientService {
     public List<Specialty> getAllSpecialty();
@@ -44,8 +41,4 @@ public interface PatientService {
     public Boolean insertClinicFeedback(PatientFeedbackClinicRequest request);
 
     public Boolean insertDoctorFeedback(PatientFeedbackDoctorRequest request);
-
-    public Boolean insertNurseFeedback(PatientFeedbackNurseRequest request);
-
-    public Boolean insertFrontDeskFeedback(PatientFeedbackFrontDeskRequest request);
 }
