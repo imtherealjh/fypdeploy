@@ -21,8 +21,6 @@ function LoginForm() {
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // navigate("doctor", { replace: true });
-
     const { username, password } = inputs;
     const response = await axiosPrivate.post("/auth/login", {
       username: username,
@@ -32,9 +30,19 @@ function LoginForm() {
     const { role, accessToken } = await response.data;
     setAuth({ role: role, accessToken: accessToken });
 
-    if (role.toLowerCase() == "doctor") {
+    document.getElementById("closeModalBtn")?.click();
+
+    if (role.toLowerCase() == "clinic-owner")
+      navigate("clinic", { replace: true });
+    else if (role.toLowerCase() == "patient")
+      navigate("patient", { replace: true });
+    else if (role.toLowerCase() == "doctor")
       navigate("doctor", { replace: true });
-    }
+    else if (role.toLowerCase() == "nurse")
+      navigate("nurse", { replace: true });
+    else if (role.toLowerCase() == "front-desk")
+      navigate("clerk", { replace: true });
+    else navigate("/", { replace: true });
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -45,6 +53,14 @@ function LoginForm() {
 
   return (
     <>
+      <button
+        id="closeModalBtn"
+        style={{ display: "none" }}
+        type="button"
+        className="btn-close"
+        data-bs-dismiss="modal"
+        aria-label="Close"
+      ></button>
       <form
         onSubmit={handleLogin}
         id="loginForm"

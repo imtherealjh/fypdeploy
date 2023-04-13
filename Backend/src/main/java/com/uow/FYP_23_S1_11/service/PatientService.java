@@ -8,7 +8,6 @@ import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
 
@@ -30,8 +29,6 @@ public interface PatientService {
     public Boolean updateAppointment(Integer originalApptId, BookUpdateAppointmentRequest updateApptReq);
 
     public Boolean deleteAppointment(Integer apptId);
-
-    public Boolean insertFeedback(PatientFeedbackRequest request);
 
     //
     public List<EducationalMaterial> getAllEduMaterial();
