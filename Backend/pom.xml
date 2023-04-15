@@ -106,6 +106,16 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+	<!--Deployment Plugin Note:Adjust version number accordingly -->
+			<plugin>
+            <groupId>com.google.cloud.tools</groupId>
+            <artifactId>appengine-maven-plugin</artifactId>
+            <version>2.4.4</version>
+            <configuration>
+                <projectId>extreme-flux-382703</projectId>
+                <version>1</version>   
+            </configuration>
+        </plugin>		
 		</plugins>
 	</build>
 
