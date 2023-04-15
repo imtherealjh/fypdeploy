@@ -28,4 +28,6 @@ public class PatientRegisterRequest {
     private String address;
     @JsonProperty("contact")
     private Integer contact;
+    @JsonProperty("email")
+    private String email;
 }

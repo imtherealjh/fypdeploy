@@ -21,10 +21,11 @@ import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.service.PatientService;
-
-
+import com.uow.FYP_23_S1_11.domain.MailDetails;
+import com.uow.FYP_23_S1_11.domain.request.MailRequest;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
 @Validated
@@ -93,5 +94,20 @@ public class PatientController {
     public ResponseEntity<EducationalMaterial> getEduMaterialById(@RequestParam Integer id) {
         return ResponseEntity.ok(patientService.getEduMaterialById(id));
     }
+
+    //
+    @PostMapping("/sendMail")
+    public String sendMail(@RequestBody MailRequest details) {
+        String status = patientService.sendSimpleMail(details);
+
+        return status;
+    }
+
+    // @PostMapping("/sendMailWithAttachment")
+    // public String sendMailWithAttachment(@RequestBody MailRequest details) {
+    // String status = patientService.sendMailWithAttachment(details);
+
+    // return status;
+    // }
 
 }

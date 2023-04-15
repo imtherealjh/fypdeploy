@@ -28,10 +28,26 @@ import com.uow.FYP_23_S1_11.repository.DoctorRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackRepository;
 import com.uow.FYP_23_S1_11.repository.PatientRepository;
 import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
-
-//
 import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
+
+//
+import com.uow.FYP_23_S1_11.domain.MailDetails;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+//import javax.mail.MessagingException;
+//import javax.mail.internet.MimeMessage;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+
+import com.uow.FYP_23_S1_11.domain.request.MailRequest;
+//
 
 import jakarta.transaction.Transactional;
 
@@ -50,9 +66,16 @@ public class PatientServiceImpl implements PatientService {
     private DoctorRepository doctorRepo;
     @Autowired
     private AppointmentRepository apptRepo;
-    //
     @Autowired
     private EduMaterialRepository eduMaterialRepo;
+
+    //
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String sender;
+    //
 
     @Override
     public List<Specialty> getAllSpecialty() {
@@ -113,7 +136,7 @@ public class PatientServiceImpl implements PatientService {
     public Appointment getAppointmentById(Integer apptId) {
         try {
             Optional<Appointment> apptOptional = apptRepo.findById(apptId);
-            if(apptOptional.isEmpty()) {
+            if (apptOptional.isEmpty()) {
                 throw new IllegalArgumentException("Appointment does not exist");
             }
             return apptOptional.get();
@@ -128,11 +151,12 @@ public class PatientServiceImpl implements PatientService {
         try {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
-            //TODO: need to check if current appointment is booked
+            // TODO: need to check if current appointment is booked
             Optional<Appointment> apptOptional = apptRepo.findById(bookApptReq.getApptId());
-            if(apptOptional.isEmpty()) {
+            if (apptOptional.isEmpty()) {
                 throw new IllegalArgumentException("No available appointment...");
             }
+            System.out.println(patient);
             Appointment appt = apptOptional.get();
             appt.setStatus(EAppointmentStatus.BOOKED);
             appt.setDescription(bookApptReq.getDescription());
@@ -151,13 +175,13 @@ public class PatientServiceImpl implements PatientService {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
             Optional<Appointment> optionalOrigAppt = apptRepo.findById(originalApptId);
-            if(optionalOrigAppt.isEmpty()) {
+            if (optionalOrigAppt.isEmpty()) {
                 throw new IllegalArgumentException("Appointment not found...");
             }
 
             Appointment origAppt = optionalOrigAppt.get();
-            if(patient.getPatientId() == origAppt.getApptPatient().getPatientId()) {
-                if(originalApptId == updateApptReq.getApptId()) {
+            if (patient.getPatientId() == origAppt.getApptPatient().getPatientId()) {
+                if (originalApptId == updateApptReq.getApptId()) {
                     origAppt.setDescription(updateApptReq.getDescription());
                     apptRepo.save(origAppt);
                 } else {
@@ -168,7 +192,7 @@ public class PatientServiceImpl implements PatientService {
                     bookAvailableAppointment(updateApptReq);
                 }
             }
-            
+
             return true;
         } catch (Exception e) {
             return false;
@@ -181,11 +205,11 @@ public class PatientServiceImpl implements PatientService {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
             Optional<Appointment> apptOptional = apptRepo.findById(apptId);
-            if(apptOptional.isEmpty()) {
+            if (apptOptional.isEmpty()) {
                 throw new IllegalArgumentException("No available appointment...");
             }
             Appointment appt = apptOptional.get();
-            if(patient.getPatientId() == appt.getApptPatient().getPatientId()) {
+            if (patient.getPatientId() == appt.getApptPatient().getPatientId()) {
                 appt.setStatus(EAppointmentStatus.AVAILABLE);
                 appt.setDescription(null);
                 appt.setApptPatient(null);
@@ -196,9 +220,8 @@ public class PatientServiceImpl implements PatientService {
             System.out.println(e);
             return false;
         }
-    } 
-    
-    //
+    }
+
     @Override
     public List<EducationalMaterial> getAllEduMaterial() {
         return eduMaterialRepo.findAll();
@@ -208,14 +231,119 @@ public class PatientServiceImpl implements PatientService {
     public EducationalMaterial getEduMaterialById(Integer materialId) {
         try {
             Optional<EducationalMaterial> materialOptional = eduMaterialRepo.findById(materialId);
-            if(materialOptional.isEmpty()) {
+            if (materialOptional.isEmpty()) {
                 throw new IllegalArgumentException("Educational material does not exist..");
             }
+            // Below code for sending email test when implementing in a function, to
+            // delete...
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+            // to get current user's email
+            UserAccount currentUser = Constants.getAuthenticatedUser();
+
+            mailMessage.setFrom(sender);
+            mailMessage.setTo(currentUser.getPatient().getEmail());
+            String template = "Hello " +
+                    String.valueOf(currentUser.getPatient().getName()) +
+                    ",\n\n\ttesting send message\n" +
+                    "\tnewline test\n" +
+                    "\ttest sent educational material details\n" +
+                    "\tContent of Material:\n" +
+                    String.valueOf(materialOptional.get().getContent()) +
+                    "\n\nBest Regards\n" +
+                    "Good Doctor Team";
+            mailMessage.setText(template);
+            mailMessage.setSubject("View Educational Material: " + materialOptional.get().getTitle());
+
+            javaMailSender.send(mailMessage);
+            //
             return materialOptional.get();
         } catch (Exception e) {
             System.out.println(e);
             return new EducationalMaterial();
         }
     }
-    
+
+    // Test email function (this is a page)
+    // To implement to function, just copy code and paste into functions,
+    // change variables accordingly (require recipient's email in string)
+    @Override
+    public String sendSimpleMail(MailRequest details) {
+
+        // Try block to check for exceptions
+        try {
+            // Setting up current user
+            UserAccount currentUser = Constants.getAuthenticatedUser();
+            // String recipientEmail = currentUser.getPatient().getEmail();
+
+            // Creating a simple mail message
+            SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+            // Setting up necessary details
+            mailMessage.setFrom(sender);
+
+            // dynamic allocation of recipient
+            // mailMessage.setTo(details.getRecipient());
+            // mailMessage.setTo(currentUser.getPatient().getEmail()) //to set based on
+            // roles
+
+            // multiple recipient test
+            mailMessage.setTo(new String[] { "soosteven96@gmail.com", "animecrazysteve@gmail.com" });
+
+            // setting the message and subject by defining a template
+            String template = "Hello " +
+                    String.valueOf(currentUser.getUsername()) +
+                    ",\n\n\ttesting sent message\n" +
+                    String.valueOf(details.getMsgBody()) +
+                    "\n\tnewline test\n\n" +
+                    "Best Regards\n" +
+                    "Good Doctor Team";
+            mailMessage.setText(template);
+            mailMessage.setSubject(details.getSubject());
+
+            // Sending the mail
+            javaMailSender.send(mailMessage);
+            return "Mail Sent Successfully...";
+        }
+
+        // Catch block to handle the exceptions
+        catch (Exception e) {
+            System.out.println(e);
+            return "Error While Sending Mail..";
+        }
+    }
+
+    // Not working
+    // @Override
+    // public String sendMailWithAttachment(MailRequest details) {
+    // // Creating a mime message
+    // MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+    // MimeMessageHelper mimeMessageHelper;
+
+    // try {
+    // // Setting multipart as true for attachments to
+    // // be send
+    // mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+    // mimeMessageHelper.setFrom(sender);
+    // mimeMessageHelper.setTo(details.getRecipient());
+    // mimeMessageHelper.setText(details.getMsgBody());
+    // mimeMessageHelper.setSubject(details.getSubject());
+
+    // // Adding the attachment
+    // FileSystemResource file = new FileSystemResource(new
+    // File(details.getAttachment()));
+
+    // mimeMessageHelper.addAttachment("test.txt", file);
+
+    // // Sending the mail
+    // javaMailSender.send(mimeMessage);
+    // return "Mail sent Successfully";
+    // }
+
+    // // Catch block to handle MessagingException
+    // catch (MessagingException e) {
+
+    // // Display message when exception occurred
+    // return "Error while sending mail!!!";
+    // }
+    // }
 }

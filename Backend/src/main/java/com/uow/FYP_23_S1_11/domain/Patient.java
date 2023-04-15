@@ -39,6 +39,7 @@ public class Patient implements Serializable {
     private String gender;
     private String address;
     private Integer contact;
+    private String email;
 
     @OneToOne
     @JoinColumn(name = "patientAccount", referencedColumnName = "accountId")
