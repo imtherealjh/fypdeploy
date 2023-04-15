@@ -9,6 +9,8 @@ import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
 
 import jakarta.mail.MessagingException;
 
@@ -42,8 +44,11 @@ public interface PatientService {
 
     public EducationalMaterial getEduMaterialById(Integer materialId);
 
-    //
     public String sendSimpleMail(MailRequest details);
 
     // public String sendMailWithAttachment(MailRequest details);
+
+    public Boolean insertClinicFeedback(PatientFeedbackClinicRequest request);
+
+    public Boolean insertDoctorFeedback(PatientFeedbackDoctorRequest request);
 }

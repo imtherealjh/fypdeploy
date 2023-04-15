@@ -1,4 +1,26 @@
+import { useEffect } from "react";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+
 export default function dashboard_home() {
+  const axiosPrivate = useAxiosPrivate();
+  useEffect(() => {
+    let isMounted = true;
+    const controller = new AbortController();
+    const fetchData = async () => {
+      const response = await axiosPrivate.get("/doctor/secure", {
+        signal: controller.signal,
+      });
+      console.log(response);
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
+
   return (
     <>
       <div className="content d-flex flex-column">

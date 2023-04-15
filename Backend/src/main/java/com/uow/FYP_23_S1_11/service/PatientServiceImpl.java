@@ -17,6 +17,8 @@ import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.PatientFeedback;
+import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
+import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
@@ -29,9 +31,10 @@ import com.uow.FYP_23_S1_11.repository.PatientFeedbackRepository;
 import com.uow.FYP_23_S1_11.repository.PatientRepository;
 import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
 import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
+import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
+import com.uow.FYP_23_S1_11.repository.PatientFeedbackDoctorRepository;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 
-//
 import com.uow.FYP_23_S1_11.domain.MailDetails;
 import java.io.File;
 import java.io.FileWriter;
@@ -45,9 +48,12 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-
 import com.uow.FYP_23_S1_11.domain.request.MailRequest;
-//
+
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackNurseRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackFrontDeskRequest;
 
 import jakarta.transaction.Transactional;
 
@@ -68,6 +74,10 @@ public class PatientServiceImpl implements PatientService {
     private AppointmentRepository apptRepo;
     @Autowired
     private EduMaterialRepository eduMaterialRepo;
+    @Autowired
+    private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
+    @Autowired
+    private PatientFeedbackDoctorRepository patientFeedbackDoctorRepo;
 
     //
     @Autowired
@@ -346,4 +356,34 @@ public class PatientServiceImpl implements PatientService {
     // return "Error while sending mail!!!";
     // }
     // }
+
+    @Override
+    public Boolean insertClinicFeedback(PatientFeedbackClinicRequest request) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            PatientFeedbackClinic patientFeedbackClinic = (PatientFeedbackClinic) mapper.convertValue(request,
+                    PatientFeedbackClinic.class);
+            patientFeedbackClinicRepo.save(patientFeedbackClinic);
+            return true;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean insertDoctorFeedback(PatientFeedbackDoctorRequest request) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            PatientFeedbackDoctor patientFeedbackDoctor = (PatientFeedbackDoctor) mapper.convertValue(request,
+                    PatientFeedbackDoctor.class);
+            patientFeedbackDoctorRepo.save(patientFeedbackDoctor);
+            return true;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
 }

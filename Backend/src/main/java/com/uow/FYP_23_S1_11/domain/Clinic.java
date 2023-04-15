@@ -10,13 +10,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.uow.FYP_23_S1_11.enums.EApprovalStatus;
 
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,7 +30,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name="CLINIC")
+@Table(name = "CLINIC")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -46,24 +42,21 @@ public class Clinic implements Serializable {
     private String name;
     private String location;
     private String proofOfLicense;
-    @JsonFormat(pattern="HH:mm")
-    @JsonSerialize(using= LocalTimeSerializer.class)
+    @JsonFormat(pattern = "HH:mm")
+    @JsonSerialize(using = LocalTimeSerializer.class)
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @Temporal(TemporalType.TIME)
     private LocalTime openingHrs;
-    @JsonFormat(pattern="HH:mm")
-    @JsonSerialize(using= LocalTimeSerializer.class)
+    @JsonFormat(pattern = "HH:mm")
+    @JsonSerialize(using = LocalTimeSerializer.class)
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @Temporal(TemporalType.TIME)
     private LocalTime closingHrs;
-    @JsonFormat(pattern="HH:mm")
-    @JsonSerialize(using= LocalTimeSerializer.class)
+    @JsonFormat(pattern = "HH:mm")
+    @JsonSerialize(using = LocalTimeSerializer.class)
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @Temporal(TemporalType.TIME)
     private LocalTime apptDuration;
-    @Column(length = 35)
-    @Enumerated(EnumType.STRING)
-    private EApprovalStatus status = EApprovalStatus.PENDING;
 
     @OneToOne
     @JoinColumn(name = "clinicAccount", referencedColumnName = "accountId")
@@ -86,7 +79,7 @@ public class Clinic implements Serializable {
     @JsonIgnore
     private List<Appointment> clinicsAppt;
 
-    @ManyToMany(cascade = CascadeType.ALL)//mappedBy = "educationalMaterial")
+    @ManyToMany(cascade = CascadeType.ALL) // mappedBy = "educationalMaterial")
     @JoinTable(name = "edu_Material", joinColumns = @JoinColumn(name = "clinicId"), inverseJoinColumns = @JoinColumn(name = "materialId"))
     private List<EducationalMaterial> eduMatList;
 

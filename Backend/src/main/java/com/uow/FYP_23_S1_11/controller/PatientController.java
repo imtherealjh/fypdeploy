@@ -20,6 +20,10 @@ import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackNurseRequest;
+import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackFrontDeskRequest;
 import com.uow.FYP_23_S1_11.service.PatientService;
 import com.uow.FYP_23_S1_11.domain.MailDetails;
 import com.uow.FYP_23_S1_11.domain.request.MailRequest;
@@ -95,7 +99,6 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getEduMaterialById(id));
     }
 
-    //
     @PostMapping("/sendMail")
     public String sendMail(@RequestBody MailRequest details) {
         String status = patientService.sendSimpleMail(details);
@@ -110,4 +113,15 @@ public class PatientController {
     // return status;
     // }
 
+    @PostMapping("/insertPatientClinicFeedback")
+    public ResponseEntity<Boolean> insertPatientClinicFeedback(
+            @Valid @RequestBody PatientFeedbackClinicRequest patientFeedbackClinicRequest) {
+        return ResponseEntity.ok(patientService.insertClinicFeedback(patientFeedbackClinicRequest));
+    }
+
+    @PostMapping("/insertPatientDoctorFeedback")
+    public ResponseEntity<Boolean> insertPatientDoctorFeedback(
+            @Valid @RequestBody PatientFeedbackDoctorRequest patientFeedbackDoctorRequest) {
+        return ResponseEntity.ok(patientService.insertDoctorFeedback(patientFeedbackDoctorRequest));
+    }
 }

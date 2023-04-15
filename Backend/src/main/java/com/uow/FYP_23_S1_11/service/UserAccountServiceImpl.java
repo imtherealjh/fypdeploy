@@ -1,23 +1,28 @@
 package com.uow.FYP_23_S1_11.service;
 
+import java.io.IOException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.core.exc.StreamWriteException;
+import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
-import com.uow.FYP_23_S1_11.domain.request.AccessTokenRequest;
 import com.uow.FYP_23_S1_11.domain.request.ClinicRegisterRequest;
 import com.uow.FYP_23_S1_11.domain.request.LoginRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientRegisterRequest;
@@ -29,9 +34,16 @@ import com.uow.FYP_23_S1_11.repository.PatientRepository;
 import com.uow.FYP_23_S1_11.repository.UserAccountRepository;
 import com.uow.FYP_23_S1_11.utils.JwtUtils;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 @Transactional
+@Slf4j
 public class UserAccountServiceImpl implements UserAccountService {
+
     @Autowired
     private UserAccountRepository userAccRepo;
     @Autowired
@@ -45,48 +57,70 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Autowired
     private JwtUtils jwtUtils;
 
+    @Value("${refresh.jwtexpirationms}")
+    private int refreshTokenExpiry;
+
     @Override
-    public AuthResponse authenticate(LoginRequest loginRequest) {
+    public void authenticate(LoginRequest loginRequest, HttpServletRequest request,
+            HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
         // using built-in authentication manager to validate the login request
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password));
+
         var user = userAccRepo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
+
         String refreshToken = jwtUtils.generateToken(ETokenType.REFRESH_TOKEN, user);
         String accessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
-        return AuthResponse
+
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setAttribute("SameSite", "None");
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(refreshTokenExpiry / 1000);
+
+        response.addCookie(cookie);
+
+        log.error("Initial cookie {} :", refreshToken);
+
+        AuthResponse auth = AuthResponse
                 .builder()
                 .role(user.getRole().name())
-                .refreshToken(refreshToken)
                 .accessToken(accessToken)
                 .build();
+
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        new ObjectMapper().writeValue(response.getOutputStream(), auth);
     }
 
     @Override
-    public AuthResponse regenerateAccessToken(AccessTokenRequest accessTokenReq) {
-        try {
-            String refreshToken = accessTokenReq.getRefreshToken();
-            ETokenType type = ETokenType.REFRESH_TOKEN;
-            String username = jwtUtils.extractUserFromToken(type, refreshToken);
+    public void refresh(HttpServletRequest request,
+            HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
+
+        if (token != "") {
+            String username = jwtUtils.extractUserFromToken(ETokenType.REFRESH_TOKEN, token);
             if (username != null) {
-                UserDetails userDetails = userAccRepo.findByUsername(username)
+                UserAccount user = userAccRepo.findByUsername(username)
                         .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
-                if (jwtUtils.isTokenValid(type, refreshToken, userDetails)) {
-                    String newAccessToken = jwtUtils.generateToken(type, userDetails);
-                    return AuthResponse
+                if (jwtUtils.isTokenValid(ETokenType.REFRESH_TOKEN, token, user)) {
+                    String newAccessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
+
+                    AuthResponse auth = AuthResponse
                             .builder()
-                            .refreshToken(null)
+                            .role(user.getRole().name())
                             .accessToken(newAccessToken)
                             .build();
+
+                    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                    new ObjectMapper().writeValue(response.getOutputStream(), auth);
                 }
             }
-            return null;
-        } catch (Exception e) {
-            return null;
+
         }
+
     }
 
     @Override

@@ -48,7 +48,7 @@ export default function DashboardLayout({ children }: Props) {
         {show && children}
         <main>
           <div className="d-flex justify-content-between align-content-center">
-            <h1>{useLocation().state}</h1>
+            <h1>{useLocation()?.state ?? "Dashboard"}</h1>
             {width <= 500 && (
               <>
                 <button

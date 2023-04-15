@@ -1,5 +1,29 @@
 package com.uow.FYP_23_S1_11.domain.request;
 
-public class PatientFeedbackDoctorRequest {
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class PatientFeedbackDoctorRequest {
+    @JsonProperty("doctorFeedbackId")
+    private Integer doctorFeedbackId;
+
+    @JsonProperty("ratings")
+    private Integer ratings;
+
+    @JsonProperty("feedback")
+    private String feedback;
+
+    @JsonProperty("patientId")
+    private Integer patientId;
+
+    @JsonProperty("doctorId")
+    private Integer doctorId;
 }

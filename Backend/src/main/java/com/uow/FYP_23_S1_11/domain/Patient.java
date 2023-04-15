@@ -56,16 +56,4 @@ public class Patient implements Serializable {
     @OneToOne(mappedBy = "patientmd", cascade = CascadeType.ALL)
     private PatientMedicalRecords patientMedicalRecords;
 
-    // @OneToOne
-    // @JoinTable(name = "MY_JOIN_TABLE",
-    // joinColumns = {
-    // @JoinColumn(name = "Patient", referencedColumnName = "patientId")
-    // },
-    // inverseJoinColumns = {
-    // @JoinColumn(name = "patientMedicalRecords", referencedColumnName =
-    // "medicalRecordId", unique = true)
-    // }
-    // )
-    // private PatientMedicalRecords patientMedicalRecords;
-
 }
