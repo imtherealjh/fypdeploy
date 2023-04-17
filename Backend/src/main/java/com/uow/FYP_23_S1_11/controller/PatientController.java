@@ -22,8 +22,6 @@ import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackNurseRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackFrontDeskRequest;
 import com.uow.FYP_23_S1_11.service.PatientService;
 import com.uow.FYP_23_S1_11.domain.MailDetails;
 import com.uow.FYP_23_S1_11.domain.request.MailRequest;
@@ -39,11 +37,6 @@ import jakarta.validation.Valid;
 public class PatientController {
     @Autowired
     private PatientService patientService;
-
-    @GetMapping("/getAllSpecialty")
-    public ResponseEntity<List<Specialty>> getAllSpecialty() {
-        return ResponseEntity.ok(patientService.getAllSpecialty());
-    }
 
     @GetMapping("/getClinicsBySpecialty")
     public ResponseEntity<List<Clinic>> getClinicBySpecialty(@RequestParam String specialty) {

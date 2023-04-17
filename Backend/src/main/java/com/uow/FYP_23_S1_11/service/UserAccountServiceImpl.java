@@ -84,8 +84,6 @@ public class UserAccountServiceImpl implements UserAccountService {
 
         response.addCookie(cookie);
 
-        log.error("Initial cookie {} :", refreshToken);
-
         AuthResponse auth = AuthResponse
                 .builder()
                 .role(user.getRole().name())

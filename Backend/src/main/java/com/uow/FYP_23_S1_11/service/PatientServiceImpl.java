@@ -22,7 +22,6 @@ import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackRequest;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
@@ -52,8 +51,6 @@ import com.uow.FYP_23_S1_11.domain.request.MailRequest;
 
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackNurseRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackFrontDeskRequest;
 
 import jakarta.transaction.Transactional;
 
@@ -88,11 +85,6 @@ public class PatientServiceImpl implements PatientService {
     //
 
     @Override
-    public List<Specialty> getAllSpecialty() {
-        return specialtyRepo.findAll();
-    }
-
-    @Override
     public List<Clinic> getAllClinicBySpecialty(String specialty) {
         return clinicRepo.findBySpecialty(specialty);
     }
@@ -107,27 +99,6 @@ public class PatientServiceImpl implements PatientService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         LocalDate parseDate = LocalDate.parse(date, formatter);
         return apptRepo.findAvailableApptByDoctorAndDay(doctorId, EAppointmentStatus.AVAILABLE, parseDate);
-    }
-
-    @Override
-    public Boolean insertFeedback(PatientFeedbackRequest request) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        try {
-            Optional<Patient> patient = patientRepo.findById(request.getPatientId());
-            if (patient.isEmpty()) {
-                throw new IllegalArgumentException("Invalid user");
-            }
-
-            PatientFeedback patientFeedback = (PatientFeedback) mapper.convertValue(request, PatientFeedback.class);
-            patientFeedback.setPatient(patient.get());
-            patientFeedbackRepo.save(patientFeedback);
-
-            return true;
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
     }
 
     @Override

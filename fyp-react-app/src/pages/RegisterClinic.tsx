@@ -1,6 +1,30 @@
+import { ChangeEvent, FormEvent, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "../api/axios";
 import "../css/register.css";
 
 export default function RegisterClinic() {
+  const navigate = useNavigate();
+  const [inputs, setInputs] = useState({});
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    console.log(name, value);
+    setInputs((values) => ({ ...values, [name]: value }));
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post("/auth/registerClinic", inputs);
+      if (JSON.parse(response.data) === true) {
+        alert("Clinic successfully registered successfully");
+        navigate("/", { replace: true });
+      }
+    } catch (err) {}
+  };
+
   return (
     <>
       <div className="register d-flex flex-column align-items-center mx-4">
@@ -10,13 +34,15 @@ export default function RegisterClinic() {
         <form
           className="d-flex flex-column align-items-center w-100 pt-4"
           method="POST"
+          onSubmit={handleSubmit}
         >
           <div className="form-floating mb-3">
             <input
               type="text"
               className="form-control"
-              id="username"
+              name="username"
               placeholder="username..."
+              onChange={handleChange}
             />
             <label htmlFor="username">Username</label>
           </div>
@@ -24,8 +50,9 @@ export default function RegisterClinic() {
             <input
               type="password"
               className="form-control"
-              id="password"
+              name="password"
               placeholder="password..."
+              onChange={handleChange}
             />
             <label htmlFor="password">Password</label>
           </div>
@@ -33,8 +60,9 @@ export default function RegisterClinic() {
             <input
               type="text"
               className="form-control"
-              id="name"
+              name="name"
               placeholder="name..."
+              onChange={handleChange}
             />
             <label htmlFor="name">Name</label>
           </div>
@@ -42,8 +70,9 @@ export default function RegisterClinic() {
             <input
               type="email"
               className="form-control"
-              id="email"
+              name="email"
               placeholder="email..."
+              onChange={handleChange}
             />
             <label htmlFor="email">Email</label>
           </div>
@@ -51,8 +80,9 @@ export default function RegisterClinic() {
             <input
               type="text"
               className="form-control"
-              id="location"
+              name="location"
               placeholder="location..."
+              onChange={handleChange}
             />
             <label htmlFor="location">Location</label>
           </div>
@@ -60,8 +90,9 @@ export default function RegisterClinic() {
             <input
               type="text"
               className="form-control"
-              id="openingHrs"
+              name="openingHrs"
               placeholder="openingHrs..."
+              onChange={handleChange}
             />
             <label htmlFor="openingHrs">Opening Hours</label>
           </div>
@@ -69,8 +100,9 @@ export default function RegisterClinic() {
             <input
               type="text"
               className="form-control"
-              id="closingHrs"
+              name="closingHrs"
               placeholder="closingHrs..."
+              onChange={handleChange}
             />
             <label htmlFor="closingHrs">Closing Hours</label>
           </div>
@@ -78,19 +110,21 @@ export default function RegisterClinic() {
             <input
               type="text"
               className="form-control"
-              id="apptDuration"
+              name="apptDuration"
               placeholder="apptDuration..."
+              onChange={handleChange}
             />
             <label htmlFor="apptDuration">Appointment Duration</label>
           </div>
           <div className="input-group mb-3">
-            <input type="file" className="form-control" id="license" />
+            <input type="file" className="form-control" name="license" />
             <label className="input-group-text" htmlFor="license">
               Upload
             </label>
           </div>
           <div className="d-grid">
             <button
+              type="submit"
               style={{
                 backgroundColor: "#128983",
               }}
