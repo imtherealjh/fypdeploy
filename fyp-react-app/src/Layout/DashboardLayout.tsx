@@ -52,6 +52,7 @@ export default function DashboardLayout({ children }: Props) {
             {width <= 500 && (
               <>
                 <button
+                  className="menu"
                   onClick={() => setShow(!show)}
                   type="button"
                   aria-expanded={show}

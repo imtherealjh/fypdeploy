@@ -35,11 +35,6 @@ public class PatientController {
     @Autowired
     private PatientService patientService;
 
-    @GetMapping("/getAllSpecialty")
-    public ResponseEntity<List<Specialty>> getAllSpecialty() {
-        return ResponseEntity.ok(patientService.getAllSpecialty());
-    }
-
     @GetMapping("/getClinicsBySpecialty")
     public ResponseEntity<List<Clinic>> getClinicBySpecialty(@RequestParam String specialty) {
         return ResponseEntity.ok(patientService.getAllClinicBySpecialty(specialty));

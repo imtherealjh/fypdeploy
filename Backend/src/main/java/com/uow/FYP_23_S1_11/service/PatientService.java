@@ -12,8 +12,6 @@ import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
 
 public interface PatientService {
-    public List<Specialty> getAllSpecialty();
-
     public List<Clinic> getAllClinicBySpecialty(String specialty);
 
     public List<Doctor> getAllDoctorsByClinicSpecialty(Integer clincId, String specialty);

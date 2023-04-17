@@ -48,8 +48,7 @@ public class PatientServiceImpl implements PatientService {
     private PatientFeedbackRepository patientFeedbackRepo;
     @Autowired
     private PatientRepository patientRepo;
-    @Autowired
-    private SpecialtyRepository specialtyRepo;
+
     @Autowired
     private ClinicRepository clinicRepo;
     @Autowired
@@ -63,11 +62,6 @@ public class PatientServiceImpl implements PatientService {
     private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
     @Autowired
     private PatientFeedbackDoctorRepository patientFeedbackDoctorRepo;
-
-    @Override
-    public List<Specialty> getAllSpecialty() {
-        return specialtyRepo.findAll();
-    }
 
     @Override
     public List<Clinic> getAllClinicBySpecialty(String specialty) {
