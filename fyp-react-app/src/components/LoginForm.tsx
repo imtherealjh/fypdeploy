@@ -72,7 +72,6 @@ export default function LoginForm() {
       ></button>
       <form
         onSubmit={handleLogin}
-        id="loginForm"
         className="d-flex flex-column align-items-center"
         method="POST"
       >

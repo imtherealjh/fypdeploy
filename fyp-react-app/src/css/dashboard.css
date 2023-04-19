@@ -19,7 +19,7 @@
   margin: 0;
 }
 
-.dashboard > main button {
+.dashboard > main button.menu {
   border: none;
   margin: 0 0.1rem;
   padding: 0.15rem 0.4rem;

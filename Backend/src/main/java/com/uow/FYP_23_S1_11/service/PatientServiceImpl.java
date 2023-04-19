@@ -61,8 +61,7 @@ public class PatientServiceImpl implements PatientService {
     private PatientFeedbackRepository patientFeedbackRepo;
     @Autowired
     private PatientRepository patientRepo;
-    @Autowired
-    private SpecialtyRepository specialtyRepo;
+
     @Autowired
     private ClinicRepository clinicRepo;
     @Autowired

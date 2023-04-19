@@ -7,3 +7,7 @@ export type NavigationItems = {
   name: string;
   link: string;
 };
+
+export type IObjectKeys = {
+  [key: string]: any;
+};
