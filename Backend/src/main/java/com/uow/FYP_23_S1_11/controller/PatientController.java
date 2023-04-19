@@ -18,7 +18,6 @@ import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
-import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;

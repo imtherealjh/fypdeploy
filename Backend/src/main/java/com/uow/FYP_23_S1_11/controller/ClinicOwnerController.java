@@ -1,8 +1,11 @@
 package com.uow.FYP_23_S1_11.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,11 +23,12 @@ import com.uow.FYP_23_S1_11.service.ClinicOwnerService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 
-@Validated
 @RestController
 @RequestMapping(value = "/api/clinicOwner", produces = { MediaType.APPLICATION_JSON_VALUE })
-// @PreAuthorize("hasAuthority('CLINIC_OWNER')")
+@Validated
+@PreAuthorize("hasAuthority('CLINIC_OWNER')")
 @SecurityRequirement(name = "bearerAuth")
 public class ClinicOwnerController {
     @Autowired
@@ -32,26 +36,28 @@ public class ClinicOwnerController {
     @Autowired
     private ClerkService clerkService;
 
-    @PostMapping("/insertDoctorSchedule")
-    public ResponseEntity<Boolean> insertDoctorSchedule(
-            @Valid @RequestBody DoctorScheduleRequest doctorScheduleRequest) {
-        System.out.println(doctorScheduleRequest.getDoctorId());
-        return ResponseEntity.ok(clincOwnerService.insertDoctorSchedule(doctorScheduleRequest));
-    }
-
     @PostMapping("/registerDoctor")
-    public ResponseEntity<Boolean> registerDoctor(@Valid @RequestBody RegisterDoctorRequest registerDoctorReq) {
+    public ResponseEntity<Boolean> registerDoctor(
+            @RequestBody @NotEmpty(message = "Doctor Registration List cannot be empty") List<@Valid RegisterDoctorRequest> registerDoctorReq) {
         return ResponseEntity.ok(clincOwnerService.registerDoctor(registerDoctorReq));
     }
 
     @PostMapping("/registerNurse")
-    public ResponseEntity<Boolean> registerNurse(@Valid @RequestBody RegisterNurseRequest registerNurseReq) {
+    public ResponseEntity<Boolean> registerNurse(
+            @RequestBody @NotEmpty(message = "Nurse Registration List cannot be empty") List<@Valid RegisterNurseRequest> registerNurseReq) {
         return ResponseEntity.ok(clincOwnerService.registerNurse(registerNurseReq));
     }
 
     @PostMapping("/registerClerk")
-    public ResponseEntity<Boolean> registerClerk(@Valid @RequestBody RegisterFrontDeskRequest registerFrontDeskReq) {
+    public ResponseEntity<Boolean> registerClerk(
+            @RequestBody @NotEmpty(message = "Clerk Registration List cannot be empty") List<RegisterFrontDeskRequest> registerFrontDeskReq) {
         return ResponseEntity.ok(clincOwnerService.registerFrontDesk(registerFrontDeskReq));
+    }
+
+    @PostMapping("/insertDoctorSchedule")
+    public ResponseEntity<Boolean> insertDoctorSchedule(
+            @Valid @RequestBody DoctorScheduleRequest doctorScheduleRequest) {
+        return ResponseEntity.ok(clincOwnerService.insertDoctorSchedule(doctorScheduleRequest));
     }
 
     @PostMapping("/generateClinicAppointmentSlots")

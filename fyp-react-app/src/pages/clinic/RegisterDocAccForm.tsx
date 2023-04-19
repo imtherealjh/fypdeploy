@@ -1,13 +1,15 @@
-import axios from "axios";
+import axios from "../../api/axios";
 import Multiselect from "multiselect-react-dropdown";
 import { useState, ChangeEvent, useEffect, FormEvent } from "react";
 import { IObjectKeys } from "../../utils/types";
 import { CgMathPlus } from "react-icons/cg";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
 
 interface ScheduleInputs extends IObjectKeys {
   day: string;
-  startingHrs: string;
-  stoppingHrs: string;
+  startTime: string;
+  endTime: string;
 }
 
 interface DoctorInputs extends IObjectKeys {
@@ -16,7 +18,7 @@ interface DoctorInputs extends IObjectKeys {
   name: string;
   profile: string;
   specialty: Array<string>;
-  schedules: Array<ScheduleInputs>;
+  schedule: Array<ScheduleInputs>;
 }
 
 const defaultVal: DoctorInputs = {
@@ -25,10 +27,12 @@ const defaultVal: DoctorInputs = {
   name: "",
   profile: "",
   specialty: [],
-  schedules: [],
+  schedule: [],
 };
 
 export default function DoctorAccount() {
+  const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
   const [doctorInput, setDoctorInput] = useState([defaultVal]);
   const [speciality, setSpeciality] = useState([]);
 
@@ -47,7 +51,7 @@ export default function DoctorAccount() {
         console.log(response);
         isMounted && setSpeciality(_specialty);
       } catch (err) {
-        console.error(err);
+        console.log(err);
       }
     };
 
@@ -77,15 +81,15 @@ export default function DoctorAccount() {
 
   const handleScheduleChange = (
     event: ChangeEvent<any>,
-    scheduleIdx: number,
-    doctorIdx: number
+    doctorIdx: number,
+    scheduleIdx: number
   ) => {
     setDoctorInput((prev) =>
       prev.map((el, doctorI) =>
         doctorIdx === doctorI
           ? {
               ...el,
-              ["schedules"]: el.schedules.map((elem, schedI) =>
+              ["schedule"]: el.schedule.map((elem, schedI) =>
                 scheduleIdx === schedI
                   ? {
                       ...elem,
@@ -99,8 +103,15 @@ export default function DoctorAccount() {
     );
   };
 
-  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    try {
+      await axiosPrivate.post("/clinicOwner/registerDoctor", doctorInput);
+      alert("Doctors has been successfully registered");
+      navigate(0);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -195,8 +206,8 @@ export default function DoctorAccount() {
                           idx === index
                             ? {
                                 ...el,
-                                ["schedules"]: [
-                                  ...el.schedules,
+                                ["schedule"]: [
+                                  ...el.schedule,
                                   {} as ScheduleInputs,
                                 ],
                               }
@@ -209,8 +220,8 @@ export default function DoctorAccount() {
                   </button>
                 </div>
 
-                {customInput.schedules != null &&
-                  customInput.schedules.map((scheduleInput, i) => (
+                {customInput.schedule != null &&
+                  customInput.schedule.map((scheduleInput, i) => (
                     <div className="col-12 d-flex gap-2 mt-1" key={i}>
                       <select
                         style={{ height: "100%" }}
@@ -237,25 +248,25 @@ export default function DoctorAccount() {
                       <input
                         type="text"
                         className="form-control"
-                        name="startingHrs"
+                        name="startTime"
                         placeholder="Starting Hours (HH:mm i.e. 12:00) "
-                        aria-label="startingHrs"
+                        aria-label="startTime"
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
                           handleScheduleChange(event, idx, i)
                         }
-                        value={scheduleInput.startingHrs || ""}
+                        value={scheduleInput.startTime || ""}
                       />
 
                       <input
                         type="text"
                         className="form-control"
-                        name="stoppingHrs"
+                        name="endTime"
                         placeholder="Stop Hours (HH:mm i.e. 15:00)"
-                        aria-label="stoppingHrs"
+                        aria-label="endTime"
                         onChange={(event: ChangeEvent<HTMLInputElement>) =>
                           handleScheduleChange(event, idx, i)
                         }
-                        value={scheduleInput.stoppingHrs || ""}
+                        value={scheduleInput.endTime || ""}
                       />
                     </div>
                   ))}
@@ -264,6 +275,7 @@ export default function DoctorAccount() {
           </div>
         ))}
         <button
+          type="button"
           className="w-100 mt-3 btn btn-danger btn-lg"
           onClick={() => {
             setDoctorInput([...doctorInput, defaultVal]);
@@ -271,7 +283,9 @@ export default function DoctorAccount() {
         >
           Add additional doctor
         </button>
-        <button className="w-100 mt-2 btn btn-success btn-lg">Submit</button>
+        <button type="submit" className="w-100 mt-2 btn btn-success btn-lg">
+          Submit
+        </button>
       </form>
     </>
   );

@@ -1,6 +1,7 @@
-import axios from "axios";
 import { useState, ChangeEvent, FormEvent } from "react";
 import { IObjectKeys } from "../../utils/types";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
 
 interface NurseInputs extends IObjectKeys {
   username: string;
@@ -15,6 +16,8 @@ const defaultVal: NurseInputs = {
 };
 
 export default function NurseAccount() {
+  const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
   const [nurseInput, setNurseInput] = useState([defaultVal]);
 
   const handleNurseChange = (
@@ -33,8 +36,16 @@ export default function NurseAccount() {
     );
   };
 
-  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    try {
+      await axiosPrivate.post("/clinicOwner/registerNurse", nurseInput);
+      alert("Nurses has been successfully registered");
+      navigate(0);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -87,6 +98,7 @@ export default function NurseAccount() {
           </div>
         ))}
         <button
+          type="button"
           className="w-100 mt-3 btn btn-danger btn-lg"
           onClick={() => {
             setNurseInput([...nurseInput, defaultVal]);
@@ -94,7 +106,9 @@ export default function NurseAccount() {
         >
           Add additional nurse
         </button>
-        <button className="w-100 mt-2 btn btn-success btn-lg">Submit</button>
+        <button type="submit" className="w-100 mt-2 btn btn-success btn-lg">
+          Submit
+        </button>
       </form>
     </>
   );

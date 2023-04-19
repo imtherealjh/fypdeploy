@@ -1,6 +1,7 @@
-import axios from "axios";
-import { useState, ChangeEvent, useEffect, FormEvent } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { IObjectKeys } from "../../utils/types";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
 
 interface ClerkInputs extends IObjectKeys {
   username: string;
@@ -15,6 +16,8 @@ const defaultVal: ClerkInputs = {
 };
 
 export default function ClerkAccount() {
+  const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
   const [clerkInput, setClerkInput] = useState([defaultVal]);
 
   const handleClerkChange = (
@@ -33,8 +36,15 @@ export default function ClerkAccount() {
     );
   };
 
-  const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    try {
+      await axiosPrivate.post("/clinicOwner/registerClerk", clerkInput);
+      alert("Clerks has been successfully registered");
+      navigate(0);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -87,6 +97,7 @@ export default function ClerkAccount() {
           </div>
         ))}
         <button
+          type="button"
           className="w-100 mt-3 btn btn-danger btn-lg"
           onClick={() => {
             setClerkInput([...clerkInput, defaultVal]);
@@ -94,7 +105,9 @@ export default function ClerkAccount() {
         >
           Add additional clerk
         </button>
-        <button className="w-100 mt-2 btn btn-success btn-lg">Submit</button>
+        <button type="submit" className="w-100 mt-2 btn btn-success btn-lg">
+          Submit
+        </button>
       </form>
     </>
   );

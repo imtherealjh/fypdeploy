@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,12 +26,13 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/auth", produces = { MediaType.APPLICATION_JSON_VALUE })
+@Validated
 public class AuthController {
     @Autowired
     private UserAccountService userAccountService;
 
     @PostMapping("/login")
-    public void authenticate(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request,
+    public void authenticate(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest request,
             HttpServletResponse response, @CookieValue(value = "refreshToken", defaultValue = "") String token)
             throws StreamWriteException, DatabindException, IOException {
 

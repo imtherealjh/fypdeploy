@@ -12,6 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.uow.FYP_23_S1_11.enums.EWeekdays;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,7 +30,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="DOCTOR_SCHEDULE")
+@Table(name = "DOCTOR_SCHEDULE")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -38,16 +39,22 @@ public class DoctorSchedule implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int scheduleId;
+
+    @Column(name = "day", nullable = false)
     @JsonProperty("day")
     @Enumerated(EnumType.STRING)
     private EWeekdays day;
-    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="HH:mm")
-    @JsonSerialize(using= LocalTimeSerializer.class)
+
+    @Column(name = "startTime", nullable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
+    @JsonSerialize(using = LocalTimeSerializer.class)
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @Temporal(TemporalType.TIME)
     private LocalTime startTime;
-    @JsonFormat(pattern="HH:mm")
-    @JsonSerialize(using= LocalTimeSerializer.class)
+
+    @Column(name = "endTime", nullable = false)
+    @JsonFormat(pattern = "HH:mm")
+    @JsonSerialize(using = LocalTimeSerializer.class)
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @Temporal(TemporalType.TIME)
     private LocalTime endTime;

@@ -3,7 +3,7 @@ package com.uow.FYP_23_S1_11.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.validation.annotation.Validated;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping(value = "/api/clerk", produces = { MediaType.APPLICATION_JSON_VALUE })
+@Validated
 @SecurityRequirement(name = "bearerAuth")
 public class ClerkController {
     @Autowired

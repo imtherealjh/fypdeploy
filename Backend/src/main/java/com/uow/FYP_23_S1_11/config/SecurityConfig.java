@@ -3,7 +3,6 @@ package com.uow.FYP_23_S1_11.config;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -42,7 +41,7 @@ public class SecurityConfig {
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**", "/api/public", "/api/test/**", "/swagger-ui/**", "/v3/api-docs/**")
+                .requestMatchers("/api/auth/**", "/api/public/**", "/api/test/**", "/swagger-ui/**", "/v3/api-docs/**")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and()

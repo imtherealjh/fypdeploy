@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,7 +34,9 @@ public class Doctor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer doctorId;
+    @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "profile", nullable = false)
     private String profile;
 
     @OneToOne
@@ -42,7 +45,7 @@ public class Doctor implements Serializable {
     private UserAccount doctorAccount;
 
     @ManyToOne
-    @JoinColumn(name = "doctorClinic", referencedColumnName = "clinicId")
+    @JoinColumn(name = "doctorClinic", referencedColumnName = "clinicId", nullable = false)
     @JsonIgnore
     private Clinic doctorClinic;
 

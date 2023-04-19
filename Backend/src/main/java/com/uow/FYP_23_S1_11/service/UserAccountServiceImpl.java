@@ -149,7 +149,7 @@ public class UserAccountServiceImpl implements UserAccountService {
 
             return true;
         } catch (IllegalArgumentException e) {
-            return false;
+            throw e;
         } catch (Exception e) {
             System.out.println(e);
             return false;
