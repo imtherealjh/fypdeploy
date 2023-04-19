@@ -62,6 +62,30 @@ function App() {
               <Route index path="" element={<DoctorHome />} />
               <Route path="register-account" element={<RegisterAccount />} />
             </Route>
+
+            <Route
+              path="/patient/*"
+              element={
+                <DashboardLayout>
+                  <SideBar
+                    navList={[
+                      { name: "Dashboard", link: "" },
+                      { name: "Create Account", link: "register-account" },
+                      { name: "Manage Account", link: "manage-account" },
+                      {
+                        name: "Create Appointment",
+                        link: "create-appointment",
+                      },
+                      { name: "Subscription", link: "subscription" },
+                      { name: "Feedback", link: "feedback" },
+                    ]}
+                  />
+                </DashboardLayout>
+              }
+            >
+              <Route index path="" element={<DoctorHome />} />
+              <Route path="register-account" element={<RegisterAccount />} />
+            </Route>
           </Route>
         </Routes>
       </div>

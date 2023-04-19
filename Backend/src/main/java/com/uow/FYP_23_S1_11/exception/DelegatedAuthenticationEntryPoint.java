@@ -2,15 +2,11 @@ package com.uow.FYP_23_S1_11.exception;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -24,10 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    // @Autowired
-    // @Qualifier("handlerExceptionResolver")
-    // private HandlerExceptionResolver resolver;
-
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
@@ -47,8 +39,6 @@ public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoi
 
         log.error("AuthEntryPointJwt error: {}", apiError.getDebugMessage());
         response.getWriter().write(mapper.writeValueAsString(apiError));
-        // System.out.println(authException.getMessage());
-        // resolver.resolveException(request, response, null, authException);
     }
 
 }

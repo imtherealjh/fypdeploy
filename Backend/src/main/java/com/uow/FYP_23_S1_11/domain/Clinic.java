@@ -12,6 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,19 +40,27 @@ public class Clinic implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer clinicId;
+    @Column(name = "name", nullable = false)
     private String name;
+    @Column(name = "location", nullable = false)
     private String location;
     private String proofOfLicense;
+
+    @Column(name = "openingHrs", nullable = false)
     @JsonFormat(pattern = "HH:mm")
     @JsonSerialize(using = LocalTimeSerializer.class)
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @Temporal(TemporalType.TIME)
     private LocalTime openingHrs;
+
+    @Column(name = "closingHrs", nullable = false)
     @JsonFormat(pattern = "HH:mm")
     @JsonSerialize(using = LocalTimeSerializer.class)
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @Temporal(TemporalType.TIME)
     private LocalTime closingHrs;
+
+    @Column(name = "apptDuration", nullable = false)
     @JsonFormat(pattern = "HH:mm")
     @JsonSerialize(using = LocalTimeSerializer.class)
     @JsonDeserialize(using = LocalTimeDeserializer.class)

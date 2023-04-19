@@ -31,19 +31,18 @@ public class AuthController {
     @Autowired
     private UserAccountService userAccountService;
 
-    @PostMapping("/login")
-    public void authenticate(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest request,
-            HttpServletResponse response, @CookieValue(value = "refreshToken", defaultValue = "") String token)
-            throws StreamWriteException, DatabindException, IOException {
-
-        userAccountService.authenticate(loginRequest, request, response, token);
-    }
-
     @GetMapping("/refresh")
     public void refresh(HttpServletRequest request,
             HttpServletResponse response, @CookieValue(value = "refreshToken", defaultValue = "") String token)
             throws StreamWriteException, DatabindException, IOException {
         userAccountService.refresh(request, response, token);
+    }
+
+    @PostMapping("/login")
+    public void authenticate(@RequestBody @Valid LoginRequest loginRequest, HttpServletRequest request,
+            HttpServletResponse response, @CookieValue(value = "refreshToken", defaultValue = "") String token)
+            throws StreamWriteException, DatabindException, IOException {
+        userAccountService.authenticate(loginRequest, request, response, token);
     }
 
     @PostMapping("/registerClinic")
@@ -61,5 +60,11 @@ public class AuthController {
     public ResponseEntity<Boolean> registerPatient(@Valid @RequestBody PatientRegisterRequest patientReq) {
         Boolean result = userAccountService.registerPatientAccount(patientReq);
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping("/logout")
+    public void logout(HttpServletRequest request,
+            HttpServletResponse response, @CookieValue(value = "refreshToken", defaultValue = "") String token) {
+        userAccountService.logout(request, response, token);
     }
 }

@@ -2,6 +2,7 @@ package com.uow.FYP_23_S1_11;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -11,11 +12,20 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import com.uow.FYP_23_S1_11.domain.Specialty;
+import com.uow.FYP_23_S1_11.domain.UserAccount;
+import com.uow.FYP_23_S1_11.enums.ERole;
 import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
+import com.uow.FYP_23_S1_11.repository.UserAccountRepository;
+import com.uow.FYP_23_S1_11.service.UserAccountService;
 
 @Component
 public class InitialSetup {
-    @Autowired private SpecialtyRepository specialtyRepo;
+    @Autowired
+    private SpecialtyRepository specialtyRepo;
+    @Autowired
+    private UserAccountRepository userAccRepo;
+    @Autowired
+    private UserAccountService userAccService;
 
     @EventListener
     public void onApplicationEvent(ApplicationReadyEvent event) throws Exception {
@@ -27,9 +37,22 @@ public class InitialSetup {
         specialtyList.add(Specialty.builder().type("Psychiatry").build());
         specialtyList.add(Specialty.builder().type("Urology").build());
 
-        List<Specialty> alreadyExist = specialtyRepo.findByTypeIn(specialtyList.stream().map(x -> x.getType()).collect(Collectors.toList()));
+        List<Specialty> alreadyExist = specialtyRepo
+                .findByTypeIn(specialtyList.stream().map(x -> x.getType()).collect(Collectors.toList()));
         Set<String> existType = alreadyExist.stream().map(Specialty::getType).collect(Collectors.toSet());
-        specialtyList = specialtyList.stream().filter(e -> !existType.contains(e.getType())).collect(Collectors.toList());
+        specialtyList = specialtyList.stream().filter(e -> !existType.contains(e.getType()))
+                .collect(Collectors.toList());
         specialtyRepo.saveAll(specialtyList);
+
+        Optional<UserAccount> sysAdmin = userAccRepo.findByUsername("admin");
+        if (sysAdmin.isEmpty()) {
+            UserAccount account = new UserAccount();
+            account.setUsername("admin");
+            account.setPassword("admin");
+            account.setIsEnabled(true);
+            UserAccount createdUser = userAccService.registerAccount(account, ERole.SYSTEM_ADMIN);
+            System.out.println(createdUser.getRole());
+        }
+
     }
 }

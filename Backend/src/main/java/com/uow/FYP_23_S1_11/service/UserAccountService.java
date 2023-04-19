@@ -14,15 +14,20 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface UserAccountService {
-    public void authenticate(LoginRequest loginReq, HttpServletRequest request,
-            HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException;
+        public void authenticate(LoginRequest loginReq, HttpServletRequest request,
+                        HttpServletResponse response, String token)
+                        throws StreamWriteException, DatabindException, IOException;
 
-    public void refresh(HttpServletRequest request,
-            HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException;
+        public void refresh(HttpServletRequest request,
+                        HttpServletResponse response, String token)
+                        throws StreamWriteException, DatabindException, IOException;
 
-    public UserAccount registerAccount(UserAccount account, ERole userRole);
+        public UserAccount registerAccount(UserAccount account, ERole userRole);
 
-    public Boolean registerClinicAccount(ClinicRegisterRequest clinicReq);
+        public Boolean registerClinicAccount(ClinicRegisterRequest clinicReq);
 
-    public Boolean registerPatientAccount(PatientRegisterRequest patientReq);
+        public Boolean registerPatientAccount(PatientRegisterRequest patientReq);
+
+        public void logout(HttpServletRequest request,
+                        HttpServletResponse response, String token);
 }

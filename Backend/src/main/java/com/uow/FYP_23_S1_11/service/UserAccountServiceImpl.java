@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,9 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
-@Slf4j
 public class UserAccountServiceImpl implements UserAccountService {
-
     @Autowired
     private UserAccountRepository userAccRepo;
     @Autowired
@@ -61,44 +60,13 @@ public class UserAccountServiceImpl implements UserAccountService {
     private int refreshTokenExpiry;
 
     @Override
-    public void authenticate(LoginRequest loginRequest, HttpServletRequest request,
-            HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
-        String username = loginRequest.getUsername();
-        String password = loginRequest.getPassword();
-
-        // using built-in authentication manager to validate the login request
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(username, password));
-
-        var user = userAccRepo.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
-
-        String refreshToken = jwtUtils.generateToken(ETokenType.REFRESH_TOKEN, user);
-        String accessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
-
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setAttribute("SameSite", "None");
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(refreshTokenExpiry / 1000);
-
-        response.addCookie(cookie);
-
-        AuthResponse auth = AuthResponse
-                .builder()
-                .role(user.getRole().name())
-                .accessToken(accessToken)
-                .build();
-
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), auth);
-    }
-
-    @Override
     public void refresh(HttpServletRequest request,
             HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
+        try {
+            if (token == "") {
+                throw new IllegalArgumentException("Token is required...");
+            }
 
-        if (token != "") {
             String username = jwtUtils.extractUserFromToken(ETokenType.REFRESH_TOKEN, token);
             if (username != null) {
                 UserAccount user = userAccRepo.findByUsername(username)
@@ -116,9 +84,57 @@ public class UserAccountServiceImpl implements UserAccountService {
                     new ObjectMapper().writeValue(response.getOutputStream(), auth);
                 }
             }
-
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (Exception e) {
+            System.out.println(e);
+            response.sendError(401, "Error occured while refreshing token");
         }
 
+    }
+
+    @Override
+    public void authenticate(LoginRequest loginRequest, HttpServletRequest request,
+            HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
+        try {
+            String username = loginRequest.getUsername();
+            String password = loginRequest.getPassword();
+
+            // using built-in authentication manager to validate the login request
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
+
+            var user = userAccRepo.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
+
+            String refreshToken = jwtUtils.generateToken(ETokenType.REFRESH_TOKEN, user);
+            String accessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
+
+            Cookie cookie = new Cookie("refreshToken", refreshToken);
+            cookie.setAttribute("SameSite", "None");
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(refreshTokenExpiry / 1000);
+
+            response.addCookie(cookie);
+
+            AuthResponse auth = AuthResponse
+                    .builder()
+                    .role(user.getRole().name())
+                    .accessToken(accessToken)
+                    .build();
+
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            new ObjectMapper().writeValue(response.getOutputStream(), auth);
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (BadCredentialsException e) {
+            System.out.println(e);
+            response.sendError(401, "Invalid credentials while logging in");
+        } catch (Exception e) {
+            System.out.println(e);
+            response.sendError(500, "Unknown error have occurred while logging in");
+        }
     }
 
     @Override
@@ -169,9 +185,17 @@ public class UserAccountServiceImpl implements UserAccountService {
             patientRepo.save(newPatient);
 
             return true;
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public void logout(HttpServletRequest request, HttpServletResponse response, String token) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'logout'");
     }
 
 }
