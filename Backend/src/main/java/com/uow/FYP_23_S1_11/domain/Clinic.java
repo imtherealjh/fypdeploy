@@ -14,6 +14,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -73,7 +74,6 @@ public class Clinic implements Serializable {
     private UserAccount clinicAccount;
 
     @OneToMany(mappedBy = "doctorClinic", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Doctor> doctor;
 
     @OneToMany(mappedBy = "nurseClinic", cascade = CascadeType.ALL)

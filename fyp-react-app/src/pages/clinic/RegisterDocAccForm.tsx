@@ -48,7 +48,7 @@ export default function DoctorAccount() {
         const _specialty = response.data.map((obj: any) => {
           return obj["type"];
         });
-        console.log(response);
+
         isMounted && setSpeciality(_specialty);
       } catch (err) {
         console.log(err);
@@ -109,7 +109,14 @@ export default function DoctorAccount() {
       await axiosPrivate.post("/clinicOwner/registerDoctor", doctorInput);
       alert("Doctors has been successfully registered");
       navigate(0);
-    } catch (err) {
+    } catch (err: any) {
+      if (!err?.response) {
+        alert("No Server Response");
+      } else if (err.response?.status === 400) {
+        alert(err.response?.data.errors);
+      } else {
+        alert("Unknown error occured...");
+      }
       console.log(err);
     }
   };

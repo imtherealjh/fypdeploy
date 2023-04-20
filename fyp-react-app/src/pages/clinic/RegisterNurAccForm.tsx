@@ -43,7 +43,14 @@ export default function NurseAccount() {
       await axiosPrivate.post("/clinicOwner/registerNurse", nurseInput);
       alert("Nurses has been successfully registered");
       navigate(0);
-    } catch (err) {
+    } catch (err: any) {
+      if (!err?.response) {
+        alert("No Server Response");
+      } else if (err.response?.status === 400) {
+        alert(err.response?.data.errors);
+      } else {
+        alert("Unknown error occured...");
+      }
       console.log(err);
     }
   };

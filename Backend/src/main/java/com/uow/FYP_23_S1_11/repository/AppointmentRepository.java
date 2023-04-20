@@ -17,4 +17,14 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
             @Param("status") EAppointmentStatus status, @Param("apptDate") LocalDate date);
 
     List<Appointment> findByApptPatient(Patient apptPatient);
+
+    @Query("SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.name) "
+            + "FROM Appointment A WHERE A.apptPatient = :patient AND "
+            + "(A.apptDate < CURRENT_DATE OR (A.apptDate = CURRENT_DATE AND A.apptTime < CURRENT_TIME))")
+    List<?> getPastAppointments(@Param("patient") Patient patient);
+
+    @Query("SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.name) "
+            + "FROM Appointment A WHERE A.apptPatient = :patient AND "
+            + "(A.apptDate > CURRENT_DATE OR (A.apptDate = CURRENT_DATE AND A.apptTime > CURRENT_TIME))")
+    List<?> getUpcomingAppointments(@Param("patient") Patient patient);
 }

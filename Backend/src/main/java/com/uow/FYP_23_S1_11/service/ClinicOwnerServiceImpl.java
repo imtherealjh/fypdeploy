@@ -1,5 +1,6 @@
 package com.uow.FYP_23_S1_11.service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -75,7 +76,16 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
                 List<DoctorScheduleRequest> schedule = object.getSchedule();
                 if (schedule != null && schedule.size() > 0) {
                     List<DoctorSchedule> _schedule = schedule.stream()
+                            .distinct()
                             .map(obj -> {
+                                if (LocalTime.parse(obj.getStartTime()).isBefore(clinic.getOpeningHrs())) {
+                                    throw new IllegalArgumentException(
+                                            "Doctor's work start time should not be before the opening hours of the clinic...");
+                                } else if (LocalTime.parse(obj.getEndTime()).isAfter(clinic.getClosingHrs())) {
+                                    throw new IllegalArgumentException(
+                                            "Doctor's end start time should not be after the closing hours of the clinic...");
+                                }
+
                                 DoctorSchedule newSchedule = (DoctorSchedule) mapper.convertValue(obj,
                                         DoctorSchedule.class);
                                 newSchedule.setDoctor(newDoctor);
@@ -86,7 +96,6 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
                     doctorScheduleRepo.saveAll(_schedule);
                 }
             }
-
             return true;
         } catch (IllegalArgumentException e) {
             throw e;

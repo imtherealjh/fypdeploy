@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="APPOINTMENTS")
+@Table(name = "APPOINTMENTS")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,29 +38,31 @@ import lombok.Setter;
 @Setter
 public class Appointment implements Serializable {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer appointmentId;
     private String description;
     private LocalDate apptDate;
-    @JsonFormat(pattern="HH:mm")
-    @JsonSerialize(using= LocalTimeSerializer.class)
+
+    @JsonFormat(pattern = "HH:mm")
+    @JsonSerialize(using = LocalTimeSerializer.class)
     @JsonDeserialize(using = LocalTimeDeserializer.class)
     @Temporal(TemporalType.TIME)
     private LocalTime apptTime;
+
     @Enumerated(EnumType.STRING)
     private EAppointmentStatus status;
 
     @ManyToOne
-    @JoinColumn(name="patientId", referencedColumnName="patientId")
+    @JoinColumn(name = "patientId", referencedColumnName = "patientId")
     @JsonIgnore
     private Patient apptPatient;
-    
+
     @ManyToOne
-    @JoinColumn(name="doctorId", referencedColumnName="doctorId")
+    @JoinColumn(name = "doctorId", referencedColumnName = "doctorId")
     private Doctor apptDoctor;
 
     @ManyToOne
-    @JoinColumn(name="clinicId", referencedColumnName="clinicId")
+    @JoinColumn(name = "clinicId", referencedColumnName = "clinicId")
     @JsonIgnore
     private Clinic apptClinic;
 }

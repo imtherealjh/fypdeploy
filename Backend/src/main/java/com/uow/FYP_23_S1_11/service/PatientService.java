@@ -8,6 +8,7 @@ import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
 
@@ -20,15 +21,17 @@ import com.uow.FYP_23_S1_11.domain.request.MailRequest;
 
 public interface PatientService {
 
-    public List<Clinic> getAllClinicBySpecialty(String specialty);
+    public List<?> getUpcomingAppointments();
+
+    public List<?> getPastAppointments();
+
+    public List<?> getAllClinicBySpecialty(String specialty);
 
     public List<Doctor> getAllDoctorsByClinicSpecialty(Integer clincId, String specialty);
 
-    public List<Appointment> getDoctorAvailableAppointment(Integer doctorId, String date);
+    public List<Appointment> getDoctorAvailableAppointment(DoctorAvailableRequest req);
 
     public Boolean bookAvailableAppointment(BookUpdateAppointmentRequest bookApptReq);
-
-    public List<Appointment> getBookedAppointments();
 
     public Appointment getAppointmentById(Integer apptId);
 

@@ -37,8 +37,13 @@ public class DoctorScheduleRequest {
     @JsonProperty("endTime")
     private String endTime;
 
-    @AssertTrue(message = "End Time must be later than Start Time")
+    @AssertTrue(message = "Start Time and End Time must be valid (HH:mm) and End Time must be later than Start Time")
     private boolean isValid() {
-        return LocalTime.parse(endTime).isAfter(LocalTime.parse(startTime));
+        try {
+            return LocalTime.parse(endTime).isAfter(LocalTime.parse(startTime));
+        } catch (Exception e) {
+            return false;
+        }
     }
+
 }

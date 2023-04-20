@@ -16,7 +16,7 @@ export default function SideBar({ navList }: Props) {
               key={"side-navbar" + index}
               state={navItem.name}
               to={navItem.link}
-              end
+              end={navItem.end}
             >
               {({ isActive }) => (
                 <li className={isActive ? "active" : ""}>

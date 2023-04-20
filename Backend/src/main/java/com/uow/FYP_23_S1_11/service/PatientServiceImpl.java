@@ -22,6 +22,7 @@ import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
@@ -84,7 +85,19 @@ public class PatientServiceImpl implements PatientService {
     //
 
     @Override
-    public List<Clinic> getAllClinicBySpecialty(String specialty) {
+    public List<?> getUpcomingAppointments() {
+        UserAccount userAccount = Constants.getAuthenticatedUser();
+        return apptRepo.getUpcomingAppointments(userAccount.getPatient());
+    }
+
+    @Override
+    public List<?> getPastAppointments() {
+        UserAccount userAccount = Constants.getAuthenticatedUser();
+        return apptRepo.getPastAppointments(userAccount.getPatient());
+    }
+
+    @Override
+    public List<?> getAllClinicBySpecialty(String specialty) {
         return clinicRepo.findBySpecialty(specialty);
     }
 
@@ -94,22 +107,9 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Appointment> getDoctorAvailableAppointment(Integer doctorId, String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-        LocalDate parseDate = LocalDate.parse(date, formatter);
-        return apptRepo.findAvailableApptByDoctorAndDay(doctorId, EAppointmentStatus.AVAILABLE, parseDate);
-    }
-
-    @Override
-    public List<Appointment> getBookedAppointments() {
-        try {
-            UserAccount currentUser = Constants.getAuthenticatedUser();
-            Patient patient = currentUser.getPatient();
-            return apptRepo.findByApptPatient(patient);
-        } catch (Exception e) {
-            System.out.println(e);
-            return new ArrayList<Appointment>();
-        }
+    public List<Appointment> getDoctorAvailableAppointment(DoctorAvailableRequest req) {
+        LocalDate parseDate = LocalDate.parse(req.getDate());
+        return apptRepo.findAvailableApptByDoctorAndDay(req.getDoctorId(), EAppointmentStatus.AVAILABLE, parseDate);
     }
 
     @Override
@@ -136,7 +136,6 @@ public class PatientServiceImpl implements PatientService {
             if (apptOptional.isEmpty()) {
                 throw new IllegalArgumentException("No available appointment...");
             }
-            System.out.println(patient);
             Appointment appt = apptOptional.get();
             appt.setStatus(EAppointmentStatus.BOOKED);
             appt.setDescription(bookApptReq.getDescription());
@@ -356,4 +355,5 @@ public class PatientServiceImpl implements PatientService {
             return false;
         }
     }
+
 }

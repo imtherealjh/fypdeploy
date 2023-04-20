@@ -6,6 +6,7 @@ export type CarouselItems = {
 export type NavigationItems = {
   name: string;
   link: string;
+  end: true | false;
 };
 
 export type IObjectKeys = {

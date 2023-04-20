@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
 import com.uow.FYP_23_S1_11.service.PatientService;
@@ -29,34 +31,33 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 
-@Validated
 @RestController
 @RequestMapping(value = "/api/patient", produces = { MediaType.APPLICATION_JSON_VALUE })
+@Validated
+@PreAuthorize("hasAuthority('PATIENT')")
 @SecurityRequirement(name = "bearerAuth")
 public class PatientController {
     @Autowired
     private PatientService patientService;
 
+    @GetMapping("/getPastAppointment")
+    public ResponseEntity<List<?>> getPastAppointments() {
+        return ResponseEntity.ok(patientService.getPastAppointments());
+    }
+
+    @GetMapping("/getUpcomingAppointment")
+    public ResponseEntity<List<?>> getUpcomingAppointments() {
+        return ResponseEntity.ok(patientService.getUpcomingAppointments());
+    }
+
     @GetMapping("/getClinicsBySpecialty")
-    public ResponseEntity<List<Clinic>> getClinicBySpecialty(@RequestParam String specialty) {
+    public ResponseEntity<List<?>> getClinicBySpecialty(@RequestParam String specialty) {
         return ResponseEntity.ok(patientService.getAllClinicBySpecialty(specialty));
     }
 
-    @GetMapping("/getDoctorsByClinicSpecialty")
-    public ResponseEntity<List<Doctor>> getDoctorsByClinicSpecialty(@RequestParam Integer clinicId,
-            @RequestParam String specialty) {
-        return ResponseEntity.ok(patientService.getAllDoctorsByClinicSpecialty(clinicId, specialty));
-    }
-
-    @GetMapping("/getDoctorAvailability")
-    public ResponseEntity<List<Appointment>> getAvailableAppointment(@RequestParam Integer doctorId,
-            @RequestParam String date) {
-        return ResponseEntity.ok(patientService.getDoctorAvailableAppointment(doctorId, date));
-    }
-
-    @GetMapping("/getAllAppointments")
-    public ResponseEntity<List<Appointment>> getAllAppointments() {
-        return ResponseEntity.ok(patientService.getBookedAppointments());
+    @PostMapping("/getDoctorAvailability")
+    public ResponseEntity<List<Appointment>> getAvailableAppointment(@RequestBody DoctorAvailableRequest req) {
+        return ResponseEntity.ok(patientService.getDoctorAvailableAppointment(req));
     }
 
     @GetMapping("/getAppointmentById")

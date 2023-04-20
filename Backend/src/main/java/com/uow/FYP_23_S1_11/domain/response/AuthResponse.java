@@ -1,5 +1,7 @@
 package com.uow.FYP_23_S1_11.domain.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +14,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthResponse {
+    @JsonProperty("role")
     private String role;
-    private String refreshToken;
+    @JsonProperty("accessToken")
     private String accessToken;
 }
