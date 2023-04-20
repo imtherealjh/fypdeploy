@@ -1,0 +1,22 @@
+.patient-details {
+  background-color: #edf0f7;
+  padding: 1rem;
+  border: 2px solid black;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+  text-align: center;
+  margin-left: 5rem;
+}
+
+.patient-details h1 {
+  color: #2d3648;
+  margin-bottom: 1rem;
+  font-size: 24px;
+}
+
+.patient-details p {
+  color: #717d96;
+  margin-bottom: 0.5rem;
+}
