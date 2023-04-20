@@ -1,0 +1,25 @@
+.patients-list {
+  width: 100%;
+}
+
+.patients-list h3 {
+  color: #2d3648;
+  margin-bottom: 1rem;
+}
+
+.patients-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.patients-list th,
+.patients-list td {
+  border: 1px solid #717d96;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.patients-list th {
+  background-color: #e2e7f0;
+  color: #2d3648;
+}

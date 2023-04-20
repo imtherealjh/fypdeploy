@@ -6,6 +6,9 @@ import RegisterClinic from "./pages/RegisterClinic";
 import LandingPageLayout from "./Layout/LandingPageLayout";
 import DashboardLayout from "./Layout/DashboardLayout";
 import SideBar from "./components/sidenavbar";
+import Appointment from "./pages/doctor/Appointment";
+import PatientList from "./pages/doctor/PatientList";
+import Feedback from "./pages/doctor/Feedback";
 
 const DoctorSideBar = [
   { name: "Dashboard", link: "" },
@@ -34,6 +37,9 @@ function App() {
             }
           >
             <Route index path="" element={<DoctorHome />} />
+            <Route path="appointments" element={<Appointment />} />
+            <Route path="patients" element={<PatientList />} />
+            <Route path="feedbacks" element={<Feedback />} />
           </Route>
         </Routes>
       </div>

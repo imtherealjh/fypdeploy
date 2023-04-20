@@ -72,6 +72,9 @@ export default function Home() {
               Clinics
             </button>
           </div>
+          <div className="doctor-dashboard-link my-4">
+            <Link to="/doctor">Go to Doctor Dashboard</Link>
+          </div>
           <div className="d-flex my-5">
             {current === "patient" && (
               <>
