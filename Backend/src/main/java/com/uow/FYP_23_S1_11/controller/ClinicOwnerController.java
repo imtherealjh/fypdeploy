@@ -7,11 +7,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.request.DoctorScheduleRequest;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.GenerateClinicAppointmentRequest;
@@ -70,5 +73,10 @@ public class ClinicOwnerController {
     public ResponseEntity<Boolean> generateDoctorAppointmentSlots(
             @RequestBody GenerateAppointmentRequest generateAppointmentReq) {
         return ResponseEntity.ok(clerkService.generateDoctorAppointmentSlots(generateAppointmentReq));
+    }
+
+    @GetMapping("/getByClinicFeedbackId")
+    public ResponseEntity<List<PatientFeedbackClinic>> getByClinicFeedbackId(@RequestParam Integer clinicFeedbackId) {
+        return ResponseEntity.ok(clincOwnerService.getByClinicFeedbackId(clinicFeedbackId));
     }
 }

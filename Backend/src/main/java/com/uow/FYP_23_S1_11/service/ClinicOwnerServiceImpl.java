@@ -18,6 +18,7 @@ import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.DoctorSchedule;
 import com.uow.FYP_23_S1_11.domain.FrontDesk;
 import com.uow.FYP_23_S1_11.domain.Nurse;
+import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.DoctorScheduleRequest;
@@ -29,6 +30,7 @@ import com.uow.FYP_23_S1_11.repository.DoctorRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorScheduleRepository;
 import com.uow.FYP_23_S1_11.repository.FrontDeskRepository;
 import com.uow.FYP_23_S1_11.repository.NurseRepository;
+import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
 import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
 
 import jakarta.transaction.Transactional;
@@ -48,6 +50,8 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     private SpecialtyRepository specialtyRepo;
     @Autowired
     private UserAccountService userAccountService;
+    @Autowired
+    private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
 
     @Override
     public Boolean registerDoctor(
@@ -184,6 +188,17 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
         } catch (Exception e) {
             System.out.println(e);
             return false;
+        }
+    }
+
+    @Override
+    public List<PatientFeedbackClinic> getByClinicFeedbackId(Integer clinicFeedbackId) {
+        List<PatientFeedbackClinic> patientFeedbackClinic = patientFeedbackClinicRepo
+                .findByClinicFeedbackId(clinicFeedbackId);
+        if (patientFeedbackClinic.isEmpty() == false) {
+            return patientFeedbackClinic;
+        } else {
+            throw new IllegalArgumentException("Feedback not found...");
         }
     }
 

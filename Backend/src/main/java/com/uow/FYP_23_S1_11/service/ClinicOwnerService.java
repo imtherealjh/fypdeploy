@@ -2,6 +2,7 @@ package com.uow.FYP_23_S1_11.service;
 
 import java.util.List;
 
+import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.request.DoctorScheduleRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
@@ -16,4 +17,6 @@ public interface ClinicOwnerService {
     public Boolean registerFrontDesk(List<RegisterFrontDeskRequest> registerFrontDeskReq);
 
     public Boolean insertDoctorSchedule(DoctorScheduleRequest doctorScheduleReq);
+
+    public List<PatientFeedbackClinic> getByClinicFeedbackId(Integer clinicFeedbackId);
 }

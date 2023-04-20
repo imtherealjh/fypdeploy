@@ -62,4 +62,8 @@ public class Doctor implements Serializable {
     @OneToMany(mappedBy = "apptDoctor")
     @JsonIgnore
     private List<Appointment> doctorAppt;
+
+    @OneToMany(mappedBy = "doctorFeedback")
+    @JsonIgnore
+    private List<PatientFeedbackDoctor> feedbackDoctor;
 }

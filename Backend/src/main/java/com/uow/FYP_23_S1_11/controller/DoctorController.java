@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
 import com.uow.FYP_23_S1_11.domain.PatientMedicalRecords;
 import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
 import com.uow.FYP_23_S1_11.exception.MedicalRecordsNotFoundException;
@@ -43,14 +44,18 @@ public class DoctorController {
     }
 
     @GetMapping("/getByMedicalRecordsId")
-    public ResponseEntity<List<PatientMedicalRecords>> getByMedicalRecordsId(@RequestParam Integer medicalRecordId)
-            throws MedicalRecordsNotFoundException {
+    public ResponseEntity<List<PatientMedicalRecords>> getByMedicalRecordsId(@RequestParam Integer medicalRecordId) {
         return ResponseEntity.ok(doctorService.getByMedicalRecordsId(medicalRecordId));
     }
 
     @PostMapping("/updateMedicalRecords")
-    public ResponseEntity<Boolean> updateMedicalRecords(@Valid @RequestBody @RequestParam Integer medicalRecordsId,
-            PatientMedicalRecordsRequest patientMedicalRecordsRequest) throws MedicalRecordsNotFoundException {
+    public ResponseEntity<Boolean> updateMedicalRecords(@RequestParam Integer medicalRecordsId,
+            @Valid @RequestBody PatientMedicalRecordsRequest patientMedicalRecordsRequest) {
         return ResponseEntity.ok(doctorService.updateMedicalRecords(medicalRecordsId, patientMedicalRecordsRequest));
+    }
+
+    @GetMapping("/getByDoctorFeedbackId")
+    public ResponseEntity<List<PatientFeedbackDoctor>> getByDoctorFeedbackId(@RequestParam Integer doctorFeedbackId) {
+        return ResponseEntity.ok(doctorService.getByDoctorFeedbackId(doctorFeedbackId));
     }
 }

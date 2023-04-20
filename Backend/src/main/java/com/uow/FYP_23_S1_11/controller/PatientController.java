@@ -20,9 +20,11 @@ import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
+import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.service.PatientService;
 import com.uow.FYP_23_S1_11.domain.MailDetails;
 import com.uow.FYP_23_S1_11.domain.request.MailRequest;
@@ -116,5 +118,39 @@ public class PatientController {
     public ResponseEntity<Boolean> insertPatientDoctorFeedback(
             @Valid @RequestBody PatientFeedbackDoctorRequest patientFeedbackDoctorRequest) {
         return ResponseEntity.ok(patientService.insertDoctorFeedback(patientFeedbackDoctorRequest));
+    }
+
+    @PostMapping("/insertClinicAndDoctorFeedback")
+    public ResponseEntity<Boolean> insertClinicAndDoctorFeedback(
+            @Valid @RequestBody ClinicAndDoctorFeedbackRequest clinicAndDoctorFeedbackRequest) {
+        return ResponseEntity.ok(patientService.insertClinicAndDoctorFeedback(clinicAndDoctorFeedbackRequest));
+    }
+
+    @PostMapping("/updateClinicFeedback")
+    public ResponseEntity<Boolean> updateClinicFeedback(@RequestParam Integer clinicFeedbackId,
+            @Valid @RequestBody PatientFeedbackClinicRequest updateClinicFeedbackRequest) {
+        return ResponseEntity.ok(patientService.updateClinicFeedback(clinicFeedbackId, updateClinicFeedbackRequest));
+    }
+
+    @PostMapping("/updateDoctorFeedback")
+    public ResponseEntity<Boolean> updateDoctorFeedback(@RequestParam Integer doctorFeedbackId,
+            @Valid @RequestBody PatientFeedbackDoctorRequest updateDoctorFeedbackRequest) {
+        return ResponseEntity.ok(patientService.updateDoctorFeedback(doctorFeedbackId, updateDoctorFeedbackRequest));
+    }
+
+    @DeleteMapping("/deleteClinicFeedback")
+    public ResponseEntity<Boolean> deleteClinicFeedback(@RequestParam Integer clinicFeedbackId) {
+        return ResponseEntity.ok(patientService.deleteClinicFeedback(clinicFeedbackId));
+    }
+
+    @DeleteMapping("/deleteDoctorFeedback")
+    public ResponseEntity<Boolean> deleteDoctorFeedback(@RequestParam Integer doctorFeedbackId) {
+        return ResponseEntity.ok(patientService.deleteDoctorFeedback(doctorFeedbackId));
+    }
+
+    @PostMapping("/insertQueueNumber")
+    public ResponseEntity<Boolean> insertQueueNumber(
+            @Valid @RequestBody QueueRequest request) {
+        return ResponseEntity.ok(patientService.insertQueueNumber(request));
     }
 }

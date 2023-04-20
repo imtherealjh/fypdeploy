@@ -92,4 +92,8 @@ public class Clinic implements Serializable {
     @JoinTable(name = "edu_Material", joinColumns = @JoinColumn(name = "clinicId"), inverseJoinColumns = @JoinColumn(name = "materialId"))
     private List<EducationalMaterial> eduMatList;
 
+    @OneToMany(mappedBy = "clinicFeedback")
+    @JsonIgnore
+    private List<PatientFeedbackClinic> feedbackClinic;
+
 }

@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.GenerateClinicAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.service.ClerkService;
 
 import com.uow.FYP_23_S1_11.domain.request.EducationalMaterialRequest;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/api/clerk", produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -56,5 +58,11 @@ public class ClerkController {
     @DeleteMapping("/deleteEduMaterial")
     public ResponseEntity<Boolean> deleteEduMaterial(@RequestParam Integer materialId) {
         return ResponseEntity.ok(clerkService.deleteEduMaterial(materialId));
+    }
+
+    @PostMapping("/updateQueueNumber")
+    public ResponseEntity<Boolean> updateQueueNumber(@RequestParam Integer queueId,
+            @Valid @RequestBody QueueRequest updateQueueRequest) {
+        return ResponseEntity.ok(clerkService.updateQueueNumber(queueId, updateQueueRequest));
     }
 }

@@ -27,14 +27,12 @@ public class PatientFeedbackClinic implements Serializable {
     private Integer clinicFeedbackId;
     private Integer ratings;
     private String feedback;
-    private Integer clinicId;
-    private Integer patientId;
 
-    // @ManyToOne
-    // @JoinColumn(name = "clinicId", referencedColumnName = "clinicId")
-    // private Clinic clinic;
+    @ManyToOne
+    @JoinColumn(name = "clinicId", referencedColumnName = "clinicId")
+    private Clinic clinicFeedback;
 
-    // @ManyToOne
-    // @JoinColumn(name = "patientId", referencedColumnName = "patientId")
-    // private Patient patient;
+    @ManyToOne
+    @JoinColumn(name = "patientId", referencedColumnName = "patientId")
+    private Patient patientClinicFeedback;
 }

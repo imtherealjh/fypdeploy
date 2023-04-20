@@ -56,4 +56,12 @@ public class Patient implements Serializable {
     @OneToOne(mappedBy = "patientmd", cascade = CascadeType.ALL)
     private PatientMedicalRecords patientMedicalRecords;
 
+    @OneToMany(mappedBy = "patientClinicFeedback")
+    @JsonIgnore
+    private List<PatientFeedbackClinic> feedbackPatientClinic;
+
+    @OneToMany(mappedBy = "patientDoctorFeedback")
+    @JsonIgnore
+    private List<PatientFeedbackDoctor> feedbackPatientDoctor;
+
 }

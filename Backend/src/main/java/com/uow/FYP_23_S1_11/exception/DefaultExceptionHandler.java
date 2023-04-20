@@ -1,6 +1,8 @@
 package com.uow.FYP_23_S1_11.exception;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpHeaders;
@@ -52,5 +54,4 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
     ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST, errorList);
     return errorDetails;
   }
-
 }

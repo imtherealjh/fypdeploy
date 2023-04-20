@@ -8,9 +8,11 @@ import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
+import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 
 import jakarta.mail.MessagingException;
 
@@ -50,4 +52,18 @@ public interface PatientService {
     public Boolean insertClinicFeedback(PatientFeedbackClinicRequest request);
 
     public Boolean insertDoctorFeedback(PatientFeedbackDoctorRequest request);
+
+    public Boolean insertClinicAndDoctorFeedback(ClinicAndDoctorFeedbackRequest request);
+
+    public Boolean updateClinicFeedback(Integer clinicFeedbackId,
+            PatientFeedbackClinicRequest updateClinicFeedbackRequest);
+
+    public Boolean updateDoctorFeedback(Integer doctorFeedbackId,
+            PatientFeedbackDoctorRequest updateDoctorFeedbackRequest);
+
+    public Boolean deleteClinicFeedback(Integer clinicFeedbackId);
+
+    public Boolean deleteDoctorFeedback(Integer doctorFeedbackId);
+
+    public Boolean insertQueueNumber(QueueRequest request);
 }

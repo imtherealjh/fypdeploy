@@ -21,6 +21,7 @@ import com.uow.FYP_23_S1_11.domain.DoctorSchedule;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.GenerateClinicAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.enums.EWeekdays;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
@@ -30,9 +31,10 @@ import com.uow.FYP_23_S1_11.repository.DoctorScheduleRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
+import com.uow.FYP_23_S1_11.domain.Queue;
 import com.uow.FYP_23_S1_11.domain.request.EducationalMaterialRequest;
 import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
-
+import com.uow.FYP_23_S1_11.repository.QueueRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -45,6 +47,8 @@ public class ClerkServiceImpl implements ClerkService {
     private DoctorRepository doctorRepo;
     @Autowired
     private DoctorScheduleRepository doctorScheduleRepo;
+    @Autowired
+    private QueueRepository queueRepo;
 
     //
     @Autowired
@@ -121,10 +125,10 @@ public class ClerkServiceImpl implements ClerkService {
             LocalDate parseDate = LocalDate.parse(generateDoctorApptReq.getGeneratedDate(), formatter);
 
             List<Appointment> generatedSlots = generateTimeSlots(doctor.get(), parseDate);
-            if(generatedSlots != null) {
+            if (generatedSlots != null) {
                 apptRepo.saveAll(generatedSlots);
             }
-            
+
             return true;
         } catch (Exception e) {
             System.out.println(e);
@@ -138,7 +142,8 @@ public class ClerkServiceImpl implements ClerkService {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try {
-            EducationalMaterial educationalMaterial = (EducationalMaterial) mapper.convertValue(request, EducationalMaterial.class);
+            EducationalMaterial educationalMaterial = (EducationalMaterial) mapper.convertValue(request,
+                    EducationalMaterial.class);
             eduMaterialRepo.save(educationalMaterial);
 
             return true;
@@ -153,7 +158,7 @@ public class ClerkServiceImpl implements ClerkService {
         try {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Optional<EducationalMaterial> materialOptional = eduMaterialRepo.findById(materialId);
-            if(materialOptional.isEmpty()) {
+            if (materialOptional.isEmpty()) {
                 throw new IllegalArgumentException("Educational Material does not exist...");
             }
             EducationalMaterial eduMat = materialOptional.get();
@@ -163,14 +168,14 @@ public class ClerkServiceImpl implements ClerkService {
             System.out.println(e);
             return false;
         }
-    } 
+    }
 
     @Override
     public Boolean updateEduMaterial(Integer materialId, EducationalMaterialRequest request) {
         try {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Optional<EducationalMaterial> materialOptional = eduMaterialRepo.findById(materialId);
-            if(materialOptional.isEmpty()) {
+            if (materialOptional.isEmpty()) {
                 throw new IllegalArgumentException("Educational Material does not exist...");
             }
             EducationalMaterial eduMat = materialOptional.get();
@@ -184,4 +189,21 @@ public class ClerkServiceImpl implements ClerkService {
         }
     }
 
+    @Override
+    public Boolean updateQueueNumber(Integer queueId,
+            QueueRequest updateQueueRequest) {
+        Optional<Queue> originalQueue = queueRepo
+                .findById(queueId);
+
+        if (originalQueue.isEmpty() == false) {
+            Queue queue = originalQueue.get();
+            queue.setQueueNumber(updateQueueRequest.getQueueNumber());
+            queue.setStatus(updateQueueRequest.getStatus());
+            queueRepo.save(queue);
+            return true;
+        } else {
+            throw new IllegalArgumentException("Queue not found...");
+        }
+
+    }
 }

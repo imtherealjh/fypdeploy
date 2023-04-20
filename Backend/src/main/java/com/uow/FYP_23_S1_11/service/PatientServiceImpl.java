@@ -19,9 +19,11 @@ import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.PatientFeedback;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
+import com.uow.FYP_23_S1_11.domain.Queue;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
@@ -29,6 +31,7 @@ import com.uow.FYP_23_S1_11.repository.ClinicRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackRepository;
 import com.uow.FYP_23_S1_11.repository.PatientRepository;
+import com.uow.FYP_23_S1_11.repository.QueueRepository;
 import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
 import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
@@ -52,6 +55,7 @@ import com.uow.FYP_23_S1_11.domain.request.MailRequest;
 
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
+import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 
 import jakarta.transaction.Transactional;
 
@@ -75,6 +79,8 @@ public class PatientServiceImpl implements PatientService {
     private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
     @Autowired
     private PatientFeedbackDoctorRepository patientFeedbackDoctorRepo;
+    @Autowired
+    private QueueRepository queueRepo;
 
     //
     @Autowired
@@ -356,4 +362,100 @@ public class PatientServiceImpl implements PatientService {
         }
     }
 
+    @Override
+    public Boolean insertClinicAndDoctorFeedback(ClinicAndDoctorFeedbackRequest request) {
+        try {
+
+            PatientFeedbackClinic patientFeedbackClinic = new PatientFeedbackClinic();
+
+            patientFeedbackClinic.setClinicFeedbackId(request.getFeedbackId());
+            patientFeedbackClinic.setFeedback(request.getClinicFeedback());
+            patientFeedbackClinic.setRatings(request.getClinicRatings());
+
+            patientFeedbackClinicRepo.save(patientFeedbackClinic);
+
+            PatientFeedbackDoctor patientFeedbackDoctor = new PatientFeedbackDoctor();
+
+            patientFeedbackDoctor.setDoctorFeedbackId(request.getFeedbackId());
+            patientFeedbackDoctor.setFeedback(request.getDoctorFeedback());
+            patientFeedbackDoctor.setRatings(request.getDoctorRatings());
+
+            patientFeedbackDoctorRepo.save(patientFeedbackDoctor);
+
+            return true;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean updateClinicFeedback(Integer clinicFeedbackId,
+            PatientFeedbackClinicRequest updateClinicFeedbackRequest) {
+        Optional<PatientFeedbackClinic> patientFeedbackClinicOptional = patientFeedbackClinicRepo
+                .findById(clinicFeedbackId);
+        if (patientFeedbackClinicOptional.isEmpty()) {
+            throw new IllegalArgumentException("Clinic feedback does not exist...");
+        }
+        PatientFeedbackClinic patientFeedbackClinic = patientFeedbackClinicOptional.get();
+        patientFeedbackClinic.setRatings(updateClinicFeedbackRequest.getRatings());
+        patientFeedbackClinic.setFeedback(updateClinicFeedbackRequest.getFeedback());
+        patientFeedbackClinicRepo.save(patientFeedbackClinic);
+        return true;
+    }
+
+    @Override
+    public Boolean updateDoctorFeedback(Integer doctorFeedbackId,
+            PatientFeedbackDoctorRequest updateDoctorFeedbackRequest) {
+        Optional<PatientFeedbackDoctor> patientFeedbackDoctorOptional = patientFeedbackDoctorRepo
+                .findById(doctorFeedbackId);
+        if (patientFeedbackDoctorOptional.isEmpty()) {
+            throw new IllegalArgumentException("Doctor feedback does not exist...");
+        }
+        PatientFeedbackDoctor patientFeedbackDoctor = patientFeedbackDoctorOptional.get();
+        patientFeedbackDoctor.setRatings(updateDoctorFeedbackRequest.getRatings());
+        patientFeedbackDoctor.setFeedback(updateDoctorFeedbackRequest.getFeedback());
+        patientFeedbackDoctorRepo.save(patientFeedbackDoctor);
+        return true;
+    }
+
+    @Override
+    public Boolean deleteClinicFeedback(Integer clinicFeedbackId) {
+        Optional<PatientFeedbackClinic> patientFeedbackClinicOptional = patientFeedbackClinicRepo
+                .findById(clinicFeedbackId);
+        if (patientFeedbackClinicOptional.isEmpty()) {
+            throw new IllegalArgumentException("Clinic feedback does not exist...");
+        }
+        PatientFeedbackClinic patientFeedbackClinic = patientFeedbackClinicOptional.get();
+        patientFeedbackClinicRepo.delete(patientFeedbackClinic);
+        return true;
+    }
+
+    @Override
+    public Boolean deleteDoctorFeedback(Integer doctorFeedbackId) {
+        Optional<PatientFeedbackDoctor> patientFeedbackDoctorOptional = patientFeedbackDoctorRepo
+                .findById(doctorFeedbackId);
+        if (patientFeedbackDoctorOptional.isEmpty()) {
+            throw new IllegalArgumentException("Doctor feedback does not exist...");
+        }
+        PatientFeedbackDoctor patientFeedbackDoctor = patientFeedbackDoctorOptional.get();
+        patientFeedbackDoctorRepo.delete(patientFeedbackDoctor);
+        return true;
+    }
+
+    @Override
+    public Boolean insertQueueNumber(QueueRequest request) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Queue queue = (Queue) mapper.convertValue(request,
+                    Queue.class);
+            queueRepo.save(queue);
+            return true;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
 }
