@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import Step1 from "./AppointmentStep/Step1";
 import Step2 from "./AppointmentStep/Step2";
 import Step3 from "./AppointmentStep/Step3";
@@ -19,7 +19,7 @@ export default function BookAppointment() {
       if (!isMounted) {
         isMounted = true;
         try {
-          let response = await axiosPrivate.post("/patient/bookAppointment", {
+          await axiosPrivate.post("/patient/bookAppointment", {
             apptId: formData.apptId,
           });
           alert("Appointment has been successfully created...");

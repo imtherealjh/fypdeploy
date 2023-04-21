@@ -155,27 +155,31 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Boolean updateAppointment(Integer originalApptId, BookUpdateAppointmentRequest updateApptReq) {
+    public Boolean updateAppointment(BookUpdateAppointmentRequest updateApptReq) {
         try {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
-            Optional<Appointment> optionalOrigAppt = apptRepo.findById(originalApptId);
+
+            Optional<Appointment> optionalOrigAppt = apptRepo.findById(updateApptReq.getOriginalApptId());
             if (optionalOrigAppt.isEmpty()) {
                 throw new IllegalArgumentException("Appointment not found...");
             }
 
             Appointment origAppt = optionalOrigAppt.get();
-            if (patient.getPatientId() == origAppt.getApptPatient().getPatientId()) {
-                if (originalApptId == updateApptReq.getApptId()) {
-                    origAppt.setDescription(updateApptReq.getDescription());
-                    apptRepo.save(origAppt);
-                } else {
-                    origAppt.setStatus(EAppointmentStatus.AVAILABLE);
-                    origAppt.setDescription(null);
-                    origAppt.setApptPatient(null);
-                    apptRepo.save(origAppt);
-                    bookAvailableAppointment(updateApptReq);
-                }
+            // validate if is the actual person updating the appointment
+            if (patient.getPatientId() != origAppt.getApptPatient().getPatientId()) {
+                throw new IllegalArgumentException("Appointment cannot be updated...");
+            }
+
+            if (origAppt.getAppointmentId() == updateApptReq.getApptId()) {
+                origAppt.setDescription(updateApptReq.getDescription());
+                apptRepo.save(origAppt);
+            } else {
+                origAppt.setStatus(EAppointmentStatus.AVAILABLE);
+                origAppt.setDescription(null);
+                origAppt.setApptPatient(null);
+                apptRepo.save(origAppt);
+                bookAvailableAppointment(updateApptReq);
             }
 
             return true;
@@ -189,11 +193,9 @@ public class PatientServiceImpl implements PatientService {
         try {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
-            Optional<Appointment> apptOptional = apptRepo.findById(apptId);
-            if (apptOptional.isEmpty()) {
-                throw new IllegalArgumentException("No available appointment...");
-            }
-            Appointment appt = apptOptional.get();
+
+            Appointment appt = getAppointmentById(apptId);
+
             if (patient.getPatientId() == appt.getApptPatient().getPatientId()) {
                 appt.setStatus(EAppointmentStatus.AVAILABLE);
                 appt.setDescription(null);

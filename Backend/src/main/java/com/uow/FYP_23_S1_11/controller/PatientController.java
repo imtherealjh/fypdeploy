@@ -10,11 +10,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uow.FYP_23_S1_11.constraints.OnCreate;
+import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
@@ -67,15 +70,17 @@ public class PatientController {
         return ResponseEntity.ok(patientService.getAppointmentById(id));
     }
 
+    @Validated(OnCreate.class)
     @PostMapping("/bookAppointment")
     public ResponseEntity<Boolean> bookAppointment(@Valid @RequestBody BookUpdateAppointmentRequest bookApptReq) {
         return ResponseEntity.ok(patientService.bookAvailableAppointment(bookApptReq));
     }
 
-    @PostMapping("/updateAppointment")
-    public ResponseEntity<Boolean> updateAppointment(@RequestParam Integer apptId,
-            @RequestBody BookUpdateAppointmentRequest updateApptReq) {
-        return ResponseEntity.ok(patientService.updateAppointment(apptId, updateApptReq));
+    @Validated(OnUpdate.class)
+    @PutMapping("/updateAppointment")
+    public ResponseEntity<Boolean> updateAppointment(
+            @Valid @RequestBody BookUpdateAppointmentRequest updateApptReq) {
+        return ResponseEntity.ok(patientService.updateAppointment(updateApptReq));
     }
 
     @DeleteMapping("/deleteAppointment")

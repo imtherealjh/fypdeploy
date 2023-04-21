@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
 import DashboardLayout from "../layout/DashboardLayout";
-import Appointment from "../pages/patient/Appointment";
-import BookAppointment from "../pages/patient/BookAppointment";
+import Appointment from "../pages/patient/Appointments/Appointment";
+import BookAppointment from "../pages/patient/Appointments/BookAppointment";
 import Home from "../pages/patient/Home";
 import SearchClinic from "../pages/patient/SearchClinic";
 import Queue from "../pages/patient/Queue";

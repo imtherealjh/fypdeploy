@@ -23,47 +23,47 @@ import com.uow.FYP_23_S1_11.domain.request.MailRequest;
 
 public interface PatientService {
 
-    public List<?> getUpcomingAppointments();
+        public List<?> getUpcomingAppointments();
 
-    public List<?> getPastAppointments();
+        public List<?> getPastAppointments();
 
-    public List<?> getAllClinicBySpecialty(String specialty);
+        public List<?> getAllClinicBySpecialty(String specialty);
 
-    public List<Doctor> getAllDoctorsByClinicSpecialty(Integer clincId, String specialty);
+        public List<Doctor> getAllDoctorsByClinicSpecialty(Integer clincId, String specialty);
 
-    public List<Appointment> getDoctorAvailableAppointment(DoctorAvailableRequest req);
+        public List<Appointment> getDoctorAvailableAppointment(DoctorAvailableRequest req);
 
-    public Boolean bookAvailableAppointment(BookUpdateAppointmentRequest bookApptReq);
+        public Boolean bookAvailableAppointment(BookUpdateAppointmentRequest bookApptReq);
 
-    public Appointment getAppointmentById(Integer apptId);
+        public Appointment getAppointmentById(Integer apptId);
 
-    public Boolean updateAppointment(Integer originalApptId, BookUpdateAppointmentRequest updateApptReq);
+        public Boolean updateAppointment(BookUpdateAppointmentRequest updateApptReq);
 
-    public Boolean deleteAppointment(Integer apptId);
+        public Boolean deleteAppointment(Integer apptId);
 
-    public List<EducationalMaterial> getAllEduMaterial();
+        public List<EducationalMaterial> getAllEduMaterial();
 
-    public EducationalMaterial getEduMaterialById(Integer materialId);
+        public EducationalMaterial getEduMaterialById(Integer materialId);
 
-    public String sendSimpleMail(MailRequest details);
+        public String sendSimpleMail(MailRequest details);
 
-    // public String sendMailWithAttachment(MailRequest details);
+        // public String sendMailWithAttachment(MailRequest details);
 
-    public Boolean insertClinicFeedback(PatientFeedbackClinicRequest request);
+        public Boolean insertClinicFeedback(PatientFeedbackClinicRequest request);
 
-    public Boolean insertDoctorFeedback(PatientFeedbackDoctorRequest request);
+        public Boolean insertDoctorFeedback(PatientFeedbackDoctorRequest request);
 
-    public Boolean insertClinicAndDoctorFeedback(ClinicAndDoctorFeedbackRequest request);
+        public Boolean insertClinicAndDoctorFeedback(ClinicAndDoctorFeedbackRequest request);
 
-    public Boolean updateClinicFeedback(Integer clinicFeedbackId,
-            PatientFeedbackClinicRequest updateClinicFeedbackRequest);
+        public Boolean updateClinicFeedback(Integer clinicFeedbackId,
+                        PatientFeedbackClinicRequest updateClinicFeedbackRequest);
 
-    public Boolean updateDoctorFeedback(Integer doctorFeedbackId,
-            PatientFeedbackDoctorRequest updateDoctorFeedbackRequest);
+        public Boolean updateDoctorFeedback(Integer doctorFeedbackId,
+                        PatientFeedbackDoctorRequest updateDoctorFeedbackRequest);
 
-    public Boolean deleteClinicFeedback(Integer clinicFeedbackId);
+        public Boolean deleteClinicFeedback(Integer clinicFeedbackId);
 
-    public Boolean deleteDoctorFeedback(Integer doctorFeedbackId);
+        public Boolean deleteDoctorFeedback(Integer doctorFeedbackId);
 
-    public Boolean insertQueueNumber(QueueRequest request);
+        public Boolean insertQueueNumber(QueueRequest request);
 }
