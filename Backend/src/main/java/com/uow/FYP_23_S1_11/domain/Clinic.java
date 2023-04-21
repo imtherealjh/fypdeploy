@@ -41,11 +41,16 @@ public class Clinic implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer clinicId;
-    @Column(name = "name", nullable = false)
-    private String name;
+
+    @Column(name = "clinicName", nullable = false)
+    private String clinicName;
     @Column(name = "location", nullable = false)
     private String location;
     private String proofOfLicense;
+    @Column(nullable = false)
+    private String email;
+    @Column(nullable = false)
+    private String contactName;
 
     @Column(name = "openingHrs", nullable = false)
     @JsonFormat(pattern = "HH:mm")

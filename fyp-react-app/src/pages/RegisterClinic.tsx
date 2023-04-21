@@ -20,8 +20,12 @@ export default function RegisterClinic() {
       if (JSON.parse(response.data) === true) {
         alert("Clinic successfully registered successfully");
         navigate("/", { replace: true });
+      } else {
+        console.log(response);
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -59,11 +63,21 @@ export default function RegisterClinic() {
             <input
               type="text"
               className="form-control"
-              name="name"
-              placeholder="name..."
+              name="clinicName"
+              placeholder="Clinic Name..."
               onChange={handleChange}
             />
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Clinic Name</label>
+          </div>
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              className="form-control"
+              name="contactName"
+              placeholder="Contact Name..."
+              onChange={handleChange}
+            />
+            <label htmlFor="name">Contact Name</label>
           </div>
           <div className="form-floating mb-3">
             <input

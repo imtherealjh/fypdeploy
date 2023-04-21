@@ -18,11 +18,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,18 +33,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@NamedQuery(name = "findEmailInTables", query = "SELECT p.email FROM Patient p WHERE p.email = :email " +
+        "UNION SELECT c.email FROM Clinic c WHERE c.email = :email " +
+        "UNION SELECT d.email FROM Doctor d WHERE d.email = :email " +
+        "UNION SELECT n.email FROM Nurse n WHERE n.email = :email " +
+        "UNION SELECT f.email FROM FrontDesk f WHERE f.email = :email ")
 public class UserAccount implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer accountId;
     @Column(nullable = false, unique = true)
     private String username;
+    @Column(nullable = false)
     private String password;
     @Enumerated(EnumType.STRING)
     private ERole role;
     private Boolean isEnabled = false;
-    private String verificationCode;
-    private String email;
 
     @OneToMany(mappedBy = "tokenAccount", cascade = CascadeType.ALL)
     private List<Token> userTokens;

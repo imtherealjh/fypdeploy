@@ -66,7 +66,8 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
             List<Doctor> newDoctorList = new ArrayList<Doctor>();
             for (RegisterDoctorRequest object : registerDoctorRequest) {
                 UserAccount newAccount = (UserAccount) mapper.convertValue(object, UserAccount.class);
-                UserAccount registeredAccount = userAccountService.registerAccount(newAccount, ERole.DOCTOR);
+                UserAccount registeredAccount = userAccountService.registerAccount(newAccount, object.getEmail(),
+                        ERole.DOCTOR);
                 List<Specialty> specialty = specialtyRepo.findByTypeIn(object.getSpecialty());
 
                 Doctor newDoctor = (Doctor) mapper.convertValue(object, Doctor.class);
@@ -120,7 +121,8 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
 
             List<Nurse> nurses = registerNurseReq.stream().map(obj -> {
                 UserAccount newAccount = (UserAccount) mapper.convertValue(obj, UserAccount.class);
-                UserAccount registeredAccount = userAccountService.registerAccount(newAccount, ERole.NURSE);
+                UserAccount registeredAccount = userAccountService.registerAccount(newAccount, obj.getEmail(),
+                        ERole.NURSE);
 
                 Nurse nurse = (Nurse) mapper.convertValue(obj, Nurse.class);
                 nurse.setNurseAccount(registeredAccount);
@@ -131,6 +133,8 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
 
             nurseRepo.saveAll(nurses);
             return true;
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             System.out.println(e);
             return false;
@@ -148,7 +152,8 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
 
             List<FrontDesk> clerks = registerFrontDeskReq.stream().map(obj -> {
                 UserAccount newAccount = (UserAccount) mapper.convertValue(obj, UserAccount.class);
-                UserAccount registeredAccount = userAccountService.registerAccount(newAccount, ERole.FRONT_DESK);
+                UserAccount registeredAccount = userAccountService.registerAccount(newAccount, obj.getEmail(),
+                        ERole.FRONT_DESK);
 
                 FrontDesk frontDesk = (FrontDesk) mapper.convertValue(obj, FrontDesk.class);
                 frontDesk.setFrontDeskAccount(registeredAccount);
@@ -159,6 +164,8 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
 
             frontDeskRepo.saveAll(clerks);
             return true;
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             System.out.println(e);
             return false;

@@ -100,7 +100,7 @@ export default function RegisterPatient() {
             <input
               type="date"
               className="form-control"
-              name="date"
+              name="dob"
               placeholder="date..."
               onChange={handleChange}
             />

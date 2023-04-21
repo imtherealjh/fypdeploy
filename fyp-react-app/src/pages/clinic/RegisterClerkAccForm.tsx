@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { IObjectKeys } from "../../utils/types";
+import { IObjectKeys } from "../../hooks/types";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 
@@ -7,12 +7,14 @@ interface ClerkInputs extends IObjectKeys {
   username: string;
   password: string;
   name: string;
+  email: string;
 }
 
 const defaultVal: ClerkInputs = {
   username: "",
   password: "",
   name: "",
+  email: "",
 };
 
 export default function ClerkAccount() {
@@ -61,7 +63,7 @@ export default function ClerkAccount() {
           <div className="mt-2" key={idx}>
             <h4>Clerk {idx + 1}</h4>
             <div className="row g-2 align-content-center justify-content-center">
-              <div className="col">
+              <div className="col-6">
                 <input
                   type="text"
                   className="form-control"
@@ -74,7 +76,7 @@ export default function ClerkAccount() {
                   value={customInput.username || ""}
                 />
               </div>
-              <div className="col">
+              <div className="col-6">
                 <input
                   type="password"
                   className="form-control"
@@ -87,7 +89,7 @@ export default function ClerkAccount() {
                   value={customInput.password || ""}
                 />
               </div>
-              <div className="col">
+              <div className="col-6">
                 <input
                   type="text"
                   className="form-control"
@@ -98,6 +100,20 @@ export default function ClerkAccount() {
                     handleClerkChange(event, idx)
                   }
                   value={customInput.name || ""}
+                />
+              </div>
+
+              <div className="col-6">
+                <input
+                  type="email"
+                  className="form-control"
+                  name="email"
+                  placeholder="Email"
+                  aria-label="Email"
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    handleClerkChange(event, idx)
+                  }
+                  value={customInput.email || ""}
                 />
               </div>
             </div>

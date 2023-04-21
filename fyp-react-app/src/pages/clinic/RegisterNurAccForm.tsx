@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { IObjectKeys } from "../../utils/types";
+import { IObjectKeys } from "../../hooks/types";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 
@@ -7,12 +7,14 @@ interface NurseInputs extends IObjectKeys {
   username: string;
   password: string;
   name: string;
+  email: string;
 }
 
 const defaultVal: NurseInputs = {
   username: "",
   password: "",
   name: "",
+  email: "",
 };
 
 export default function NurseAccount() {
@@ -62,7 +64,7 @@ export default function NurseAccount() {
           <div className="mt-2" key={idx}>
             <h4>Nurse {idx + 1}</h4>
             <div className="row g-2 align-content-center justify-content-center">
-              <div className="col">
+              <div className="col-6">
                 <input
                   type="text"
                   className="form-control"
@@ -75,7 +77,7 @@ export default function NurseAccount() {
                   value={customInput.username || ""}
                 />
               </div>
-              <div className="col">
+              <div className="col-6">
                 <input
                   type="password"
                   className="form-control"
@@ -88,7 +90,7 @@ export default function NurseAccount() {
                   value={customInput.password || ""}
                 />
               </div>
-              <div className="col">
+              <div className="col-6">
                 <input
                   type="text"
                   className="form-control"
@@ -99,6 +101,19 @@ export default function NurseAccount() {
                     handleNurseChange(event, idx)
                   }
                   value={customInput.name || ""}
+                />
+              </div>
+              <div className="col-6">
+                <input
+                  type="text"
+                  className="form-control"
+                  name="email"
+                  placeholder="Email"
+                  aria-label="Email"
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    handleNurseChange(event, idx)
+                  }
+                  value={customInput.email || ""}
                 />
               </div>
             </div>

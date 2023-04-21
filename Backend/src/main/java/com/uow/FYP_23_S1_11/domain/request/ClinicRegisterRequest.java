@@ -27,13 +27,17 @@ public class ClinicRegisterRequest {
     private String password;
 
     @NotEmpty
-    @JsonProperty("name")
-    private String name;
+    @JsonProperty("clinicName")
+    private String clinicName;
 
     @NotEmpty
     @Email
     @JsonProperty("email")
     private String email;
+
+    @NotEmpty
+    @JsonProperty("contactName")
+    private String contactName;
 
     @NotEmpty
     @JsonProperty("location")
@@ -73,7 +77,6 @@ public class ClinicRegisterRequest {
         }
     }
 
-    @NotEmpty
     @JsonProperty("licenseBase64")
     private String licenseBase64;
 }

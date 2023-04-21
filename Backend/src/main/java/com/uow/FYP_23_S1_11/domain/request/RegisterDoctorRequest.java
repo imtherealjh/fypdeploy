@@ -29,6 +29,10 @@ public class RegisterDoctorRequest {
     private String name;
 
     @NotEmpty
+    @JsonProperty("email")
+    private String email;
+
+    @NotEmpty
     @JsonProperty("profile")
     private String profile;
 

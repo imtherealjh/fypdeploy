@@ -1,5 +1,7 @@
 package com.uow.FYP_23_S1_11.controller;
 
+import java.util.List;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,8 +15,5 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @PreAuthorize("hasAuthority('SYSTEM_ADMIN')")
 public class SuperAdminController {
-    @GetMapping("/secure")
-    public ResponseEntity<String> getSecureRoute() {
-        return ResponseEntity.ok("Secure endpoint");
-    }
+
 }

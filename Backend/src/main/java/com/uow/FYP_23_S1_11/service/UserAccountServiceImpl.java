@@ -2,6 +2,7 @@ package com.uow.FYP_23_S1_11.service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -11,8 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +40,9 @@ import com.uow.FYP_23_S1_11.utils.JwtUtils;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,6 +50,8 @@ import jakarta.servlet.http.HttpServletResponse;
 @Service
 @Transactional
 public class UserAccountServiceImpl implements UserAccountService {
+    @PersistenceContext
+    private EntityManager entityManager;
     @Autowired
     private UserAccountRepository userAccRepo;
     @Autowired
@@ -73,6 +77,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     public void refresh(HttpServletRequest request,
             HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
         try {
+            String baseURL = Constants.makeUrl(request);
             if (token == null || token.isEmpty()) {
                 response.sendError(401, "Invalid refresh token...");
                 return;
@@ -144,10 +149,15 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public UserAccount registerAccount(UserAccount account, ERole userRole) {
+    public UserAccount registerAccount(UserAccount account, String email, ERole userRole) {
         Optional<UserAccount> user = userAccRepo.findByUsername(account.getUsername());
-        if (user.isPresent()) {
-            throw new IllegalArgumentException("Username has already been registered...");
+
+        TypedQuery<String> query = entityManager.createNamedQuery("findEmailInTables", String.class);
+        query.setParameter("email", email);
+
+        List<String> results = query.getResultList();
+        if (user.isPresent() || !results.isEmpty()) {
+            throw new IllegalArgumentException("Username/Email has already been registered...");
         }
 
         account.setPassword(passwordEncoder.encode(account.getPassword()));
@@ -163,7 +173,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         mapper.registerModule(new JavaTimeModule());
         try {
             UserAccount newAccount = (UserAccount) mapper.convertValue(clinicReq, UserAccount.class);
-            UserAccount registeredAccount = registerAccount(newAccount, ERole.CLINIC_OWNER);
+            UserAccount registeredAccount = registerAccount(newAccount, clinicReq.getEmail(), ERole.CLINIC_OWNER);
 
             Clinic newClinic = (Clinic) mapper.convertValue(clinicReq, Clinic.class);
             newClinic.setClinicAccount(registeredAccount);
@@ -184,7 +194,7 @@ public class UserAccountServiceImpl implements UserAccountService {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try {
             UserAccount newAccount = (UserAccount) mapper.convertValue(patientReq, UserAccount.class);
-            UserAccount registeredAccount = registerAccount(newAccount, ERole.PATIENT);
+            UserAccount registeredAccount = registerAccount(newAccount, patientReq.getEmail(), ERole.PATIENT);
 
             Patient newPatient = (Patient) mapper.convertValue(patientReq, Patient.class);
             newPatient.setPatientAccount(registeredAccount);
@@ -224,11 +234,11 @@ public class UserAccountServiceImpl implements UserAccountService {
         return generatedString;
     }
 
-    public void sendEmail(UserAccount userAccount, HttpServletRequest request)
+    public void sendEmail(UserAccount userAccount, String verificationCode, HttpServletRequest request)
             throws MessagingException, UnsupportedEncodingException {
         String baseURL = Constants.makeUrl(request);
 
-        String toAddress = userAccount.getEmail();
+        // String toAddress = userAccount.getEmail();
         String fromAddress = sender;
         String senderName = "GoDoctor";
         String subject = "Please verify your registration";
@@ -236,17 +246,17 @@ public class UserAccountServiceImpl implements UserAccountService {
                 + "Please click the link below to verify your registration:<br>"
                 + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
                 + "Thank you,<br>"
-                + "Your company name.";
+                + "GoDoctor.";
 
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 
         helper.setFrom(fromAddress, senderName);
-        helper.setTo(toAddress);
+        helper.setTo("abc");
         helper.setSubject(subject);
 
         content = content.replace("[[name]]", userAccount.getUsername());
-        String verifyURL = baseURL + "/verify?code=" + userAccount.getVerificationCode();
+        String verifyURL = baseURL + "/verify?code=" + verificationCode;
 
         content = content.replace("[[URL]]", verifyURL);
 

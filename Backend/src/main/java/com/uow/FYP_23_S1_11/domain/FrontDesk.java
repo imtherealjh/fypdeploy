@@ -2,6 +2,7 @@ package com.uow.FYP_23_S1_11.domain;
 
 import java.io.Serializable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="FRONT_DESK")
+@Table(name = "FRONT_DESK")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -25,7 +26,10 @@ public class FrontDesk implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int frontDeskId;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
+    private String email;
 
     @OneToOne
     @JoinColumn(name = "frontDeskAccount", referencedColumnName = "accountId")

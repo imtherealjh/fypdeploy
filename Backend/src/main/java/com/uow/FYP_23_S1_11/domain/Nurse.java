@@ -2,6 +2,7 @@ package com.uow.FYP_23_S1_11.domain;
 
 import java.io.Serializable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="NURSE")
+@Table(name = "NURSE")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -25,6 +26,9 @@ public class Nurse implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int nurseId;
+    @Column(nullable = false)
+    private String email;
+    @Column(nullable = false)
     private String name;
 
     @OneToOne

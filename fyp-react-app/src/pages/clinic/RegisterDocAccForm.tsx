@@ -1,7 +1,7 @@
 import axios from "../../api/axios";
 import Multiselect from "multiselect-react-dropdown";
 import { useState, ChangeEvent, useEffect, FormEvent } from "react";
-import { IObjectKeys } from "../../utils/types";
+import { IObjectKeys } from "../../hooks/types";
 import { CgMathPlus } from "react-icons/cg";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +16,7 @@ interface DoctorInputs extends IObjectKeys {
   username: string;
   password: string;
   name: string;
+  email: string;
   profile: string;
   specialty: Array<string>;
   schedule: Array<ScheduleInputs>;
@@ -25,6 +26,7 @@ const defaultVal: DoctorInputs = {
   username: "",
   password: "",
   name: "",
+  email: "",
   profile: "",
   specialty: [],
   schedule: [],
@@ -128,7 +130,7 @@ export default function DoctorAccount() {
           <div className="mt-2" key={idx}>
             <h4>Doctor {idx + 1}</h4>
             <div className="row g-2 align-content-center justify-content-center">
-              <div className="col">
+              <div className="col-6">
                 <input
                   type="text"
                   className="form-control"
@@ -141,7 +143,7 @@ export default function DoctorAccount() {
                   value={customInput.username || ""}
                 />
               </div>
-              <div className="col">
+              <div className="col-6">
                 <input
                   type="password"
                   className="form-control"
@@ -154,7 +156,8 @@ export default function DoctorAccount() {
                   value={customInput.password || ""}
                 />
               </div>
-              <div className="col">
+
+              <div className="col-6">
                 <input
                   type="text"
                   className="form-control"
@@ -165,6 +168,20 @@ export default function DoctorAccount() {
                     handleDoctorChange(event, idx)
                   }
                   value={customInput.name || ""}
+                />
+              </div>
+
+              <div className="col-6">
+                <input
+                  type="text"
+                  className="form-control"
+                  name="email"
+                  placeholder="Email"
+                  aria-label="Email"
+                  onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                    handleDoctorChange(event, idx)
+                  }
+                  value={customInput.email || ""}
                 />
               </div>
 

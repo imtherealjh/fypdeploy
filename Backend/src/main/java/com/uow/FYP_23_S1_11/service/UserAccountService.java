@@ -22,11 +22,11 @@ public interface UserAccountService {
                         HttpServletResponse response, String token)
                         throws StreamWriteException, DatabindException, IOException;
 
-        public UserAccount registerAccount(UserAccount account, ERole userRole);
+        public UserAccount registerAccount(UserAccount account, String email, ERole userRole);
 
         public Boolean registerClinicAccount(ClinicRegisterRequest clinicReq);
 
-        public Boolean registerPatientAccount(PatientRegisterRequest patientReq,HttpServletRequest request);
+        public Boolean registerPatientAccount(PatientRegisterRequest patientReq, HttpServletRequest request);
 
         public void logout(HttpServletRequest request,
                         HttpServletResponse response, String token);

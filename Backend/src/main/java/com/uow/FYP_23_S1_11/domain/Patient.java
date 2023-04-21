@@ -7,12 +7,12 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -33,12 +33,13 @@ public class Patient implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer patientId;
+    @Column(nullable = false)
+    private String email;
+    @Column(nullable = false)
     private String name;
     @Temporal(TemporalType.DATE)
     private Date dob;
-    private String gender;
     private String address;
-    private Integer contact;
 
     @OneToOne
     @JoinColumn(name = "patientAccount", referencedColumnName = "accountId")

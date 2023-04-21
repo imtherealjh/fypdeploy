@@ -35,8 +35,10 @@ public class Doctor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer doctorId;
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
+    private String email;
     @Column(name = "profile", nullable = false)
     private String profile;
 

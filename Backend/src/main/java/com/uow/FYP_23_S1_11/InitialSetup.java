@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,8 @@ public class InitialSetup {
     private UserAccountRepository userAccRepo;
     @Autowired
     private UserAccountService userAccService;
+    @Value("${spring.mail.username}")
+    private String sender;
 
     @EventListener
     public void onApplicationEvent(ApplicationReadyEvent event) throws Exception {
@@ -50,8 +53,7 @@ public class InitialSetup {
             account.setUsername("admin");
             account.setPassword("admin");
             account.setIsEnabled(true);
-            UserAccount createdUser = userAccService.registerAccount(account, ERole.SYSTEM_ADMIN);
-            System.out.println(createdUser.getRole());
+            UserAccount createdUser = userAccService.registerAccount(account, sender, ERole.SYSTEM_ADMIN);
         }
 
     }

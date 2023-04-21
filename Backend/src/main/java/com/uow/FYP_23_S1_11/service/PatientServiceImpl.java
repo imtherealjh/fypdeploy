@@ -128,7 +128,7 @@ public class PatientServiceImpl implements PatientService {
             return apptOptional.get();
         } catch (Exception e) {
             System.out.println(e);
-            return new Appointment();
+            return null;
         }
     }
 
@@ -137,12 +137,11 @@ public class PatientServiceImpl implements PatientService {
         try {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
-            // TODO: need to check if current appointment is booked
-            Optional<Appointment> apptOptional = apptRepo.findById(bookApptReq.getApptId());
-            if (apptOptional.isEmpty()) {
-                throw new IllegalArgumentException("No available appointment...");
+            Appointment appt = getAppointmentById(bookApptReq.getApptId());
+            if (appt == null || appt.getStatus() == EAppointmentStatus.BOOKED
+                    || appt.getStatus() == EAppointmentStatus.BLOCKED) {
+                throw new IllegalArgumentException("Appointment cannot be booked...");
             }
-            Appointment appt = apptOptional.get();
             appt.setStatus(EAppointmentStatus.BOOKED);
             appt.setDescription(bookApptReq.getDescription());
             appt.setApptPatient(patient);
@@ -154,20 +153,22 @@ public class PatientServiceImpl implements PatientService {
         }
     }
 
+    private void removeAppointment(Appointment appointment) {
+        appointment.setStatus(EAppointmentStatus.AVAILABLE);
+        appointment.setDescription(null);
+        appointment.setApptPatient(null);
+        apptRepo.save(appointment);
+    }
+
     @Override
     public Boolean updateAppointment(BookUpdateAppointmentRequest updateApptReq) {
         try {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
 
-            Optional<Appointment> optionalOrigAppt = apptRepo.findById(updateApptReq.getOriginalApptId());
-            if (optionalOrigAppt.isEmpty()) {
-                throw new IllegalArgumentException("Appointment not found...");
-            }
-
-            Appointment origAppt = optionalOrigAppt.get();
+            Appointment origAppt = getAppointmentById(updateApptReq.getOriginalApptId());
             // validate if is the actual person updating the appointment
-            if (patient.getPatientId() != origAppt.getApptPatient().getPatientId()) {
+            if (origAppt == null || patient.getPatientId() != origAppt.getApptPatient().getPatientId()) {
                 throw new IllegalArgumentException("Appointment cannot be updated...");
             }
 
@@ -175,11 +176,8 @@ public class PatientServiceImpl implements PatientService {
                 origAppt.setDescription(updateApptReq.getDescription());
                 apptRepo.save(origAppt);
             } else {
-                origAppt.setStatus(EAppointmentStatus.AVAILABLE);
-                origAppt.setDescription(null);
-                origAppt.setApptPatient(null);
-                apptRepo.save(origAppt);
                 bookAvailableAppointment(updateApptReq);
+                removeAppointment(origAppt);
             }
 
             return true;
@@ -194,14 +192,12 @@ public class PatientServiceImpl implements PatientService {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
 
-            Appointment appt = getAppointmentById(apptId);
-
-            if (patient.getPatientId() == appt.getApptPatient().getPatientId()) {
-                appt.setStatus(EAppointmentStatus.AVAILABLE);
-                appt.setDescription(null);
-                appt.setApptPatient(null);
-                apptRepo.save(appt);
+            Appointment origAppt = getAppointmentById(apptId);
+            if (origAppt == null || patient.getPatientId() != origAppt.getApptPatient().getPatientId()) {
+                throw new IllegalArgumentException("Appointment cannot be removed...");
             }
+
+            removeAppointment(origAppt);
             return true;
         } catch (Exception e) {
             System.out.println(e);
@@ -221,28 +217,6 @@ public class PatientServiceImpl implements PatientService {
             if (materialOptional.isEmpty()) {
                 throw new IllegalArgumentException("Educational material does not exist..");
             }
-            // Below code for sending email test when implementing in a function, to
-            // delete...
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-            // to get current user's email
-            UserAccount currentUser = Constants.getAuthenticatedUser();
-
-            mailMessage.setFrom(sender);
-            mailMessage.setTo(currentUser.getEmail());
-            String template = "Hello " +
-                    String.valueOf(currentUser.getPatient().getName()) +
-                    ",\n\n\ttesting send message\n" +
-                    "\tnewline test\n" +
-                    "\ttest sent educational material details\n" +
-                    "\tContent of Material:\n" +
-                    String.valueOf(materialOptional.get().getContent()) +
-                    "\n\nBest Regards\n" +
-                    "Good Doctor Team";
-            mailMessage.setText(template);
-            mailMessage.setSubject("View Educational Material: " + materialOptional.get().getTitle());
-
-            javaMailSender.send(mailMessage);
-            //
             return materialOptional.get();
         } catch (Exception e) {
             System.out.println(e);
