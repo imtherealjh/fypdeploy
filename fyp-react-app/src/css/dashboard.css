@@ -26,6 +26,17 @@
   background-color: transparent;
 }
 
+.dashboard-stats {
+  display: flex;
+  gap: 1rem;
+}
+
+.dashboard-stats div {
+  background-color: #f0f0f0;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
 @media screen and (max-width: 500px) {
   .dashboard > :first-child {
     flex-grow: 1;

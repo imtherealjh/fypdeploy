@@ -1,4 +1,14 @@
 import { Route, Routes } from "react-router-dom";
+
+// Layouts
+import LandingPageLayout from "./layout/LandingPageLayout";
+import DashboardLayout from "./layout/DashboardLayout";
+
+// Components
+import SideBar from "./components/sidenavbar";
+import PersistLogin from "./components/PersistLogin";
+
+// Pages
 import Home from "./pages/Home";
 import DoctorHome from "./pages/doctor/Home";
 import RegisterAccount from "./pages/clinic/RegisterAccount";
@@ -6,10 +16,9 @@ import RegisterPatient from "./pages/RegisterPatient";
 import RegisterClinic from "./pages/RegisterClinic";
 import Appointment from "./pages/patient/Appointment";
 import BookAppointment from "./pages/patient/BookAppointment";
-import LandingPageLayout from "./layout/LandingPageLayout";
-import DashboardLayout from "./layout/DashboardLayout";
-import SideBar from "./components/sidenavbar";
-import PersistLogin from "./components/PersistLogin";
+import DoctorAppointment from "./pages/doctor/Appointment";
+import PatientList from "./pages/doctor/PatientList";
+import Feedback from "./pages/doctor/Feedback";
 
 function App() {
   return (
@@ -39,6 +48,9 @@ function App() {
               }
             >
               <Route index path="" element={<DoctorHome />} />
+              <Route path="appointments" element={<DoctorAppointment />} />
+              <Route path="patients" element={<PatientList />} />
+              <Route path="feedbacks" element={<Feedback />} />
             </Route>
 
             <Route
