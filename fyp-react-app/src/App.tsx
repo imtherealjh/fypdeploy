@@ -2,23 +2,19 @@ import { Route, Routes } from "react-router-dom";
 
 // Layouts
 import LandingPageLayout from "./layout/LandingPageLayout";
-import DashboardLayout from "./layout/DashboardLayout";
 
 // Components
-import SideBar from "./components/sidenavbar";
 import PersistLogin from "./components/PersistLogin";
+import RequireAuth from "./components/RequiredAuth";
 
 // Pages
 import Home from "./pages/Home";
-import DoctorHome from "./pages/doctor/Home";
-import RegisterAccount from "./pages/clinic/RegisterAccount";
 import RegisterPatient from "./pages/RegisterPatient";
 import RegisterClinic from "./pages/RegisterClinic";
-import Appointment from "./pages/patient/Appointment";
-import BookAppointment from "./pages/patient/BookAppointment";
-import DoctorAppointment from "./pages/doctor/Appointment";
-import PatientList from "./pages/doctor/PatientList";
-import Feedback from "./pages/doctor/Feedback";
+import PatientRoutes from "./routes/PatientRoutes";
+import ClinicRoutes from "./routes/ClinicRoutes";
+import DoctorRoutes from "./routes/DoctorRoutes";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   return (
@@ -29,96 +25,19 @@ function App() {
             <Route index path="/" element={<Home />} />
             <Route path="/registerClinic" element={<RegisterClinic />} />
             <Route path="/registerPatient" element={<RegisterPatient />} />
+            <Route path="/verify" element={<VerifyEmail />} />
+            <Route path="/unauthorized" element={<></>} />
           </Route>
 
           <Route element={<PersistLogin />}>
-            <Route
-              path="/doctor/*"
-              element={
-                <DashboardLayout>
-                  <SideBar
-                    navList={[
-                      { name: "Dashboard", link: "", end: true },
-                      { name: "Appointment", link: "appointments", end: true },
-                      { name: "Patient List", link: "patients", end: true },
-                      { name: "Feed Back", link: "feedbacks", end: true },
-                    ]}
-                  />
-                </DashboardLayout>
-              }
-            >
-              <Route index path="" element={<DoctorHome />} />
-              <Route path="appointments" element={<DoctorAppointment />} />
-              <Route path="patients" element={<PatientList />} />
-              <Route path="feedbacks" element={<Feedback />} />
+            <Route element={<RequireAuth role={"patient"} />}>
+              <Route path="/patient/*" element={<PatientRoutes />} />
             </Route>
-
-            <Route
-              path="/clinic/*"
-              element={
-                <DashboardLayout>
-                  <SideBar
-                    navList={[
-                      { name: "Dashboard", link: "", end: true },
-                      {
-                        name: "Create Account",
-                        link: "register-account",
-                        end: true,
-                      },
-                      {
-                        name: "Manage Account",
-                        link: "manage-account",
-                        end: true,
-                      },
-                      {
-                        name: "Create Appointment",
-                        link: "create-appointment",
-                        end: true,
-                      },
-                      {
-                        name: "Subscription",
-                        link: "subscription",
-                        end: true,
-                      },
-                      { name: "Feedback", link: "feedback", end: true },
-                    ]}
-                  />
-                </DashboardLayout>
-              }
-            >
-              <Route index path="" element={<DoctorHome />} />
-              <Route path="register-account" element={<RegisterAccount />} />
-            </Route>
-
-            <Route
-              path="/patient/*"
-              element={
-                <DashboardLayout>
-                  <SideBar
-                    navList={[
-                      { name: "Dashboard", link: "", end: true },
-                      {
-                        name: "Search Clinic",
-                        link: "search-clinic",
-                        end: true,
-                      },
-                      { name: "Appointment", link: "appointment", end: false },
-                      { name: "Queue", link: "queue", end: true },
-                      {
-                        name: "Medical Records",
-                        link: "medical-records",
-                        end: true,
-                      },
-                      { name: "Payments", link: "payment", end: true },
-                      { name: "Feedbacks", link: "feedback", end: true },
-                    ]}
-                  />
-                </DashboardLayout>
-              }
-            >
-              <Route index path="" element={<DoctorHome />} />
-              <Route path="appointment" element={<Appointment />} />
-              <Route path="appointment/book" element={<BookAppointment />} />
+            {/* <Route element={<RequireAuth role={"clinic_owner"} />}> */}
+            <Route path="/clinic/*" element={<ClinicRoutes />} />
+            {/* </Route> */}
+            <Route element={<RequireAuth role={"doctor"} />}>
+              <Route path="/doctor/*" element={<DoctorRoutes />} />
             </Route>
           </Route>
         </Routes>

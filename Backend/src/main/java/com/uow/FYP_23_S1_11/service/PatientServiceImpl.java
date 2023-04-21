@@ -226,7 +226,7 @@ public class PatientServiceImpl implements PatientService {
             UserAccount currentUser = Constants.getAuthenticatedUser();
 
             mailMessage.setFrom(sender);
-            mailMessage.setTo(currentUser.getPatient().getEmail());
+            mailMessage.setTo(currentUser.getEmail());
             String template = "Hello " +
                     String.valueOf(currentUser.getPatient().getName()) +
                     ",\n\n\ttesting send message\n" +

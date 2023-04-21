@@ -4,6 +4,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 export default function Appointment() {
   const [appointmentType, setAppointmentType] = useState("past");
+  const [data, setData] = useState({});
   const [appointments, setAppointments] = useState<any>([]);
   const axiosPrivate = useAxiosPrivate();
 
@@ -118,10 +119,21 @@ export default function Appointment() {
                   <>
                     <td colSpan={2}>
                       <div className="d-flex justify-content-end gap-2 flex-wrap">
-                        <button type="button" className="btn btn-warning">
+                        <button
+                          type="button"
+                          className="btn btn-warning"
+                          onClick={() => setData(appointments[idx])}
+                          data-bs-toggle="modal"
+                          data-bs-target="#modal"
+                        >
                           Update
                         </button>
-                        <button type="button" className="btn btn-danger">
+                        <button
+                          type="button"
+                          className="btn btn-danger"
+                          data-bs-toggle="modal"
+                          data-bs-target="#modal"
+                        >
                           Delete
                         </button>
                       </div>
@@ -132,6 +144,27 @@ export default function Appointment() {
             ))}
           </tbody>
         </table>
+        <div
+          className="modal fade"
+          id="modal"
+          data-bs-keyboard="false"
+          tabIndex={-1}
+          aria-labelledby={name + "modal"}
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content py-3">
+              <button
+                id="closeModalBtn"
+                style={{ display: "none" }}
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

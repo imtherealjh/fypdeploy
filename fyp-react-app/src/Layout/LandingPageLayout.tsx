@@ -1,4 +1,3 @@
-import Modal from "../components/modal";
 import NavBar from "../components/navbar";
 import Footer from "../components/footer";
 import { Outlet } from "react-router-dom";
@@ -14,18 +13,7 @@ export default function LandingPageLayout() {
         <button type="button" className="mx-1">
           Pricing
         </button>
-        <Modal
-          style={{
-            borderRadius: "0.4rem",
-            padding: "0.4rem",
-            backgroundColor: "black",
-            color: "white",
-            fontWeight: "bold",
-          }}
-          name="Login"
-        >
-          <LoginForm />
-        </Modal>
+        <LoginForm />
       </NavBar>
       <section className="mx-3">
         <main className="my-3">

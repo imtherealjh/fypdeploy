@@ -3,7 +3,11 @@ import "../css/patientdetails.css";
 
 //note: replace the patient variable with the actual data from backend l8r
 
-function PatientDetails({ patient }) {
+interface Props {
+  patient: any;
+}
+
+function PatientDetails({ patient }: Props) {
   return (
     <div className="patient-details">
       <h1>{patient.name}</h1>

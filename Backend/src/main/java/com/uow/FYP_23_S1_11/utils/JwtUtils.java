@@ -89,6 +89,7 @@ public class JwtUtils {
                     .parseClaimsJws(token)
                     .getBody();
         } catch (SignatureException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
+            System.out.println(ex);
             throw new BadCredentialsException("INVALID_CREDENTIALS", ex);
         } catch (ExpiredJwtException ex) {
             throw ex;

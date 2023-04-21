@@ -26,8 +26,6 @@ public class Token {
     private int id;
     private ETokenType type;
     private String token;
-    private Boolean expired;
-    private Boolean revoked;
 
     @ManyToOne
     @JoinColumn(name = "accountId", referencedColumnName = "accountId")

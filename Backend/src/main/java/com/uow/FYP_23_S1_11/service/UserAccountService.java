@@ -26,7 +26,7 @@ public interface UserAccountService {
 
         public Boolean registerClinicAccount(ClinicRegisterRequest clinicReq);
 
-        public Boolean registerPatientAccount(PatientRegisterRequest patientReq);
+        public Boolean registerPatientAccount(PatientRegisterRequest patientReq,HttpServletRequest request);
 
         public void logout(HttpServletRequest request,
                         HttpServletResponse response, String token);

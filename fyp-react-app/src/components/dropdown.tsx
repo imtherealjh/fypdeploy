@@ -1,7 +1,7 @@
 import { ReactNode, useRef, useState } from "react";
 
 import "../css/dropdown.css";
-import { useOutsideClick } from "../utils/hooks";
+import { useOutsideClick } from "../hooks/hooks";
 
 interface Props {
   buttonContent: ReactNode;

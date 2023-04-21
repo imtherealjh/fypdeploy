@@ -5,7 +5,7 @@ import { ReactNode, useEffect, useState } from "react";
 
 import "../css/dashboard.css";
 import Dropdown from "../components/dropdown";
-import { useWindowDimensions } from "../utils/hooks";
+import { useWindowDimensions } from "../hooks/hooks";
 
 interface Props {
   children: ReactNode;

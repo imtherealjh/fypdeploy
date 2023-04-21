@@ -3,15 +3,11 @@ import "react-calendar/dist/Calendar.css";
 import Calendar from "react-calendar";
 
 function CustomCalendar() {
-  const [value, setValue] = React.useState(new Date());
-
-  const onChange = (value: Date | Date[]) => {
-    setValue(value as Date);
-  };
+  const [value, setValue] = React.useState<any>(new Date());
 
   return (
     <div>
-      <Calendar onChange={onChange} value={value} />
+      <Calendar onChange={setValue} value={value} />
     </div>
   );
 }

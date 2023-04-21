@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 
-import { getRefValue } from "../utils/hooks";
-import { getTouchEventData } from "../utils/dom";
+import { getRefValue } from "../hooks/hooks";
+import { getTouchEventData } from "../hooks/dom";
 
 import "../css/carousel.css";
-import { CarouselItems } from "../utils/types";
+import { CarouselItems } from "../hooks/types";
 
 export type Props = {
   images: Array<CarouselItems>;

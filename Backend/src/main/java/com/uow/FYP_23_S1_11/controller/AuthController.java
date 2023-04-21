@@ -57,8 +57,9 @@ public class AuthController {
     }
 
     @PostMapping("/registerPatient")
-    public ResponseEntity<Boolean> registerPatient(@Valid @RequestBody PatientRegisterRequest patientReq) {
-        Boolean result = userAccountService.registerPatientAccount(patientReq);
+    public ResponseEntity<Boolean> registerPatient(@Valid @RequestBody PatientRegisterRequest patientReq,
+            HttpServletRequest request) {
+        Boolean result = userAccountService.registerPatientAccount(patientReq, request);
         return ResponseEntity.ok(result);
     }
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,9 @@ public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoi
         if (throwable != null && throwable.getCause().getClass() == ExpiredJwtException.class) {
             response.setStatus(403);
             apiError = new ApiError(HttpStatus.FORBIDDEN, throwable);
+        } else if (authException instanceof DisabledException) {
+            response.setStatus(409);
+            apiError = new ApiError(HttpStatus.CONFLICT, authException);
         } else {
             response.setStatus(401);
             apiError = new ApiError(HttpStatus.UNAUTHORIZED, authException);
