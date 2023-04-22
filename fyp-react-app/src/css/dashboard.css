@@ -3,16 +3,21 @@
 }
 
 .dashboard > :first-child {
-  flex-grow: 0.2;
+  flex: 0 1 auto;
 }
 
-.dashboard > main {
-  padding: 0.8rem;
+.dashboard > :not(:first-child) {
+  flex: 1 1 auto;
+}
+
+.dashboard > main > h1 + div {
+  margin: 0.8rem;
 }
 
 .dashboard > main > h1 {
   border-bottom: 2px solid black;
   font-weight: bold;
+  padding: 0.8rem;
 }
 
 .dashboard-stats {

@@ -16,17 +16,20 @@ function Dashboard() {
   ];
 
   return (
-    <div className="dashboard-container">
-      <div className="calendar">
-        <Calendar />
+    <>
+      <h1>Dashboard</h1>
+      <div className="dashboard-container">
+        <div className="calendar">
+          <Calendar />
+        </div>
+        <div className="dashboard-stats">
+          <div className="visits-today">Visits for Today: {visitsToday}</div>
+          <div className="new-patients">New Patients: {newPatients}</div>
+          <div className="old-patients">Old Patients: {oldPatients}</div>
+        </div>
+        <PatientList patients={patientsList} />
       </div>
-      <div className="dashboard-stats">
-        <div className="visits-today">Visits for Today: {visitsToday}</div>
-        <div className="new-patients">New Patients: {newPatients}</div>
-        <div className="old-patients">Old Patients: {oldPatients}</div>
-      </div>
-      <PatientList patients={patientsList} />
-    </div>
+    </>
   );
 }
 

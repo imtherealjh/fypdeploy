@@ -18,22 +18,25 @@ function Feedback() {
   };
 
   return (
-    <div className="feedback-container">
-      <h2>Feedback</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="feedback">Your feedback:</label>
-          <textarea
-            id="feedback"
-            name="feedback"
-            rows={4}
-            value={feedback}
-            onChange={handleFeedbackChange}
-          />
-        </div>
-        <button type="submit">Submit Feedback</button>
-      </form>
-    </div>
+    <>
+      <h1>Feedback</h1>
+      <div className="feedback-container">
+        <h2>Feedback</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="feedback">Your feedback:</label>
+            <textarea
+              id="feedback"
+              name="feedback"
+              rows={4}
+              value={feedback}
+              onChange={handleFeedbackChange}
+            />
+          </div>
+          <button type="submit">Submit Feedback</button>
+        </form>
+      </div>
+    </>
   );
 }
 

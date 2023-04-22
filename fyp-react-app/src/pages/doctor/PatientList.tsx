@@ -22,9 +22,12 @@ function PatientListPage() {
   };
 
   return (
-    <div>
-      <PatientDetails patient={patient} />
-    </div>
+    <>
+      <h1>Patient List</h1>
+      <div>
+        <PatientDetails patient={patient} />
+      </div>
+    </>
   );
 }
 
