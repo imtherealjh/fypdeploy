@@ -27,7 +27,6 @@ function Feedback() {
             id="feedback"
             name="feedback"
             rows={4}
-            cols={50}
             value={feedback}
             onChange={handleFeedbackChange}
           />

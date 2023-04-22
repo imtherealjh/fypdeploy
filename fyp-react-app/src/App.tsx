@@ -15,6 +15,8 @@ import PatientRoutes from "./routes/PatientRoutes";
 import ClinicRoutes from "./routes/ClinicRoutes";
 import DoctorRoutes from "./routes/DoctorRoutes";
 import VerifyEmail from "./pages/VerifyEmail";
+import AdminRoutes from "./routes/AdminRoutes";
+import SideBar from "./components/sidenavbar";
 
 function App() {
   return (
@@ -36,8 +38,11 @@ function App() {
             <Route element={<RequireAuth role={"clinic_owner"} />}>
               <Route path="/clinic/*" element={<ClinicRoutes />} />
             </Route>
-            <Route element={<RequireAuth role={"doctor"} />}>
-              <Route path="/doctor/*" element={<DoctorRoutes />} />
+            {/* <Route element={<RequireAuth role={"doctor"} />}> */}
+            <Route path="/doctor/*" element={<DoctorRoutes />} />
+            {/* </Route> */}
+            <Route element={<RequireAuth role={"system_admin"} />}>
+              <Route path="/admin/*" element={<AdminRoutes />} />
             </Route>
           </Route>
         </Routes>

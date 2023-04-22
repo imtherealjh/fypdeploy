@@ -1,5 +1,29 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100svh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 1rem;
+}
+
+.container > nav {
+  flex: 0 1 auto;
+}
+
+.container > section {
+  flex: 1 1 auto;
+}
+
 body {
-  margin: 1rem 0;
   background-color: #f2f2f2;
 }
 

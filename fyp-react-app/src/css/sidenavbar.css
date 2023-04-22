@@ -2,7 +2,7 @@
   position: relative;
   background-color: #edf0f7;
   border-right: 2px solid black;
-  height: 78svh;
+  height: 100%;
 }
 
 .side-navbar ul {
@@ -41,10 +41,4 @@
   bottom: 0;
   width: 100%;
   border-top: 2px solid black;
-}
-
-@media screen and (max-width: 500px) {
-  .side-navbar {
-    position: fixed;
-  }
 }

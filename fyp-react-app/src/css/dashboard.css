@@ -6,24 +6,13 @@
   flex-grow: 0.2;
 }
 
-.dashboard > main > * {
+.dashboard > main {
   padding: 0.8rem;
 }
 
-.dashboard > main > div:has(h1) {
+.dashboard > main > h1 {
   border-bottom: 2px solid black;
   font-weight: bold;
-}
-
-.dashboard > main h1 {
-  margin: 0;
-}
-
-.dashboard > main button.menu {
-  border: none;
-  margin: 0 0.1rem;
-  padding: 0.15rem 0.4rem;
-  background-color: transparent;
 }
 
 .dashboard-stats {
@@ -35,10 +24,4 @@
   background-color: #f0f0f0;
   padding: 1rem;
   border-radius: 4px;
-}
-
-@media screen and (max-width: 500px) {
-  .dashboard > :first-child {
-    flex-grow: 1;
-  }
 }

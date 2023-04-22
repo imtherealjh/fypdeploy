@@ -43,6 +43,8 @@ export default function LoginForm() {
         navigate("nurse", { replace: true });
       else if (role.toLowerCase() == "front-desk")
         navigate("clerk", { replace: true });
+      else if (role.toLowerCase() == "system_admin")
+        navigate("admin", { replace: true });
       else navigate("/", { replace: true });
     } catch (err: any) {
       console.log(err);

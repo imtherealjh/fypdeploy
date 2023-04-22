@@ -3,9 +3,8 @@
   padding: 1rem;
   border: 2px solid black;
   border-radius: 4px;
-  width: 100%;
-  max-width: 500px;
   margin: 2rem auto;
+  width: 100%;
 }
 
 .feedback-container h2 {
@@ -30,7 +29,7 @@
   font-size: 16px;
   color: #2d3648;
   margin-bottom: 1rem;
-  resize: vertical;
+  width: 100%;
 }
 
 .feedback-container button[type="submit"] {

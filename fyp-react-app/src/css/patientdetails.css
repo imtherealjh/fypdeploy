@@ -3,11 +3,7 @@
   padding: 1rem;
   border: 2px solid black;
   border-radius: 4px;
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto;
   text-align: center;
-  margin-left: 5rem;
 }
 
 .patient-details h1 {
