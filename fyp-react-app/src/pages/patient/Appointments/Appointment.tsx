@@ -34,6 +34,7 @@ export default function Appointment() {
 
   return (
     <>
+      <h1>Appointment</h1>
       <div>
         <div className="d-flex justify-content-end">
           <Link to="book" state={useLocation().state}>

@@ -39,8 +39,6 @@ export default function BookAppointment() {
     }
   };
 
-  console.log(formData);
-
   const conditionalComponent = () => {
     switch (step) {
       case 1:
@@ -56,6 +54,7 @@ export default function BookAppointment() {
 
   return (
     <>
+      <h1>Appointment</h1>
       <div>
         <h4>Book appointment...</h4>
         <h6>Please fill up the form before continuing...</h6>

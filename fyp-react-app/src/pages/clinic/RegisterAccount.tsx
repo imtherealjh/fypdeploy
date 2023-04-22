@@ -7,7 +7,8 @@ export default function RegisterAccount() {
   const [formState, setFormState] = useState("");
 
   return (
-    <>
+    <> 
+      <h1>Register Account</h1>
       <div className="d-flex flex-column gap-2 w-100">
         <h5>Please create account by one role at a time...</h5>
         <select

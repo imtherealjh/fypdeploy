@@ -1,0 +1,16 @@
+.clinic-overview {
+  background: white;
+}
+
+.clinic-overview > div.d-flex > * {
+  padding: 2rem;
+}
+
+.clinic-overview > div.d-flex > div:first-child {
+  border-right: 1px solid black;
+}
+
+.clinic-overview > div.d-flex > .clinic-details > div > span:first-child {
+  font-size: 1rem;
+  font-weight: bold;
+}

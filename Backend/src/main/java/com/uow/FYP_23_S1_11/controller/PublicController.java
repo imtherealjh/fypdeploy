@@ -22,4 +22,5 @@ public class PublicController {
     public ResponseEntity<List<Specialty>> getAllSpecialty() {
         return specialtyService.getAllSpecialty();
     }
+
 }

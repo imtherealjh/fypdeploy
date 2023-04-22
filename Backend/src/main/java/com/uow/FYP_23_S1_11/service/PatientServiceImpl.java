@@ -1,8 +1,10 @@
 package com.uow.FYP_23_S1_11.service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -138,8 +140,11 @@ public class PatientServiceImpl implements PatientService {
             UserAccount currentUser = Constants.getAuthenticatedUser();
             Patient patient = currentUser.getPatient();
             Appointment appt = getAppointmentById(bookApptReq.getApptId());
-            if (appt == null || appt.getStatus() == EAppointmentStatus.BOOKED
-                    || appt.getStatus() == EAppointmentStatus.BLOCKED) {
+            // Ensure that the appointment is available and ensure that the
+            // appointment date is not after today
+            if (appt == null ||
+                    appt.getStatus() != EAppointmentStatus.AVAILABLE ||
+                    appt.getApptDate().isBefore(LocalDate.now())) {
                 throw new IllegalArgumentException("Appointment cannot be booked...");
             }
             appt.setStatus(EAppointmentStatus.BOOKED);
@@ -168,7 +173,11 @@ public class PatientServiceImpl implements PatientService {
 
             Appointment origAppt = getAppointmentById(updateApptReq.getOriginalApptId());
             // validate if is the actual person updating the appointment
-            if (origAppt == null || patient.getPatientId() != origAppt.getApptPatient().getPatientId()) {
+            // and ensure that older appointments cannot be updated
+            if (origAppt == null ||
+                    patient.getPatientId() != origAppt.getApptPatient().getPatientId() ||
+                    origAppt.getStatus() != EAppointmentStatus.BOOKED ||
+                    origAppt.getApptDate().isBefore(LocalDate.now())) {
                 throw new IllegalArgumentException("Appointment cannot be updated...");
             }
 

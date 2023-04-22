@@ -18,6 +18,8 @@ function Feedback() {
   };
 
   return (
+    <>
+    <h1>Feedback</h1>
     <div className="feedback-container">
       <h2>Feedback</h2>
       <form onSubmit={handleSubmit}>
@@ -34,6 +36,7 @@ function Feedback() {
         <button type="submit">Submit Feedback</button>
       </form>
     </div>
+    </>
   );
 }
 

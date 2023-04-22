@@ -10,11 +10,13 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.uow.FYP_23_S1_11.enums.EClinicStatus;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,16 +43,17 @@ public class Clinic implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer clinicId;
-
     @Column(name = "clinicName", nullable = false)
     private String clinicName;
     @Column(name = "location", nullable = false)
     private String location;
     private String proofOfLicense;
-    @Column(nullable = false)
+    @Column(name="email", nullable = false)
     private String email;
-    @Column(nullable = false)
+    @Column(name="contactName", nullable = false)
     private String contactName;
+    @Enumerated(EnumType.STRING)
+    private EClinicStatus status = EClinicStatus.PENDING;
 
     @Column(name = "openingHrs", nullable = false)
     @JsonFormat(pattern = "HH:mm")

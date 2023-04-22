@@ -3,30 +3,6 @@ import { CgSearch } from "react-icons/cg";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { Link } from "react-router-dom";
 
-interface ClinicData {
-  clinicId: number;
-  clinicName: string;
-  location: string;
-  contactName: string;
-  email: string;
-}
-
-class CustomObject {
-  clinicId: number;
-  clinicName: string;
-  location: string;
-  contactName: string;
-  email: string;
-
-  constructor(data: any) {
-    this.clinicId = data.clinicId;
-    this.clinicName = data.clinicName;
-    this.location = data.location;
-    this.contactName = data.contactName;
-    this.email = data.email;
-  }
-}
-
 export default function Dashboard() {
   const [searchInput, setSearchInput] = useState("");
   const [clinics, setClinics] = useState([]);
@@ -53,6 +29,7 @@ export default function Dashboard() {
 
   return (
     <>
+      <h1>Dashboard</h1>
       <div>
         <div className="input-group mb-3">
           <input
