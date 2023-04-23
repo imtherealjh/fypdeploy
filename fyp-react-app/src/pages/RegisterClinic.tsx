@@ -16,15 +16,17 @@ export default function RegisterClinic() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const response = await axios.post("/auth/registerClinic", inputs);
-      if (JSON.parse(response.data) === true) {
-        alert("Clinic successfully registered successfully");
-        navigate("/", { replace: true });
+      await axios.post("/auth/registerClinic", inputs);
+      alert("Clinic successfully registered successfully");
+      navigate("/", { replace: true });
+    } catch (err: any) {
+      if (!err?.response) {
+        alert("No Server Response");
+      } else if (err.response?.status === 400) {
+        alert(err.response?.data.errors);
       } else {
-        console.log(response);
+        alert("Unknown error");
       }
-    } catch (err) {
-      console.log(err);
     }
   };
 

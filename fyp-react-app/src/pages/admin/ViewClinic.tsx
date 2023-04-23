@@ -142,26 +142,33 @@ export default function ViewClinic() {
               >
                 Suspend clinic
               </button>
+            </div>
+          </>
+        )}
+
+        {data.clinic.status === "SUSPENDED" && (
+          <>
+            <div className="d-grid gap-2 p-4">
               <button
                 type="button"
-                className="btn btn-danger"
+                className="btn btn-success"
                 onClick={async () => {
                   if (!isMounted) {
                     isMounted = true;
                     try {
                       await axiosPrivate.put(
-                        `/sysAdmin/removeClinic?clinicId=${data.clinic.clinicId}`
+                        `/sysAdmin/enableClinic?clinicId=${data.clinic.clinicId}`
                       );
-                      alert("Successfully remove clinic...");
+                      alert("Successfully enabling clinic...");
                     } catch (err) {
-                      alert("There is an error remove the clinic...");
+                      alert("There is an error enabling the clinic...");
                     }
                     navigate(0);
                     isMounted = false;
                   }
                 }}
               >
-                Remove clinic
+                Enable clinic
               </button>
             </div>
           </>

@@ -1,21 +1,12 @@
 package com.uow.FYP_23_S1_11.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.validation.FieldError;
 
 import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
-import com.uow.FYP_23_S1_11.exception.MedicalRecordsNotFoundException;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackDoctorRepository;
 import com.uow.FYP_23_S1_11.repository.PatientMedicalRecordsRepository;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;

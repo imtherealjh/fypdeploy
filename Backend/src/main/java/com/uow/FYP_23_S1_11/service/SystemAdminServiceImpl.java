@@ -27,7 +27,7 @@ public class SystemAdminServiceImpl implements SystemAdminService {
 
     @Override
     public Object getClinicById(Integer id) {
-        return clinicRepo.findByCustomObject(id); 
+        return clinicRepo.findByCustomObject(id);
     }
 
     @Override
@@ -38,11 +38,11 @@ public class SystemAdminServiceImpl implements SystemAdminService {
     private Clinic findClinicById(int id) {
         try {
             Optional<Clinic> clinicOptional = clinicRepo.findById(id);
-            if(clinicOptional.isEmpty()) {
+            if (clinicOptional.isEmpty()) {
                 throw new IllegalArgumentException("Clinic is not found...");
             }
             return clinicOptional.get();
-        } catch(Exception e) {
+        } catch (Exception e) {
             log.error("Error occured in findClinicById In SystemAdminServiceImpl: {}", e);
             return null;
         }
@@ -52,7 +52,7 @@ public class SystemAdminServiceImpl implements SystemAdminService {
     public Boolean approveClinic(Integer clinicId) {
         try {
             Clinic clinic = findClinicById(clinicId);
-            if(clinic == null || clinic.getStatus() != EClinicStatus.PENDING) {
+            if (clinic == null || clinic.getStatus() != EClinicStatus.PENDING) {
                 throw new IllegalArgumentException("Unable to approve clinic...");
             }
             clinic.setStatus(EClinicStatus.APPROVED);
@@ -63,7 +63,7 @@ public class SystemAdminServiceImpl implements SystemAdminService {
             userAccountRepo.save(userAccount);
 
             return true;
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
             log.error("Error occured in approveClinic In SystemAdminServiceImpl: {}", e);
@@ -75,14 +75,14 @@ public class SystemAdminServiceImpl implements SystemAdminService {
     public Boolean rejectClinic(Integer clinicId) {
         try {
             Clinic clinic = findClinicById(clinicId);
-            if(clinic == null || clinic.getStatus() != EClinicStatus.PENDING) {
+            if (clinic == null || clinic.getStatus() != EClinicStatus.PENDING) {
                 throw new IllegalArgumentException("Unable to reject clinic...");
             }
             clinic.setStatus(EClinicStatus.REJECTED);
             clinicRepo.save(clinic);
 
             return true;
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
             log.error("Error occured in rejectClinic In SystemAdminServiceImpl: {}", e);
@@ -94,7 +94,7 @@ public class SystemAdminServiceImpl implements SystemAdminService {
     public Boolean suspendClinic(Integer clinicId) {
         try {
             Clinic clinic = findClinicById(clinicId);
-            if(clinic == null || clinic.getStatus() != EClinicStatus.APPROVED) {
+            if (clinic == null || clinic.getStatus() != EClinicStatus.APPROVED) {
                 throw new IllegalArgumentException("Unable to suspend clinic...");
             }
             clinic.setStatus(EClinicStatus.SUSPENDED);
@@ -105,7 +105,7 @@ public class SystemAdminServiceImpl implements SystemAdminService {
             userAccountRepo.save(userAccount);
 
             return true;
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
             log.error("Error occured in suspendClinic In SystemAdminServiceImpl: {}", e);
@@ -114,28 +114,25 @@ public class SystemAdminServiceImpl implements SystemAdminService {
     }
 
     @Override
-    public Boolean removeClinic(Integer clinicId) {
+    public Boolean enableClinic(Integer clinicId) {
         try {
             Clinic clinic = findClinicById(clinicId);
-            if(clinic == null || clinic.getStatus() != EClinicStatus.APPROVED) {
-                throw new IllegalArgumentException("Unable to suspend clinic...");
+            if (clinic == null || clinic.getStatus() != EClinicStatus.SUSPENDED) {
+                throw new IllegalArgumentException("Unable to enable clinic...");
             }
-            clinic.setStatus(EClinicStatus.DELETED);
+            clinic.setStatus(EClinicStatus.APPROVED);
             clinicRepo.save(clinic);
 
             UserAccount userAccount = clinic.getClinicAccount();
-            userAccount.setIsEnabled(false);
+            userAccount.setIsEnabled(true);
             userAccountRepo.save(userAccount);
 
             return true;
-        } catch(IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
-            log.error("Error occured in removeClinic In SystemAdminServiceImpl: {}", e);
+            log.error("Error occured in enableClinic In SystemAdminServiceImpl: {}", e);
             return false;
         }
     }
-
-    
-
 }

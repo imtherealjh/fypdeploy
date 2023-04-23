@@ -110,11 +110,6 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Doctor> getAllDoctorsByClinicSpecialty(Integer clincId, String specialty) {
-        return doctorRepo.findByClinicSpecialty(clincId, specialty);
-    }
-
-    @Override
     public List<Appointment> getDoctorAvailableAppointment(DoctorAvailableRequest req) {
         LocalDate parseDate = LocalDate.parse(req.getDate());
         return apptRepo.findAvailableApptByDoctorAndDay(req.getDoctorId(), EAppointmentStatus.AVAILABLE, parseDate);
@@ -142,6 +137,7 @@ public class PatientServiceImpl implements PatientService {
             Appointment appt = getAppointmentById(bookApptReq.getApptId());
             // Ensure that the appointment is available and ensure that the
             // appointment date is not after today
+            // ensure that the doctor is not suspended
             if (appt == null ||
                     appt.getStatus() != EAppointmentStatus.AVAILABLE ||
                     appt.getApptDate().isBefore(LocalDate.now())) {

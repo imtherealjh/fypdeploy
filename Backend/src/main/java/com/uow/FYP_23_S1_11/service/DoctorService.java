@@ -5,7 +5,6 @@ import java.util.List;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
 import com.uow.FYP_23_S1_11.domain.PatientMedicalRecords;
 import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
-import com.uow.FYP_23_S1_11.exception.MedicalRecordsNotFoundException;
 
 public interface DoctorService {
         public Boolean insertMedicalRecords(PatientMedicalRecordsRequest request);

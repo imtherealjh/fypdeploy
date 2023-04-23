@@ -52,9 +52,9 @@ public class SuperAdminController {
         return ResponseEntity.ok(sysAdminService.suspendClinic(clinicId));
     }
 
-    @PutMapping("/removeClinic")
-    public ResponseEntity<?> removeClinic(@NotNull @RequestParam Integer clinicId) {
-        return ResponseEntity.ok(sysAdminService.removeClinic(clinicId));
+    @PutMapping("/enableClinic")
+    public ResponseEntity<?> enableClinic(@NotNull @RequestParam Integer clinicId) {
+        return ResponseEntity.ok(sysAdminService.enableClinic(clinicId));
     }
 
 }

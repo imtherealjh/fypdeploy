@@ -64,20 +64,14 @@ public class UserAccountServiceImpl implements UserAccountService {
     private JwtUtils jwtUtils;
     @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private JavaMailSender mailSender;
 
     @Value("${refresh.jwtexpirationms}")
     private int refreshTokenExpiry;
-
-    @Value("${spring.mail.username}")
-    private String sender;
 
     @Override
     public void refresh(HttpServletRequest request,
             HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
         try {
-            String baseURL = Constants.makeUrl(request);
             if (token == null || token.isEmpty()) {
                 response.sendError(401, "Invalid refresh token...");
                 return;
@@ -210,13 +204,13 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, String token) {
-        try {
-            if (token == null) {
+        Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setAttribute("SameSite", "None");
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
 
-            }
-        } catch (Exception e) {
-
-        }
+        response.addCookie(cookie);
     }
 
     public String createVerificationCode() {
@@ -232,38 +226,6 @@ public class UserAccountServiceImpl implements UserAccountService {
                 .toString();
 
         return generatedString;
-    }
-
-    public void sendEmail(UserAccount userAccount, String verificationCode, HttpServletRequest request)
-            throws MessagingException, UnsupportedEncodingException {
-        String baseURL = Constants.makeUrl(request);
-
-        // String toAddress = userAccount.getEmail();
-        String fromAddress = sender;
-        String senderName = "GoDoctor";
-        String subject = "Please verify your registration";
-        String content = "Dear [[name]],<br>"
-                + "Please click the link below to verify your registration:<br>"
-                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                + "Thank you,<br>"
-                + "GoDoctor.";
-
-        MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-
-        helper.setFrom(fromAddress, senderName);
-        helper.setTo("abc");
-        helper.setSubject(subject);
-
-        content = content.replace("[[name]]", userAccount.getUsername());
-        String verifyURL = baseURL + "/verify?code=" + verificationCode;
-
-        content = content.replace("[[URL]]", verifyURL);
-
-        helper.setText(content, true);
-
-        mailSender.send(message);
-
     }
 
 }

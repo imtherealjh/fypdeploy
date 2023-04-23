@@ -29,8 +29,6 @@ public interface PatientService {
 
         public List<?> getAllClinicBySpecialty(String specialty);
 
-        public List<Doctor> getAllDoctorsByClinicSpecialty(Integer clincId, String specialty);
-
         public List<Appointment> getDoctorAvailableAppointment(DoctorAvailableRequest req);
 
         public Boolean bookAvailableAppointment(BookUpdateAppointmentRequest bookApptReq);

@@ -99,7 +99,7 @@ export default function Step1({ formData, setFormData }: Props) {
             <option
               key={idx}
               value={val.clinicId}
-            >{`${val.name} - ${val.location}`}</option>
+            >{`${val.clinicName} - ${val.location}`}</option>
           ))}
         </select>
         <select

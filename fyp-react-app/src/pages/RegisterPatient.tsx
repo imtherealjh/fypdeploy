@@ -10,19 +10,24 @@ export default function RegisterPatient() {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const name = event.target.name;
     const value = event.target.value;
-    console.log(name, value);
     setInputs((values) => ({ ...values, [name]: value }));
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const response = await axios.post("/auth/registerPatient", inputs);
-      if (JSON.parse(response.data) === true) {
-        alert("Patient successfully registered successfully");
-        navigate("/", { replace: true });
+      await axios.post("/auth/registerPatient", inputs);
+      alert("Patient successfully registered successfully");
+      navigate("/", { replace: true });
+    } catch (err: any) {
+      if (!err?.response) {
+        alert("No Server Response");
+      } else if (err.response?.status === 400) {
+        alert(err.response?.data.errors);
+      } else {
+        alert("Unknown error");
       }
-    } catch (err) {}
+    }
   };
 
   return (

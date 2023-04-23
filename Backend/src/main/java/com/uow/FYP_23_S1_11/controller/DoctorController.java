@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
 import com.uow.FYP_23_S1_11.domain.PatientMedicalRecords;
 import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
-import com.uow.FYP_23_S1_11.exception.MedicalRecordsNotFoundException;
 import com.uow.FYP_23_S1_11.service.DoctorService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

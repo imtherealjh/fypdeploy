@@ -47,13 +47,9 @@ public class AuthController {
 
     @PostMapping("/registerClinic")
     public ResponseEntity<Boolean> registerClinic(@Valid @RequestBody ClinicRegisterRequest clinicReq) {
-        try {
-            Boolean result = userAccountService.registerClinicAccount(clinicReq);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            System.out.println(e);
-            return ResponseEntity.status(404).body(false);
-        }
+        Boolean result = userAccountService.registerClinicAccount(clinicReq);
+        return ResponseEntity.ok(result);
+
     }
 
     @PostMapping("/registerPatient")
