@@ -27,9 +27,9 @@ import com.uow.FYP_23_S1_11.Constants;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
-import com.uow.FYP_23_S1_11.domain.request.ClinicRegisterRequest;
+import com.uow.FYP_23_S1_11.domain.request.RegisterClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.LoginRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientRegisterRequest;
+import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
 import com.uow.FYP_23_S1_11.domain.response.AuthResponse;
 import com.uow.FYP_23_S1_11.enums.ETokenType;
 import com.uow.FYP_23_S1_11.enums.ERole;
@@ -161,7 +161,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public Boolean registerClinicAccount(ClinicRegisterRequest clinicReq) {
+    public Boolean registerClinicAccount(RegisterClinicRequest clinicReq) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.registerModule(new JavaTimeModule());
@@ -170,6 +170,8 @@ public class UserAccountServiceImpl implements UserAccountService {
             UserAccount registeredAccount = registerAccount(newAccount, clinicReq.getEmail(), ERole.CLINIC_OWNER);
 
             Clinic newClinic = (Clinic) mapper.convertValue(clinicReq, Clinic.class);
+            System.out.println(clinicReq.getCustomLicenseProof().getBytes());
+            newClinic.setLicenseProof(clinicReq.getCustomLicenseProof().getBytes());
             newClinic.setClinicAccount(registeredAccount);
             clincRepo.save(newClinic);
 
@@ -183,7 +185,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public Boolean registerPatientAccount(PatientRegisterRequest patientReq, HttpServletRequest request) {
+    public Boolean registerPatientAccount(RegisterPatientRequest patientReq, HttpServletRequest request) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try {

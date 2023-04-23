@@ -59,7 +59,6 @@ export default function Dashboard() {
               <th scope="col">Location</th>
               <th scope="col">Contact Person</th>
               <th scope="col">Email</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>

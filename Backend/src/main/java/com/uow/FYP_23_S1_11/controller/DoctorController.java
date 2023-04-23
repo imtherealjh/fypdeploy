@@ -1,5 +1,6 @@
 package com.uow.FYP_23_S1_11.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.uow.FYP_23_S1_11.service.DoctorService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -27,13 +29,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Validated
 @SecurityRequirement(name = "bearerAuth")
 public class DoctorController {
-
     @Autowired
     private DoctorService doctorService;
 
-    @GetMapping("/secure")
-    public ResponseEntity<String> getSecureRoute() {
-        return ResponseEntity.ok("Secure endpoint");
+    @GetMapping("/getPatientsByDate")
+    public ResponseEntity<?> getPatientsByApptDate(@NotNull @RequestParam String apptDate) {
+        return ResponseEntity.ok(doctorService.getPatientsByApptDate(apptDate));
     }
 
     @PostMapping("/insertMedicalRecords")

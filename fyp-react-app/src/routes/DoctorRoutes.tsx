@@ -5,6 +5,7 @@ import DoctorHome from "../pages/doctor/Home";
 import Appointment from "../pages/doctor/Appointment";
 import PatientList from "../pages/doctor/PatientList";
 import Feedback from "../pages/doctor/Feedback";
+import NotFound from "../pages/NotFound";
 
 export default function ClincRoutes() {
   return (
@@ -16,7 +17,6 @@ export default function ClincRoutes() {
               <SideBar
                 navList={[
                   { name: "Dashboard", link: "", end: true },
-                  { name: "Appointment", link: "appointments", end: true },
                   { name: "Patient List", link: "patients", end: true },
                   { name: "Feed Back", link: "feedbacks", end: true },
                 ]}
@@ -25,9 +25,9 @@ export default function ClincRoutes() {
           }
         >
           <Route index path="" element={<DoctorHome />} />
-          <Route path="appointments" element={<Appointment />} />
           <Route path="patients" element={<PatientList />} />
           <Route path="feedbacks" element={<Feedback />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </>

@@ -1,10 +1,15 @@
 import { useNavigate, useParams } from "react-router-dom";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useEffect, useState } from "react";
+import { Buffer } from "buffer";
+
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import axios from "axios";
+
 import "../../css/viewclinic.css";
 
 export default function ViewClinic() {
   const { id } = useParams();
+  const [imageData, setImageData] = useState<any>();
   const [data, setData] = useState<any>({
     clinic: {},
     totalAcc: 0,
@@ -16,19 +21,28 @@ export default function ViewClinic() {
     let isMounted = true;
     let controller = new AbortController();
 
-    const fetchData = async () => {
-      let response = await axiosPrivate.get(
-        `/sysAdmin/getClinicById?clinicId=${Number(id)}`,
-        {
-          signal: controller.signal,
-        }
-      );
+    let endpoints = [
+      axiosPrivate.get(`/sysAdmin/getClinicById?clinicId=${Number(id)}`, {
+        signal: controller.signal,
+      }),
+      axiosPrivate.get(`/sysAdmin/getClinicLicense?clinicId=${Number(id)}`, {
+        responseType: "arraybuffer",
+        signal: controller.signal,
+      }),
+    ];
 
-      isMounted &&
-        setData({
-          clinic: response.data.clinic,
-          totalAcc: response.data.totalAcc,
-        });
+    const fetchData = () => {
+      axios.all(endpoints.map((endpoint) => endpoint)).then(
+        axios.spread((clinicData, imageData) => {
+          const contentType = imageData.headers["content-type"];
+          const imageBase64 = Buffer.from(imageData.data, "binary").toString(
+            "base64"
+          );
+          const imageSrc = `data:${contentType};base64,${imageBase64}`;
+          isMounted && setData(clinicData.data);
+          isMounted && setImageData(imageSrc);
+        })
+      );
     };
 
     fetchData();
@@ -43,9 +57,12 @@ export default function ViewClinic() {
   return (
     <>
       <h1>Clinic - Overview</h1>
-      <div className="clinic-overview">
-        <div className="d-flex flex-row">
-          <div className="d-flex flex-column align-items-center">
+      <div style={{ maxWidth: "85%" }} className="clinic-overview">
+        <div className="d-flex flex-row flex-wrap">
+          <div
+            style={{ flex: "1 1 30%" }}
+            className="d-flex flex-column align-items-center"
+          >
             <img
               className="rounded-circle"
               src="https://via.placeholder.com/100"
@@ -53,18 +70,33 @@ export default function ViewClinic() {
             />
             <span>{data.clinic.clinicName}</span>
           </div>
-          <div className="clinic-details row">
-            <div className="col d-flex flex-column">
+          <div style={{ flex: "1 1 70%" }} className="clinic-details row">
+            <div className="col">
               <span>Email:</span>
               <span>{data.clinic.email}</span>
             </div>
-            <div className="col d-flex flex-column">
+            <div className="col">
               <span>Total Account:</span>
               <span>{data.totalAcc}</span>
             </div>
-            <div className="col d-flex flex-column">
+            <div className="col">
               <span>Contact Person:</span>
               <span>{data.clinic.contactName}</span>
+            </div>
+
+            <div className="col">
+              <span>Proof of License:</span>
+              <span>
+                <button
+                  id="updateBtn"
+                  type="button"
+                  className="btn btn-dark"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modal"
+                >
+                  View License
+                </button>
+              </span>
             </div>
           </div>
         </div>
@@ -173,6 +205,35 @@ export default function ViewClinic() {
             </div>
           </>
         )}
+      </div>
+      <div
+        className="modal fade"
+        id="modal"
+        data-bs-keyboard="false"
+        tabIndex={-1}
+        aria-labelledby="modal"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog modal-dialog-centered">
+          <div className="modal-content py-3">
+            <div className="modal-header">
+              <button
+                id="closeModalBtn"
+                type="button"
+                className="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div className="modal-body d-flex justify-content-center">
+              <img
+                style={{ width: "20rem" }}
+                src={imageData}
+                alt={`Clinic License Of Proof`}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

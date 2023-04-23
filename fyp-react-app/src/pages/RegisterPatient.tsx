@@ -101,6 +101,18 @@ export default function RegisterPatient() {
             />
             <label htmlFor="contact">Contact</label>
           </div>
+          <select
+            className="form-select mb-3"
+            defaultValue={"DEFAULT"}
+            aria-label="Select gender"
+          >
+            <option value={"DEFAULT"} disabled>
+              Select gender
+            </option>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
+
           <div className="form-floating mb-3">
             <input
               type="date"
@@ -111,6 +123,7 @@ export default function RegisterPatient() {
             />
             <label htmlFor="date">Date Of Birth</label>
           </div>
+
           <div className="d-grid">
             <button
               type="submit"

@@ -37,6 +37,11 @@ public class SuperAdminController {
         return ResponseEntity.ok(sysAdminService.getAllClinics());
     }
 
+    @GetMapping("/getClinicLicense")
+    public ResponseEntity<?> getClinicLicense(@NotNull @RequestParam Integer clinicId) {
+        return sysAdminService.getClinicLicense(clinicId);
+    }
+
     @PutMapping("/approveClinic")
     public ResponseEntity<?> approveClinic(@NotNull @RequestParam Integer clinicId) {
         return ResponseEntity.ok(sysAdminService.approveClinic(clinicId));

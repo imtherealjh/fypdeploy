@@ -22,6 +22,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -47,10 +48,13 @@ public class Clinic implements Serializable {
     private String clinicName;
     @Column(name = "location", nullable = false)
     private String location;
-    private String proofOfLicense;
-    @Column(name="email", nullable = false)
+    @JsonIgnore
+    @Lob
+    @Column(name = "licenseProof", columnDefinition = "MEDIUMBLOB")
+    private byte[] licenseProof;
+    @Column(name = "email", nullable = false)
     private String email;
-    @Column(name="contactName", nullable = false)
+    @Column(name = "contactName", nullable = false)
     private String contactName;
     @Enumerated(EnumType.STRING)
     private EClinicStatus status = EClinicStatus.PENDING;

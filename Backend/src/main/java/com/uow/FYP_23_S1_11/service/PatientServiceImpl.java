@@ -1,28 +1,19 @@
 package com.uow.FYP_23_S1_11.service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uow.FYP_23_S1_11.Constants;
 import com.uow.FYP_23_S1_11.domain.Appointment;
-import com.uow.FYP_23_S1_11.domain.Clinic;
-import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.Patient;
-import com.uow.FYP_23_S1_11.domain.PatientFeedback;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
 import com.uow.FYP_23_S1_11.domain.Queue;
-import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
@@ -30,29 +21,15 @@ import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
-import com.uow.FYP_23_S1_11.repository.DoctorRepository;
-import com.uow.FYP_23_S1_11.repository.PatientFeedbackRepository;
-import com.uow.FYP_23_S1_11.repository.PatientRepository;
 import com.uow.FYP_23_S1_11.repository.QueueRepository;
-import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
 import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackDoctorRepository;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 
-import com.uow.FYP_23_S1_11.domain.MailDetails;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-//import javax.mail.MessagingException;
-//import javax.mail.internet.MimeMessage;
-import jakarta.mail.internet.MimeMessage;
-import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import com.uow.FYP_23_S1_11.domain.request.MailRequest;
 
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
@@ -65,14 +42,7 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class PatientServiceImpl implements PatientService {
     @Autowired
-    private PatientFeedbackRepository patientFeedbackRepo;
-    @Autowired
-    private PatientRepository patientRepo;
-
-    @Autowired
     private ClinicRepository clinicRepo;
-    @Autowired
-    private DoctorRepository doctorRepo;
     @Autowired
     private AppointmentRepository apptRepo;
     @Autowired

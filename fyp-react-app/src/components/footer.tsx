@@ -1,5 +1,4 @@
 import logo from "../assets/logo.png";
-import { Link } from "react-router-dom";
 import "../css/footer.css";
 import { CgCopyright } from "react-icons/cg";
 import { useWindowDimensions } from "../hooks/hooks";

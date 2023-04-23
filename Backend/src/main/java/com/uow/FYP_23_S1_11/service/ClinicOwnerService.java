@@ -9,6 +9,8 @@ import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
 
 public interface ClinicOwnerService {
+    public List<?> getAllStaffs();
+
     public Boolean registerDoctor(
             List<RegisterDoctorRequest> registerDoctorRequest);
 

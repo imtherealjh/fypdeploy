@@ -5,7 +5,9 @@ import UpdateAppointmentComponent from "./UpdateAppointment";
 import DeleteAppointmentComponent from "./DeleteAppointment";
 
 export default function Appointment() {
-  const [appointmentType, setAppointmentType] = useState("Past");
+  const [appointmentType, setAppointmentType] = useState(
+    useLocation().state ?? "Past"
+  );
   const [btnClicked, setBtnClicked] = useState("");
   const [data, setData] = useState({});
   const [appointments, setAppointments] = useState<any>([]);
@@ -37,7 +39,7 @@ export default function Appointment() {
       <h1>Appointment</h1>
       <div>
         <div className="d-flex justify-content-end">
-          <Link to="book" state={useLocation().state}>
+          <Link to="book">
             <button className="btn btn-dark btn-lg" type="button">
               Book
             </button>

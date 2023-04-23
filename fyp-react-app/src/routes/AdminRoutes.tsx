@@ -3,6 +3,7 @@ import SideBar from "../components/sidenavbar";
 import DashboardLayout from "../layout/DashboardLayout";
 import Home from "../pages/admin/Home";
 import ViewClinic from "../pages/admin/ViewClinic";
+import NotFound from "../pages/NotFound";
 
 export default function AdminRoutes() {
   return (
@@ -17,6 +18,7 @@ export default function AdminRoutes() {
         >
           <Route index path="" element={<Home />} />
           <Route path="/view/:id" element={<ViewClinic />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </>

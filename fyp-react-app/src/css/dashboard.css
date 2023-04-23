@@ -1,7 +1,3 @@
-.dashboard > * {
-  flex: 1;
-}
-
 .dashboard > :first-child {
   flex: 0 1 auto;
 }
@@ -18,15 +14,4 @@
   border-bottom: 2px solid black;
   font-weight: bold;
   padding: 0.8rem;
-}
-
-.dashboard-stats {
-  display: flex;
-  gap: 1rem;
-}
-
-.dashboard-stats div {
-  background-color: #f0f0f0;
-  padding: 1rem;
-  border-radius: 4px;
 }

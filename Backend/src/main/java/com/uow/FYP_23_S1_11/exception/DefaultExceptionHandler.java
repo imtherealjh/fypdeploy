@@ -1,8 +1,6 @@
 package com.uow.FYP_23_S1_11.exception;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpHeaders;
@@ -29,7 +27,7 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
         .getBindingResult()
         .getFieldErrors()
         .stream()
-        .map(fieldError -> fieldError.getDefaultMessage())
+        .map(fieldError -> fieldError.getField() + " " + fieldError.getDefaultMessage())
         .collect(Collectors.toList());
     ErrorDetails errorDetails = new ErrorDetails(HttpStatus.BAD_REQUEST, errorList);
     return handleExceptionInternal(ex, errorDetails, headers, errorDetails.getStatus(), request);

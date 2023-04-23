@@ -1,21 +1,32 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { CgBell, CgProfile } from "react-icons/cg";
+import { CgBell, CgMenu, CgProfile } from "react-icons/cg";
+import { ReactNode, useEffect, useState } from "react";
+
 import NavBar from "../components/navbar";
-import { ReactNode } from "react";
+import Dropdown from "../components/dropdown";
+
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { useWindowDimensions } from "../hooks/hooks";
 
 import "../css/dashboard.css";
-import Dropdown from "../components/dropdown";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 interface Props {
   children: ReactNode;
 }
 
 export default function DashboardLayout({ children }: Props) {
-  const axiosPrivate = useAxiosPrivate();
-  const navigate = useNavigate();
-  let isMounted = false;
+  const [isOpen, setIsOpen] = useState(true);
+  const toggle = () => setIsOpen(!isOpen);
 
+  const axiosPrivate = useAxiosPrivate();
+  const { width } = useWindowDimensions();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setIsOpen(width > 500);
+  }, [width]);
+
+  let isMounted = false;
   const profileContent = (
     <>
       <div className="d-flex flex-column">
@@ -63,8 +74,30 @@ export default function DashboardLayout({ children }: Props) {
         <Dropdown buttonContent={<CgProfile />} menuContent={profileContent} />
       </NavBar>
       <section className="dashboard d-flex flex-row mt-3">
-        {children}
-        <main>
+        {isOpen && (
+          <div
+            style={{
+              position: width < 500 ? "absolute" : "relative",
+              height: "100%",
+              zIndex: 10,
+              flexBasis: "20%",
+            }}
+          >
+            {children}
+          </div>
+        )}
+        <main className="w-100" style={{ position: "relative" }}>
+          <button
+            style={{
+              position: "absolute",
+              right: 0,
+              zIndex: "10",
+              border: "none",
+              background: "transparent",
+            }}
+          >
+            <CgMenu onClick={toggle} fontSize={"1.5rem"} />
+          </button>
           <Outlet />
         </main>
       </section>
