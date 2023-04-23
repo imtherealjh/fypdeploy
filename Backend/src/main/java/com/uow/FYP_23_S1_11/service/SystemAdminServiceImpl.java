@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.uow.FYP_23_S1_11.domain.Clinic;
@@ -33,6 +35,20 @@ public class SystemAdminServiceImpl implements SystemAdminService {
     @Override
     public List<?> getAllClinics() {
         return clinicRepo.findAll();
+    }
+
+    @Override
+    public ResponseEntity<byte[]> getClinicLicense(Integer clinicId) {
+        try {
+            Clinic clinic = findClinicById(clinicId);
+            byte[] imageData = clinic.getLicenseProof();
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error occured in getClinicLicense In SystemAdminServiceImpl: {}", e);
+            return null;
+        }
     }
 
     private Clinic findClinicById(int id) {
@@ -135,4 +151,5 @@ public class SystemAdminServiceImpl implements SystemAdminService {
             return false;
         }
     }
+
 }

@@ -1,5 +1,6 @@
 package com.uow.FYP_23_S1_11.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -15,20 +16,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="EDUCATIONAL_MATERIAL")
+@Table(name = "EDUCATIONAL_MATERIAL")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class EducationalMaterial {
+public class EducationalMaterial implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer materialId;
     private String title;
     private String content;
 
-    //many to many for front-desk, doctor and patient
+    // many to many for front-desk, doctor and patient
     @ManyToMany(mappedBy = "eduMatList")
     private List<Clinic> clinicList;
 }

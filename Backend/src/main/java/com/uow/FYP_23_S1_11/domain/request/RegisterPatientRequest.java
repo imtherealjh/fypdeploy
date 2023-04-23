@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PatientRegisterRequest {
+public class RegisterPatientRequest {
     @JsonProperty("username")
     private String username;
     @JsonProperty("password")

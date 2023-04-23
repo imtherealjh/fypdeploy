@@ -1,9 +1,10 @@
-import axios from "../../api/axios";
 import Multiselect from "multiselect-react-dropdown";
 import { useState, ChangeEvent, useEffect, FormEvent } from "react";
-import { IObjectKeys } from "../../hooks/types";
+
 import { CgMathPlus } from "react-icons/cg";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import axios from "../../../api/axios";
+import { IObjectKeys } from "../../../hooks/types";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 
 interface ScheduleInputs extends IObjectKeys {

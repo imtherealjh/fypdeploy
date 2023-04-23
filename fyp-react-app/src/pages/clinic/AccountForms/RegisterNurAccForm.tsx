@@ -1,6 +1,6 @@
 import { useState, ChangeEvent, FormEvent } from "react";
-import { IObjectKeys } from "../../hooks/types";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { IObjectKeys } from "../../../hooks/types";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 
 interface NurseInputs extends IObjectKeys {

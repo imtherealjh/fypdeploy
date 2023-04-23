@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
-import RegisterDocAccForm from "./RegisterDocAccForm";
-import RegisterNurAccForm from "./RegisterNurAccForm";
-import RegisterClerkAccForm from "./RegisterClerkAccForm";
+import RegisterDocAccForm from "./AccountForms/RegisterDocAccForm";
+import RegisterNurAccForm from "./AccountForms/RegisterNurAccForm";
+import RegisterClerkAccForm from "./AccountForms/RegisterClerkAccForm";
 
 export default function RegisterAccount() {
   const [formState, setFormState] = useState("");

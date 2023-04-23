@@ -1,13 +1,21 @@
 package com.uow.FYP_23_S1_11.domain.request;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalTime;
 
+import javax.imageio.ImageIO;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +25,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ClinicRegisterRequest {
+public class RegisterClinicRequest {
     @NotEmpty
     @JsonProperty("username")
     private String username;
@@ -77,6 +85,26 @@ public class ClinicRegisterRequest {
         }
     }
 
-    @JsonProperty("licenseBase64")
-    private String licenseBase64;
+    @NotNull
+    @JsonIgnore
+    @JsonProperty("customLicenseProof")
+    private MultipartFile customLicenseProof;
+
+    @AssertTrue(message = "License Proof must be a valid format")
+    private Boolean isValidLicenseProof() {
+        try {
+            InputStream inputStream = customLicenseProof.getInputStream();
+            ImageIO.read(inputStream);
+
+            long fileSizeInBytes = customLicenseProof.getSize();
+            long fileSizeInMB = fileSizeInBytes / (1024 * 1024);
+            if (fileSizeInMB > 1) {
+                throw new IOException("Invalid file size...");
+            }
+            return true;
+        } catch (IOException e) {
+            System.out.println(e);
+            return false;
+        }
+    }
 }

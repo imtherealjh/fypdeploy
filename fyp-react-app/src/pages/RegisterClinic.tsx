@@ -16,15 +16,21 @@ export default function RegisterClinic() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await axios.post("/auth/registerClinic", inputs);
+      await axios.post("/auth/registerClinic", inputs, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       alert("Clinic successfully registered successfully");
       navigate("/", { replace: true });
     } catch (err: any) {
       if (!err?.response) {
         alert("No Server Response");
       } else if (err.response?.status === 400) {
+        console.log(err);
         alert(err.response?.data.errors);
       } else {
+        console.log(err);
         alert("Unknown error");
       }
     }
@@ -132,8 +138,18 @@ export default function RegisterClinic() {
             <label htmlFor="apptDuration">Appointment Duration</label>
           </div>
           <div className="input-group mb-3">
-            <input type="file" className="form-control" name="license" />
-            <label className="input-group-text" htmlFor="license">
+            <input
+              type="file"
+              className="form-control"
+              name="customLicenseProof"
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setInputs((values) => ({
+                  ...values,
+                  [e.target.name]: e.target.files?.[0],
+                }));
+              }}
+            />
+            <label className="input-group-text" htmlFor="customLicenseProof">
               Upload
             </label>
           </div>
