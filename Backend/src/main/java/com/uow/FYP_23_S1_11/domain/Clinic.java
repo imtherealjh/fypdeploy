@@ -50,11 +50,11 @@ public class Clinic implements Serializable {
     private String location;
     @JsonIgnore
     @Lob
-    @Column(name="licenseProof", columnDefinition="MEDIUMBLOB")
+    @Column(name = "licenseProof", columnDefinition = "MEDIUMBLOB")
     private byte[] licenseProof;
-    @Column(name="email", nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
-    @Column(name="contactName", nullable = false)
+    @Column(name = "contactName", nullable = false)
     private String contactName;
     @Enumerated(EnumType.STRING)
     private EClinicStatus status = EClinicStatus.PENDING;

@@ -39,6 +39,11 @@ public class ClinicOwnerController {
     @Autowired
     private ClerkService clerkService;
 
+    @GetMapping("/getAllStaffs")
+    public ResponseEntity<List<?>> getAllStaffs() {
+        return ResponseEntity.ok(clincOwnerService.getAllStaffs());
+    }
+
     @PostMapping("/registerDoctor")
     public ResponseEntity<Boolean> registerDoctor(
             @RequestBody @NotEmpty(message = "Doctor Registration List cannot be empty") List<@Valid RegisterDoctorRequest> registerDoctorReq) {

@@ -16,6 +16,8 @@ import ClinicRoutes from "./routes/ClinicRoutes";
 import DoctorRoutes from "./routes/DoctorRoutes";
 import VerifyEmail from "./pages/VerifyEmail";
 import AdminRoutes from "./routes/AdminRoutes";
+import Unauthorized from "./pages/Unauthorized";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -27,7 +29,8 @@ function App() {
             <Route path="/registerClinic" element={<RegisterClinic />} />
             <Route path="/registerPatient" element={<RegisterPatient />} />
             <Route path="/verify" element={<VerifyEmail />} />
-            <Route path="/unauthorized" element={<></>} />
+            <Route path="/unauthorized" element={<Unauthorized />} />
+            <Route path="*" element={<NotFound />} />
           </Route>
 
           <Route element={<PersistLogin />}>

@@ -1,13 +1,14 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { CgBell, CgMenu, CgProfile } from "react-icons/cg";
-import NavBar from "../components/navbar";
-import Dropdown from "../components/dropdown";
 import { ReactNode, useEffect, useState } from "react";
 
-import "../css/dashboard.css";
+import NavBar from "../components/navbar";
+import Dropdown from "../components/dropdown";
 
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useWindowDimensions } from "../hooks/hooks";
+
+import "../css/dashboard.css";
 
 interface Props {
   children: ReactNode;
@@ -23,7 +24,7 @@ export default function DashboardLayout({ children }: Props) {
 
   useEffect(() => {
     setIsOpen(width > 500);
-  }, []);
+  }, [width]);
 
   let isMounted = false;
   const profileContent = (

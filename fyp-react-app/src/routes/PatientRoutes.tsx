@@ -9,6 +9,7 @@ import Queue from "../pages/patient/Queue";
 import MedicalRecords from "../pages/patient/MedicalRecords";
 import Feedback from "../pages/patient/Feedback";
 import Payment from "../pages/patient/Payment";
+import NotFound from "../pages/NotFound";
 
 export default function PatientRoutes() {
   return (
@@ -49,6 +50,7 @@ export default function PatientRoutes() {
           <Route path="medical-records" element={<MedicalRecords />} />
           <Route path="payment" element={<Payment />} />
           <Route path="feedback" element={<Feedback />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </>

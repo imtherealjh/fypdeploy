@@ -7,6 +7,8 @@ import com.uow.FYP_23_S1_11.domain.PatientMedicalRecords;
 import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
 
 public interface DoctorService {
+        public Object getPatientsByApptDate(String apptDate);
+
         public Boolean insertMedicalRecords(PatientMedicalRecordsRequest request);
 
         public List<PatientMedicalRecords> getByMedicalRecordsId(Integer medicalRecordsId);

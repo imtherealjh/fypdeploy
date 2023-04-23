@@ -9,7 +9,7 @@ export default function VerifyEmail() {
           src={VerifyEmailSVG}
           alt="Verify Email..."
         ></img>
-        <h4 style={{ textAlign: "center" }}>
+        <h4 className="mt-3" style={{ textAlign: "center" }}>
           Please check your email for verification code to verify your email...
         </h4>
         <p>

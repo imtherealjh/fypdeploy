@@ -43,19 +43,15 @@ export default function DoctorAccount() {
     let isMounted = true;
     const controller = new AbortController();
     const fetchData = async () => {
-      try {
-        const response = await axios.get("/public/getAllSpecialty", {
-          signal: controller.signal,
-        });
+      const response = await axios.get("/public/getAllSpecialty", {
+        signal: controller.signal,
+      });
 
-        const _specialty = response.data.map((obj: any) => {
-          return obj["type"];
-        });
+      const _specialty = response.data.map((obj: any) => {
+        return obj["type"];
+      });
 
-        isMounted && setSpeciality(_specialty);
-      } catch (err) {
-        console.log(err);
-      }
+      isMounted && setSpeciality(_specialty);
     };
 
     fetchData();

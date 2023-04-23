@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.management.Query;
+
+import org.hibernate.boot.jaxb.mapping.NamedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,7 @@ import com.uow.FYP_23_S1_11.domain.request.DoctorScheduleRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
+import com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails;
 import com.uow.FYP_23_S1_11.enums.ERole;
 import com.uow.FYP_23_S1_11.repository.DoctorRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorScheduleRepository;
@@ -33,11 +37,16 @@ import com.uow.FYP_23_S1_11.repository.NurseRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
 import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
 public class ClinicOwnerServiceImpl implements ClinicOwnerService {
+    @PersistenceContext
+    private EntityManager entityManager;
     @Autowired
     private DoctorScheduleRepository doctorScheduleRepo;
     @Autowired
@@ -52,6 +61,22 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     private UserAccountService userAccountService;
     @Autowired
     private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
+
+    @Override
+    public List<?> getAllStaffs() {
+        UserAccount account = Constants.getAuthenticatedUser();
+
+        TypedQuery<StaffAccountDetails> query = entityManager.createQuery(
+                "SELECT new com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails(ua.accountId, d.name, ua.role, d.email) FROM UserAccount ua "
+                        + "JOIN ua.doctor d WHERE d.doctorClinic = :clinic UNION "
+                        + "SELECT new com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails(ua.accountId,n.name, ua.role, n.email) FROM UserAccount ua "
+                        + "JOIN ua.nurse n WHERE n.nurseClinic = :clinic UNION "
+                        + "SELECT new com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails(ua.accountId, fd.name, ua.role, fd.email) FROM UserAccount ua "
+                        + "JOIN ua.frontDesk fd WHERE fd.frontDeskClinic = :clinic",
+                StaffAccountDetails.class);
+        query.setParameter("clinic", account.getClinic());
+        return query.getResultList();
+    }
 
     @Override
     public Boolean registerDoctor(

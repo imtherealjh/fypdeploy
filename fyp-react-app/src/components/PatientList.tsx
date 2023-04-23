@@ -1,32 +1,25 @@
-import React from "react";
 import "../css/patientlist.css";
 
-interface Patient {
-  id: number;
-  name: string;
-  appointmentDateTime: string;
-}
-
 interface PatientListProps {
-  patients: Patient[];
+  apptDetails: any;
 }
 
-function PatientList({ patients }: PatientListProps) {
+function PatientList({ apptDetails }: PatientListProps) {
   return (
     <div className="patients-list">
-      <h3>List of patients for today:</h3>
+      <h3>List of patients for selected date:</h3>
       <table>
         <thead>
           <tr>
             <th>Name</th>
-            <th>Date & Time</th>
+            <th>Time</th>
           </tr>
         </thead>
         <tbody>
-          {patients.map((patient) => (
-            <tr key={patient.id}>
-              <td>{patient.name}</td>
-              <td>{patient.appointmentDateTime}</td>
+          {apptDetails.map((apptDetail: any) => (
+            <tr key={apptDetail.patient.patientId}>
+              <td>{apptDetail.patient.name}</td>
+              <td>{apptDetail.apptTime}</td>
             </tr>
           ))}
         </tbody>
