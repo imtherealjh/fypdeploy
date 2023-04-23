@@ -44,6 +44,9 @@ function App() {
             <Route element={<RequireAuth role={"system_admin"} />}>
               <Route path="/admin/*" element={<AdminRoutes />} />
             </Route>
+            <Route element={<RequireAuth role={"clerk"} />}>
+              <Route path="/clerk/*" element={<ClerkDashboard />} />
+            </Route>
           </Route>
         </Routes>
       </div>
