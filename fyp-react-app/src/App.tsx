@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
 // Layouts
-import LandingPageLayout from "./layout/LandingPageLayout";
+import LandingPageLayout from "./Layout/LandingPageLayout";
 
 // Components
 import PersistLogin from "./components/PersistLogin";
@@ -16,8 +16,8 @@ import ClinicRoutes from "./routes/ClinicRoutes";
 import DoctorRoutes from "./routes/DoctorRoutes";
 import VerifyEmail from "./pages/VerifyEmail";
 import AdminRoutes from "./routes/AdminRoutes";
-import Unauthorized from "./pages/Unauthorized";
-import NotFound from "./pages/NotFound";
+import SideBar from "./components/sidenavbar";
+import ClerkRoutes from "./routes/ClerkRoutes";
 
 function App() {
   return (
@@ -29,8 +29,7 @@ function App() {
             <Route path="/registerClinic" element={<RegisterClinic />} />
             <Route path="/registerPatient" element={<RegisterPatient />} />
             <Route path="/verify" element={<VerifyEmail />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="/unauthorized" element={<></>} />
           </Route>
 
           <Route element={<PersistLogin />}>
@@ -46,9 +45,8 @@ function App() {
             <Route element={<RequireAuth role={"system_admin"} />}>
               <Route path="/admin/*" element={<AdminRoutes />} />
             </Route>
-            <Route element={<RequireAuth role={"clerk"} />}>
-              <Route path="/clerk/*" element={<ClerkDashboard />} />
-            </Route>
+            {/* <Route element={<RequireAuth role={"clerk"} />}> */}
+            <Route path="/clerk/*" element={<ClerkRoutes />} />
           </Route>
         </Routes>
       </div>
