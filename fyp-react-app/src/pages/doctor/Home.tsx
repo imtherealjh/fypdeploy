@@ -1,13 +1,13 @@
 import React from "react";
-import "../../css/dashboard.css";
-import Calendar from "../../components/Calendar";
 import PatientList from "../../components/PatientList";
 
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+
 function Dashboard() {
+  const [value, setValue] = React.useState<any>(new Date());
   // Fetch data from the backend here
   const visitsToday = 10;
-  const newPatients = 5;
-  const oldPatients = 25;
 
   const patientsList = [
     { id: 1, name: "John Doe", appointmentDateTime: "2023-04-19 10:00 AM" },
@@ -15,16 +15,22 @@ function Dashboard() {
     // Add more patients here
   ];
 
+  console.log(value);
+
   return (
     <>
       <h1>Dashboard</h1>
       <div className="dashboard-container">
-        <div className="calendar">
-          <Calendar />
+        <div className="d-flex flex-wrap">
+          <div style={{ background: "#737373" }} className="col w-100">
+            <span>Visits for Today: </span>
+            <span>{visitsToday}</span>
+          </div>
+          <div className="col">
+            <Calendar onChange={setValue} value={value} />
+          </div>
         </div>
-        <div className="dashboard-stats">
-          <div className="visits-today">Visits for Today: {visitsToday}</div>
-        </div>
+
         <PatientList patients={patientsList} />
       </div>
     </>
