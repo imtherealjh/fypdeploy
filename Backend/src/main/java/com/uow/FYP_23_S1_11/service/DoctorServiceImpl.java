@@ -92,10 +92,18 @@ public class DoctorServiceImpl implements DoctorService {
 
         if (originalMedicalRecord.isEmpty() == false) {
             PatientMedicalRecords origPatientMedicalRecords = originalMedicalRecord.get();
-            origPatientMedicalRecords.setCurrentIllnesses(updateMedicalRecordsRequest.getCurrentIllnesses());
-            origPatientMedicalRecords.setPastIllnesses(updateMedicalRecordsRequest.getPastIllnesses());
-            origPatientMedicalRecords.setHereditaryIllnesses(updateMedicalRecordsRequest.getHereditaryIllnesses());
-            origPatientMedicalRecords.setAllergies(updateMedicalRecordsRequest.getAllergies());
+            origPatientMedicalRecords.setHeight(updateMedicalRecordsRequest.getHeight());
+            origPatientMedicalRecords.setWeight(updateMedicalRecordsRequest.getWeight());
+            origPatientMedicalRecords.setHospitalizedHistory(updateMedicalRecordsRequest.getHospitalizedHistory());
+            origPatientMedicalRecords.setCurrentMedication(updateMedicalRecordsRequest.getCurrentMedication());
+            origPatientMedicalRecords.setFoodAllergies(updateMedicalRecordsRequest.getFoodAllergies());
+            origPatientMedicalRecords.setDrugAllergies(updateMedicalRecordsRequest.getDrugAllergies());
+            origPatientMedicalRecords.setBloodType(updateMedicalRecordsRequest.getBloodType());
+            origPatientMedicalRecords.setMedicalConditions(updateMedicalRecordsRequest.getMedicalConditions());
+            origPatientMedicalRecords.setEmergencyContact(updateMedicalRecordsRequest.getEmergencyContact());
+            origPatientMedicalRecords
+                    .setEmergencyContactNumber(updateMedicalRecordsRequest.getEmergencyContactNumber());
+
             patientMedicalRecordsRepo.save(origPatientMedicalRecords);
             return true;
         } else {

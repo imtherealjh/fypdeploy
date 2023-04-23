@@ -20,10 +20,4 @@ public class PatientFeedbackClinicRequest {
 
     @JsonProperty("feedback")
     private String feedback;
-
-    @JsonProperty("patientId")
-    private Integer patientId;
-
-    @JsonProperty("clinicId")
-    private Integer clincId;
 }

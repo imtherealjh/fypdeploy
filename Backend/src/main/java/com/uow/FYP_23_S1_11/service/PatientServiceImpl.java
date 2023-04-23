@@ -1,5 +1,6 @@
 package com.uow.FYP_23_S1_11.service;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -284,36 +285,6 @@ public class PatientServiceImpl implements PatientService {
     // }
 
     @Override
-    public Boolean insertClinicFeedback(PatientFeedbackClinicRequest request) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            PatientFeedbackClinic patientFeedbackClinic = (PatientFeedbackClinic) mapper.convertValue(request,
-                    PatientFeedbackClinic.class);
-            patientFeedbackClinicRepo.save(patientFeedbackClinic);
-            return true;
-
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-    }
-
-    @Override
-    public Boolean insertDoctorFeedback(PatientFeedbackDoctorRequest request) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            PatientFeedbackDoctor patientFeedbackDoctor = (PatientFeedbackDoctor) mapper.convertValue(request,
-                    PatientFeedbackDoctor.class);
-            patientFeedbackDoctorRepo.save(patientFeedbackDoctor);
-            return true;
-
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-    }
-
-    @Override
     public Boolean insertClinicAndDoctorFeedback(ClinicAndDoctorFeedbackRequest request) {
         try {
 
@@ -397,16 +368,31 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Boolean insertQueueNumber(QueueRequest request) {
-        try {
+        Integer appointmentId = request.getCheckAppointmentId();
+        Optional<Appointment> appointmentOptional = apptRepo
+                .findById(appointmentId);
+        Appointment appointment = appointmentOptional.get();
+        LocalDate date1 = appointment.getApptDate();
+        LocalDate date2 = LocalDate.now();
+        if (date1 == date2) {
             ObjectMapper mapper = new ObjectMapper();
             Queue queue = (Queue) mapper.convertValue(request,
                     Queue.class);
             queueRepo.save(queue);
             return true;
+        } else {
+            throw new IllegalArgumentException("Your appointment is not today...");
+        }
+    }
 
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
+    @Override
+    public List<Queue> getByQueueId(Integer queueId) {
+        List<Queue> queue = queueRepo
+                .findByQueueId(queueId);
+        if (queue.isEmpty() == false) {
+            return queue;
+        } else {
+            throw new IllegalArgumentException("Queue number not found...");
         }
     }
 }

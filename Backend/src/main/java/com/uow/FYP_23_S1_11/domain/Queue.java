@@ -1,12 +1,14 @@
 package com.uow.FYP_23_S1_11.domain;
 
-import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +28,11 @@ public class Queue {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int queueId;
     private String queueNumber;
-    private Date date;
-    private Time time;
+    private LocalDate date;
+    private LocalTime time;
     private String status;
+
+    @OneToOne
+    @JoinColumn(name = "appointmentId", referencedColumnName = "appointmentId")
+    private Appointment appointment;
 }

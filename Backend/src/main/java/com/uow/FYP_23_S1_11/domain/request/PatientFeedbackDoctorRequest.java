@@ -21,9 +21,4 @@ public class PatientFeedbackDoctorRequest {
     @JsonProperty("feedback")
     private String feedback;
 
-    @JsonProperty("patientId")
-    private Integer patientId;
-
-    @JsonProperty("doctorId")
-    private Integer doctorId;
 }

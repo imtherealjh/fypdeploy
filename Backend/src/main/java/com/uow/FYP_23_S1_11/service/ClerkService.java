@@ -20,4 +20,6 @@ public interface ClerkService {
 
     public Boolean updateQueueNumber(Integer queueId,
             QueueRequest updateQueueRequest);
+
+    public Boolean deleteQueueNumber(Integer queueId);
 }

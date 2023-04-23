@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
+import com.uow.FYP_23_S1_11.domain.Queue;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
@@ -40,10 +41,6 @@ public interface PatientService {
 
         // public String sendMailWithAttachment(MailRequest details);
 
-        public Boolean insertClinicFeedback(PatientFeedbackClinicRequest request);
-
-        public Boolean insertDoctorFeedback(PatientFeedbackDoctorRequest request);
-
         public Boolean insertClinicAndDoctorFeedback(ClinicAndDoctorFeedbackRequest request);
 
         public Boolean updateClinicFeedback(Integer clinicFeedbackId,
@@ -57,4 +54,6 @@ public interface PatientService {
         public Boolean deleteDoctorFeedback(Integer doctorFeedbackId);
 
         public Boolean insertQueueNumber(QueueRequest request);
+
+        public List<Queue> getByQueueId(Integer queueId);
 }

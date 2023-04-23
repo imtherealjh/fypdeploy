@@ -65,4 +65,9 @@ public class ClerkController {
             @Valid @RequestBody QueueRequest updateQueueRequest) {
         return ResponseEntity.ok(clerkService.updateQueueNumber(queueId, updateQueueRequest));
     }
+
+    @DeleteMapping("/deleteQueueNumber")
+    public ResponseEntity<Boolean> deleteQueueNumber(@RequestParam Integer queueId) {
+        return ResponseEntity.ok(clerkService.deleteQueueNumber(queueId));
+    }
 }

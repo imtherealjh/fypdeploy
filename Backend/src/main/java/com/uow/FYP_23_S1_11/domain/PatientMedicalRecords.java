@@ -25,10 +25,16 @@ public class PatientMedicalRecords implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer medicalRecordId;
-    private String currentIllnesses;
-    private String pastIllnesses;
-    private String hereditaryIllnesses;
-    private String allergies;
+    private Integer height;
+    private Integer weight;
+    private String hospitalizedHistory;
+    private String currentMedication;
+    private String foodAllergies;
+    private String drugAllergies;
+    private String bloodType;
+    private String medicalConditions;
+    private String emergencyContact;
+    private Integer emergencyContactNumber;
 
     @OneToOne
     @JoinColumn(name = "patientmd", referencedColumnName = "patientId")

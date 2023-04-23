@@ -12,6 +12,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -20,6 +21,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -65,4 +67,8 @@ public class Appointment implements Serializable {
     @JoinColumn(name = "clinicId", referencedColumnName = "clinicId")
     @JsonIgnore
     private Clinic apptClinic;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
+    private Queue queue;
 }

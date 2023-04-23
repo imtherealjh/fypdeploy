@@ -206,4 +206,16 @@ public class ClerkServiceImpl implements ClerkService {
         }
 
     }
+
+    @Override
+    public Boolean deleteQueueNumber(Integer queueId) {
+        Optional<Queue> queueOptional = queueRepo
+                .findById(queueId);
+        if (queueOptional.isEmpty()) {
+            throw new IllegalArgumentException("Queue number does not exist...");
+        }
+        Queue queue = queueOptional.get();
+        queueRepo.delete(queue);
+        return true;
+    }
 }

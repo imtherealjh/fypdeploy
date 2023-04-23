@@ -113,18 +113,6 @@ public class PatientController {
     // return status;
     // }
 
-    @PostMapping("/insertPatientClinicFeedback")
-    public ResponseEntity<Boolean> insertPatientClinicFeedback(
-            @Valid @RequestBody PatientFeedbackClinicRequest patientFeedbackClinicRequest) {
-        return ResponseEntity.ok(patientService.insertClinicFeedback(patientFeedbackClinicRequest));
-    }
-
-    @PostMapping("/insertPatientDoctorFeedback")
-    public ResponseEntity<Boolean> insertPatientDoctorFeedback(
-            @Valid @RequestBody PatientFeedbackDoctorRequest patientFeedbackDoctorRequest) {
-        return ResponseEntity.ok(patientService.insertDoctorFeedback(patientFeedbackDoctorRequest));
-    }
-
     @PostMapping("/insertClinicAndDoctorFeedback")
     public ResponseEntity<Boolean> insertClinicAndDoctorFeedback(
             @Valid @RequestBody ClinicAndDoctorFeedbackRequest clinicAndDoctorFeedbackRequest) {
@@ -157,5 +145,10 @@ public class PatientController {
     public ResponseEntity<Boolean> insertQueueNumber(
             @Valid @RequestBody QueueRequest request) {
         return ResponseEntity.ok(patientService.insertQueueNumber(request));
+    }
+
+    @GetMapping("/getByQueueId")
+    public ResponseEntity<?> getByQueueId(@RequestParam Integer queueId) {
+        return ResponseEntity.ok(patientService.getByQueueId(queueId));
     }
 }
