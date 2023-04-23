@@ -16,7 +16,6 @@ import ClinicRoutes from "./routes/ClinicRoutes";
 import DoctorRoutes from "./routes/DoctorRoutes";
 import VerifyEmail from "./pages/VerifyEmail";
 import AdminRoutes from "./routes/AdminRoutes";
-import SideBar from "./components/sidenavbar";
 
 function App() {
   return (

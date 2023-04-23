@@ -24,8 +24,6 @@ function Dashboard() {
         </div>
         <div className="dashboard-stats">
           <div className="visits-today">Visits for Today: {visitsToday}</div>
-          <div className="new-patients">New Patients: {newPatients}</div>
-          <div className="old-patients">Old Patients: {oldPatients}</div>
         </div>
         <PatientList patients={patientsList} />
       </div>
