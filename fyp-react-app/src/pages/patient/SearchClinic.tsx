@@ -1,3 +1,8 @@
 export default function SearchClinic() {
-  return <>SearchClinic</>;
+  return (
+    <>
+      <h1>Search Clinic</h1>
+      <div></div>
+    </>
+  );
 }
