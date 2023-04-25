@@ -33,12 +33,12 @@ function App() {
           </Route>
 
           <Route element={<PersistLogin />}>
-            <Route element={<RequireAuth role={"patient"} />}>
-              <Route path="/patient/*" element={<PatientRoutes />} />
-            </Route>
-            <Route element={<RequireAuth role={"clinic_owner"} />}>
-              <Route path="/clinic/*" element={<ClinicRoutes />} />
-            </Route>
+            {/* <Route element={<RequireAuth role={"patient"} />}> */}
+            <Route path="/patient/*" element={<PatientRoutes />} />
+            {/* </Route> */}
+            {/* <Route element={<RequireAuth role={"clinic_owner"} />}> */}
+            <Route path="/clinic/*" element={<ClinicRoutes />} />
+            {/* </Route> */}
             {/* <Route element={<RequireAuth role={"doctor"} />}> */}
             <Route path="/doctor/*" element={<DoctorRoutes />} />
             {/* </Route> */}
