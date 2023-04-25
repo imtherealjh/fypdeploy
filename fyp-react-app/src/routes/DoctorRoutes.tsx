@@ -7,7 +7,7 @@ import PatientList from "../pages/doctor/PatientList";
 import Feedback from "../pages/doctor/Feedback";
 import NotFound from "../pages/NotFound";
 
-export default function ClincRoutes() {
+export default function DoctorRoutes() {
   return (
     <>
       <Routes>

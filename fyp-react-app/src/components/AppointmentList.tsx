@@ -12,12 +12,12 @@ export interface Appointment {
 
 interface AppointmentListProps {
   appointmentsList: Appointment[];
-  onAppointmentSelect: (appointmentId: number) => void; // Add this prop
+  onAppointmentSelect: (appointmentId: number) => void;
 }
 
 const AppointmentList: React.FC<AppointmentListProps> = ({
   appointmentsList,
-  onAppointmentSelect, // Add this prop
+  onAppointmentSelect,
 }) => {
   const handleCheckIn = (appointmentId: number) => {
     // Perform check-in logic here
@@ -42,7 +42,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({
           {appointmentsList.map((appointment) => (
             <tr
               key={appointment.id}
-              onClick={() => onAppointmentSelect(appointment.id)} // Add onClick handler here
+              onClick={() => onAppointmentSelect(appointment.id)}
             >
               <td>{appointment.patientName}</td>
               <td>{appointment.doctorName}</td>
@@ -52,7 +52,7 @@ const AppointmentList: React.FC<AppointmentListProps> = ({
               <td>
                 <button
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent triggering onClick event of the row
+                    e.stopPropagation();
                     handleCheckIn(appointment.id);
                   }}
                 >
