@@ -8,6 +8,10 @@ interface Props {
 }
 
 function PatientDetails({ patient }: Props) {
+  if (!patient) {
+    return <p>No patient selected</p>;
+  }
+
   return (
     <div className="patient-details">
       <h1>{patient.name}</h1>
