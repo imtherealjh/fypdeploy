@@ -1,7 +1,7 @@
 import React from "react";
 
 function Queue() {
-  return <div>{/* Your Appointments component JSX goes here */}</div>;
+  return <div>Queue</div>;
 }
 
 export default Queue;

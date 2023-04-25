@@ -8,6 +8,8 @@ import MedicalRecords from "../pages/clerk/MedicalRecords";
 import Payment from "../pages/clerk/Payment";
 import Feedback from "../pages/clerk/Feedback";
 import NotFound from "../pages/NotFound";
+import ViewAllAppointments from "../pages/clerk/ViewAllAppointments";
+import UpdateAppointments from "../pages/clerk/UpdateAppointments";
 
 export default function ClerkRoutes() {
   return (
@@ -35,6 +37,11 @@ export default function ClerkRoutes() {
           <Route path="medical-records" element={<MedicalRecords />} />
           <Route path="payment" element={<Payment />} />
           <Route path="feedbacks" element={<Feedback />} />
+          <Route
+            path="/appointments/view-all"
+            element={<ViewAllAppointments />}
+          />
+          <Route path="/appointments/update" element={<UpdateAppointments />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
