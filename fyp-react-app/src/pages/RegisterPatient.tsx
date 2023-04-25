@@ -106,12 +106,11 @@ export default function RegisterPatient() {
             className="form-select mb-3"
             defaultValue={"DEFAULT"}
             aria-label="Select gender"
-            onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-              setInputs((values) => ({
-                ...values,
-                [e.target.name]: e.target.value,
-              }))
-            }
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+              setInputs((prev) => {
+                return { ...prev, [e.target.name]: e.target.value };
+              });
+            }}
           >
             <option value={"DEFAULT"} disabled>
               Select gender

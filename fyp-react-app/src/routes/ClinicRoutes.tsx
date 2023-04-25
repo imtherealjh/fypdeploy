@@ -19,24 +19,21 @@ export default function ClincRoutes() {
                   {
                     name: "Create Account",
                     link: "register-account",
-                    end: true,
                   },
                   {
                     name: "Manage Account",
                     link: "manage-account",
-                    end: true,
+                    end: false,
                   },
                   {
-                    name: "Create Appointment",
-                    link: "create-appointment",
-                    end: true,
+                    name: "Create Appointment Slots",
+                    link: "create-appointment-slots",
                   },
                   {
-                    name: "Subscription",
-                    link: "subscription",
-                    end: true,
+                    name: "Subscription Plans",
+                    link: "subscription plans",
                   },
-                  { name: "Feedback", link: "feedback", end: true },
+                  { name: "Feedback", link: "feedback" },
                 ]}
               />
             </DashboardLayout>

@@ -16,9 +16,9 @@ export default function ClincRoutes() {
             <DashboardLayout>
               <SideBar
                 navList={[
-                  { name: "Dashboard", link: "", end: true },
-                  { name: "Patient List", link: "patients", end: true },
-                  { name: "Feed Back", link: "feedbacks", end: true },
+                  { name: "Dashboard", link: "" },
+                  { name: "Patient List", link: "patients" },
+                  { name: "Feed Back", link: "feedbacks" },
                 ]}
               />
             </DashboardLayout>
