@@ -11,7 +11,7 @@ export default function ClincRoutes() {
         <Route
           element={
             <DashboardLayout>
-              <SideBar navList={[{ name: "Dashboard", link: "", end: true }]} />
+              <SideBar navList={[{ name: "Dashboard", link: "" }]} />
             </DashboardLayout>
           }
         >

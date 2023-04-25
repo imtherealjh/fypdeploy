@@ -5,9 +5,7 @@ import UpdateAppointmentComponent from "./UpdateAppointment";
 import DeleteAppointmentComponent from "./DeleteAppointment";
 
 export default function Appointment() {
-  const [appointmentType, setAppointmentType] = useState(
-    useLocation().state ?? "Past"
-  );
+  const [appointmentType, setAppointmentType] = useState("Past");
   const [btnClicked, setBtnClicked] = useState("");
   const [data, setData] = useState({});
   const [appointments, setAppointments] = useState<any>([]);
@@ -17,9 +15,12 @@ export default function Appointment() {
     let isMounted = true;
     let controller = new AbortController();
     const fetchData = async () => {
-      const response = await axiosPrivate.get("/patient/getPastAppointment", {
-        signal: controller.signal,
-      });
+      const response = await axiosPrivate.get(
+        `/patient/get${appointmentType}Appointment`,
+        {
+          signal: controller.signal,
+        }
+      );
 
       isMounted && setAppointments(response.data);
     };
@@ -30,9 +31,7 @@ export default function Appointment() {
       isMounted = false;
       controller.abort();
     };
-  }, []);
-
-  let isMounted = false;
+  }, [appointmentType]);
 
   return (
     <>
@@ -53,23 +52,7 @@ export default function Appointment() {
               className="btn-check"
               name="btnradio"
               autoComplete="off"
-              onChange={async () => {
-                if (!isMounted) {
-                  isMounted = true;
-
-                  try {
-                    const response = await axiosPrivate.get(
-                      `/patient/getPastAppointment`
-                    );
-                    isMounted && setAppointments(response.data);
-                  } catch (error) {
-                    alert("There is an error getting the past appointment");
-                  }
-
-                  isMounted && setAppointmentType("Past");
-                  isMounted = false;
-                }
-              }}
+              onChange={() => setAppointmentType("Past")}
               checked={appointmentType === "Past"}
             />
             <label className="btn btn-outline-secondary" htmlFor="Past">
@@ -82,22 +65,7 @@ export default function Appointment() {
               className="btn-check"
               name="btnradio"
               autoComplete="off"
-              onChange={async () => {
-                if (!isMounted) {
-                  isMounted = true;
-                  try {
-                    const response = await axiosPrivate.get(
-                      `/patient/getUpcomingAppointment`
-                    );
-                    isMounted && setAppointments(response.data);
-                  } catch (error) {
-                    alert("There is an error getting the upcoming appointment");
-                  }
-
-                  isMounted && setAppointmentType("Upcoming");
-                  isMounted = false;
-                }
-              }}
+              onChange={() => setAppointmentType("Upcoming")}
               checked={appointmentType === "Upcoming"}
             />
             <label className="btn btn-outline-secondary" htmlFor="Upcoming">

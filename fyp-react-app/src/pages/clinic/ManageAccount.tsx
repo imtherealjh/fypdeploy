@@ -1,6 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { CgSearch } from "react-icons/cg";
-import { Link } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 export default function ManageAccount() {
@@ -16,7 +15,6 @@ export default function ManageAccount() {
         signal: controller.signal,
       });
 
-      console.log(response.data);
       isMounted && setData(response.data);
     };
 
@@ -74,7 +72,9 @@ export default function ManageAccount() {
             {data
               .filter(
                 (data) =>
-                  JSON.stringify(data).toLowerCase().indexOf(searchInput) !== -1
+                  JSON.stringify(data)
+                    .toLowerCase()
+                    .indexOf(searchInput.toLowerCase()) !== -1
               )
               .map((data: any, idx) => (
                 <>

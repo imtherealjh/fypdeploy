@@ -12,7 +12,7 @@ export default function AdminRoutes() {
         <Route
           element={
             <DashboardLayout>
-              <SideBar navList={[{ name: "Dashboard", link: "", end: true }]} />
+              <SideBar navList={[{ name: "Dashboard", link: "" }]} />
             </DashboardLayout>
           }
         >

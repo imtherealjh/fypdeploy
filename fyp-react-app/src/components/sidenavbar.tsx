@@ -3,7 +3,7 @@ import "../css/sidenavbar.css";
 import { NavigationItems } from "../hooks/types";
 
 export type Props = {
-  navList: Array<NavigationItems>;
+  navList: Array<Partial<NavigationItems>>;
 };
 
 export default function SideBar({ navList }: Props) {
@@ -14,9 +14,8 @@ export default function SideBar({ navList }: Props) {
           {navList.map((navItem, index) => (
             <NavLink
               key={"side-navbar" + index}
-              state={navItem.name}
-              to={navItem.link}
-              end={navItem.end}
+              to={navItem?.link ?? ""}
+              end={navItem?.end ?? true}
             >
               {({ isActive }) => (
                 <li className={isActive ? "active" : ""}>
@@ -28,7 +27,7 @@ export default function SideBar({ navList }: Props) {
             </NavLink>
           ))}
           <div className="bottom">
-            <NavLink key="side-navbar-last-item-1" to="faq" state="FAQ" end>
+            <NavLink key="side-navbar-last-item-1" to="faq" end>
               {({ isActive }) => (
                 <li className={isActive ? "active" : ""}>
                   <button style={{ display: "inline-block" }} type="button">
@@ -38,12 +37,7 @@ export default function SideBar({ navList }: Props) {
               )}
             </NavLink>
 
-            <NavLink
-              key="side-navbar-last-item-2"
-              to="contact-us"
-              state="Contact Us"
-              end
-            >
+            <NavLink key="side-navbar-last-item-2" to="contact-us" end>
               {({ isActive }) => (
                 <li className={isActive ? "active" : ""}>
                   <button style={{ display: "inline-block" }} type="button">

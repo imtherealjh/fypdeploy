@@ -20,21 +20,19 @@ export default function PatientRoutes() {
             <DashboardLayout>
               <SideBar
                 navList={[
-                  { name: "Dashboard", link: "", end: true },
+                  { name: "Dashboard", link: "" },
                   {
                     name: "Search Clinic",
                     link: "search-clinic",
-                    end: true,
                   },
                   { name: "Appointment", link: "appointment", end: false },
-                  { name: "Queue", link: "queue", end: true },
+                  { name: "Queue", link: "queue" },
                   {
                     name: "Medical Records",
                     link: "medical-records",
-                    end: true,
                   },
-                  { name: "Payments", link: "payment", end: true },
-                  { name: "Feedbacks", link: "feedback", end: true },
+                  { name: "Payments", link: "payment" },
+                  { name: "Feedbacks", link: "feedback" },
                 ]}
               />
             </DashboardLayout>

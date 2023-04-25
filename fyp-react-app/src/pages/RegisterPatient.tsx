@@ -102,9 +102,15 @@ export default function RegisterPatient() {
             <label htmlFor="contact">Contact</label>
           </div>
           <select
+            name="gender"
             className="form-select mb-3"
             defaultValue={"DEFAULT"}
             aria-label="Select gender"
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+              setInputs((prev) => {
+                return { ...prev, [e.target.name]: e.target.value };
+              });
+            }}
           >
             <option value={"DEFAULT"} disabled>
               Select gender
