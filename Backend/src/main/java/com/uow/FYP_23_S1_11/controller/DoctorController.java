@@ -36,15 +36,15 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.getPatientsByApptDate(apptDate));
     }
 
+    @GetMapping("/getByMedicalRecordsId")
+    public ResponseEntity<List<PatientMedicalRecords>> getByMedicalRecordsId(@RequestParam Integer medicalRecordId) {
+        return ResponseEntity.ok(doctorService.getByMedicalRecordsId(medicalRecordId));
+    }
+
     @PostMapping("/insertMedicalRecords")
     public ResponseEntity<Boolean> insertMedicalRecords(
             @Valid @RequestBody PatientMedicalRecordsRequest patientMedicalRecordsRequest) {
         return ResponseEntity.ok(doctorService.insertMedicalRecords(patientMedicalRecordsRequest));
-    }
-
-    @GetMapping("/getByMedicalRecordsId")
-    public ResponseEntity<List<PatientMedicalRecords>> getByMedicalRecordsId(@RequestParam Integer medicalRecordId) {
-        return ResponseEntity.ok(doctorService.getByMedicalRecordsId(medicalRecordId));
     }
 
     @PostMapping("/updateMedicalRecords")

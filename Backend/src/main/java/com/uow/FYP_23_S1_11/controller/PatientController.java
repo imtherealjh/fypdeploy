@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uow.FYP_23_S1_11.constraints.OnCreate;
 import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 import com.uow.FYP_23_S1_11.domain.Appointment;
-import com.uow.FYP_23_S1_11.domain.Clinic;
-import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
@@ -29,11 +27,8 @@ import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.service.PatientService;
-import com.uow.FYP_23_S1_11.domain.MailDetails;
-import com.uow.FYP_23_S1_11.domain.request.MailRequest;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -99,20 +94,6 @@ public class PatientController {
     public ResponseEntity<EducationalMaterial> getEduMaterialById(@RequestParam Integer id) {
         return ResponseEntity.ok(patientService.getEduMaterialById(id));
     }
-
-    @PostMapping("/sendMail")
-    public String sendMail(@RequestBody MailRequest details) {
-        String status = patientService.sendSimpleMail(details);
-
-        return status;
-    }
-
-    // @PostMapping("/sendMailWithAttachment")
-    // public String sendMailWithAttachment(@RequestBody MailRequest details) {
-    // String status = patientService.sendMailWithAttachment(details);
-
-    // return status;
-    // }
 
     @PostMapping("/insertClinicAndDoctorFeedback")
     public ResponseEntity<Boolean> insertClinicAndDoctorFeedback(

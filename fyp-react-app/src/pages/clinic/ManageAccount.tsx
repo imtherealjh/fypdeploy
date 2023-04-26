@@ -1,6 +1,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { CgSearch } from "react-icons/cg";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { Link } from "react-router-dom";
 
 export default function ManageAccount() {
   const axiosPrivate = useAxiosPrivate();
@@ -78,11 +79,17 @@ export default function ManageAccount() {
               )
               .map((data: any, idx) => (
                 <tr key={idx}>
-                  <th scope="row">{idx + 1}</th>
+                  <th style={{ alignSelf: "center" }} scope="row">
+                    {idx + 1}
+                  </th>
                   <td scope="col">{data.name}</td>
                   <td scope="col">{data.role}</td>
                   <td scope="col">{data.email}</td>
-                  <td scope="col">Edit</td>
+                  <td scope="col">
+                    <Link to={`edit/${data.accountId}`} state={data}>
+                      <button className="btn btn-primary">Edit</button>
+                    </Link>
+                  </td>
                 </tr>
               ))}
           </tbody>

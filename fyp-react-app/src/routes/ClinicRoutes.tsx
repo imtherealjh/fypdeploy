@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../Layout/DashboardLayout";
+import DashboardLayout from "../layout/DashboardLayout";
 import RegisterAccount from "../pages/clinic/RegisterAccount";
 import ManageAccount from "../pages/clinic/ManageAccount";
 import Home from "../pages/clinic/Home";
@@ -8,6 +8,8 @@ import CreateAppointmentSlots from "../pages/clinic/CreateAppointmentSlots";
 import Subscription from "../pages/clinic/Subscription";
 import Feedback from "../pages/clinic/Feedback";
 import NotFound from "../pages/NotFound";
+import Profile from "../pages/clinic/Profile";
+import EditAccount from "../pages/clinic/EditAccount";
 
 export default function ClincRoutes() {
   return (
@@ -43,8 +45,12 @@ export default function ClincRoutes() {
           }
         >
           <Route index path="" element={<Home />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="register-account" element={<RegisterAccount />} />
-          <Route path="manage-account" element={<ManageAccount />} />
+          <Route path="manage-account">
+            <Route index path="" element={<ManageAccount />} />
+            <Route path="edit/:id" element={<EditAccount />} />
+          </Route>
           <Route
             path="create-appointment-slots"
             element={<CreateAppointmentSlots />}
