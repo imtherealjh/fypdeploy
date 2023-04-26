@@ -34,7 +34,7 @@ export default function ClincRoutes() {
                   },
                   {
                     name: "Subscription Plans",
-                    link: "subscription plans",
+                    link: "subscription",
                   },
                   { name: "Feedback", link: "feedback" },
                 ]}

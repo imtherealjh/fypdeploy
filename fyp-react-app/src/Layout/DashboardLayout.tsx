@@ -9,6 +9,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useWindowDimensions } from "../hooks/hooks";
 
 import "../css/dashboard.css";
+import useAuth from "../hooks/useAuth";
 
 interface Props {
   children: ReactNode;
@@ -19,6 +20,8 @@ export default function DashboardLayout({ children }: Props) {
   const toggle = () => setIsOpen(!isOpen);
 
   const axiosPrivate = useAxiosPrivate();
+  const { auth } = useAuth();
+
   const { width } = useWindowDimensions();
   const navigate = useNavigate();
 
@@ -29,23 +32,26 @@ export default function DashboardLayout({ children }: Props) {
   let isMounted = false;
   const profileContent = (
     <>
-      <div className="d-flex flex-column">
-        <div>
-          <img
-            style={{ flex: "1 1 auto" }}
-            src="https://via.placeholder.com/50"
-            alt="Profile Img"
-            className="rounded-circle"
-          />
+      <div className="d-flex flex-column gap-2">
+        <img
+          style={{ flex: "1 1 auto" }}
+          src="https://via.placeholder.com/50"
+          alt="Profile Img"
+          className="rounded-circle"
+        />
+        <div
+          style={{
+            wordBreak: "break-all",
+            width: "7.5rem",
+            textAlign: "center",
+          }}
+        >
+          <span style={{ display: "inline-block" }}>{auth.name}</span>
         </div>
         <div className="divider-wrapper">
           <div className="horizontal-divider"></div>
         </div>
-        <div style={{ wordBreak: "break-all", width: "7.5rem" }}>
-          <span style={{ display: "inline-block" }}>
-            AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-          </span>
-        </div>
+
         <button
           className="btn btn-danger"
           onClick={async () => {

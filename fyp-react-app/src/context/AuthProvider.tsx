@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useState } from "react";
 
 interface UserContext {
+  name: string;
   role: string;
   accessToken: string;
 }
@@ -15,12 +16,12 @@ interface Props {
 }
 
 const AuthContext = createContext<IStateUserDef>({
-  auth: { role: "", accessToken: "" },
+  auth: { name: "", role: "", accessToken: "" },
   setAuth: () => {},
 });
 
 export const AuthProvider = ({ children }: Props) => {
-  const [auth, setAuth] = useState({ role: "", accessToken: "" });
+  const [auth, setAuth] = useState({ name: "", role: "", accessToken: "" });
 
   return (
     <>

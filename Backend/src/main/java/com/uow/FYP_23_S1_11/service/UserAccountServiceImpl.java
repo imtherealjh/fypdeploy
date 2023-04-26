@@ -90,8 +90,12 @@ public class UserAccountServiceImpl implements UserAccountService {
 
             String newAccessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
 
+            TypedQuery<String> query = entityManager.createNamedQuery("findNameInTables", String.class);
+            query.setParameter("account", user);
+
             AuthResponse auth = AuthResponse
                     .builder()
+                    .name(query.getSingleResult())
                     .role(user.getRole().name())
                     .accessToken(newAccessToken)
                     .build();
@@ -132,8 +136,12 @@ public class UserAccountServiceImpl implements UserAccountService {
 
         response.addCookie(cookie);
 
+        TypedQuery<String> query = entityManager.createNamedQuery("findNameInTables", String.class);
+        query.setParameter("account", user);
+
         AuthResponse auth = AuthResponse
                 .builder()
+                .name(query.getSingleResult())
                 .role(user.getRole().name())
                 .accessToken(accessToken)
                 .build();
