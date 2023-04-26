@@ -51,7 +51,9 @@ export default function DashboardLayout({ children }: Props) {
         <div className="divider-wrapper">
           <div className="horizontal-divider"></div>
         </div>
-
+        <button className="btn btn-warning" onClick={() => navigate("profile")}>
+          View profile
+        </button>
         <button
           className="btn btn-danger"
           onClick={async () => {

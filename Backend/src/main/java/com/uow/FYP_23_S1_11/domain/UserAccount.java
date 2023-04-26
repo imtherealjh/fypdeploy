@@ -39,10 +39,10 @@ import lombok.Setter;
         "UNION SELECT n.email FROM Nurse n WHERE n.email = :email " +
         "UNION SELECT f.email FROM FrontDesk f WHERE f.email = :email ")
 @NamedQuery(name = "findNameInTables", query = "SELECT p.name FROM Patient p WHERE p.patientAccount = :account "
-        + "UNION SELECT c.email FROM Clinic c WHERE c.clinicAccount = :account " +
-        "UNION SELECT d.email FROM Doctor d WHERE d.doctorAccount = :account " +
-        "UNION SELECT n.email FROM Nurse n WHERE n.nurseAccount = :account " +
-        "UNION SELECT f.email FROM FrontDesk f WHERE f.frontDeskAccount = :account ")
+        + "UNION SELECT c.clinicName FROM Clinic c WHERE c.clinicAccount = :account " +
+        "UNION SELECT d.name FROM Doctor d WHERE d.doctorAccount = :account " +
+        "UNION SELECT n.name FROM Nurse n WHERE n.nurseAccount = :account " +
+        "UNION SELECT f.name FROM FrontDesk f WHERE f.frontDeskAccount = :account ")
 public class UserAccount implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

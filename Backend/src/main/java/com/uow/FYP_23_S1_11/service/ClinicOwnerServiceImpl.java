@@ -101,11 +101,11 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
         UserAccount account = Constants.getAuthenticatedUser();
 
         TypedQuery<StaffAccountDetails> query = entityManager.createQuery(
-                "SELECT new com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails(ua.accountId, d.name, ua.role, d.email) FROM UserAccount ua "
+                "SELECT new com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails(d.doctorId, d.name, ua.role, d.email) FROM UserAccount ua "
                         + "JOIN ua.doctor d WHERE d.doctorClinic = :clinic UNION "
-                        + "SELECT new com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails(ua.accountId,n.name, ua.role, n.email) FROM UserAccount ua "
+                        + "SELECT new com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails(n.nurseId,n.name, ua.role, n.email) FROM UserAccount ua "
                         + "JOIN ua.nurse n WHERE n.nurseClinic = :clinic UNION "
-                        + "SELECT new com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails(ua.accountId, fd.name, ua.role, fd.email) FROM UserAccount ua "
+                        + "SELECT new com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails(fd.frontDeskId, fd.name, ua.role, fd.email) FROM UserAccount ua "
                         + "JOIN ua.frontDesk fd WHERE fd.frontDeskClinic = :clinic",
                 StaffAccountDetails.class);
         query.setParameter("clinic", account.getClinic());
@@ -124,8 +124,8 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
         EWeekdays day = EWeekdays.valueOf(output.toUpperCase());
 
         List<Appointment> appointments = apptRepo.findByApptDateAndApptDoctor(date, doctor);
-        // check if user have a schedule or have already generated a schedule
         DoctorSchedule doctorSchedule = doctorScheduleRepo.findByDoctorAndDay(doctor, day);
+        // check if user have a schedule or have already generated a schedule
         if (appointments.size() > 0 || doctorSchedule == null) {
             return null;
         }
