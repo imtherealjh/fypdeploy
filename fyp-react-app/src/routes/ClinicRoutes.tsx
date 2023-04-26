@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../layout/DashboardLayout";
+import DashboardLayout from "../Layout/DashboardLayout";
 import RegisterAccount from "../pages/clinic/RegisterAccount";
 import ManageAccount from "../pages/clinic/ManageAccount";
 import Home from "../pages/clinic/Home";

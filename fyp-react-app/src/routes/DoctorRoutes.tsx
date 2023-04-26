@@ -1,13 +1,13 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../layout/DashboardLayout";
+import DashboardLayout from "../Layout/DashboardLayout";
 import DoctorHome from "../pages/doctor/Home";
 import Appointment from "../pages/doctor/Appointment";
 import PatientList from "../pages/doctor/PatientList";
 import Feedback from "../pages/doctor/Feedback";
 import NotFound from "../pages/NotFound";
 
-export default function ClincRoutes() {
+export default function DoctorRoutes() {
   return (
     <>
       <Routes>
