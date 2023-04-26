@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
 // Layouts
-import LandingPageLayout from "./layout/LandingPageLayout";
+import LandingPageLayout from "./Layout/LandingPageLayout";
 
 // Components
 import PersistLogin from "./components/PersistLogin";

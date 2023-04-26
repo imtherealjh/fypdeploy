@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../layout/DashboardLayout";
+import DashboardLayout from "../Layout/DashboardLayout";
 import ClerkHome from "../pages/clerk/Home";
 import Appointments from "../pages/clerk/Appointments";
 import Queue from "../pages/clerk/Queue";
