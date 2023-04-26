@@ -54,6 +54,8 @@ public class UserAccount implements UserDetails {
     @Enumerated(EnumType.STRING)
     private ERole role;
     private Boolean isEnabled = false;
+    @Column(name = "verificationCode")
+    private String verificationCode;
 
     @OneToMany(mappedBy = "tokenAccount", cascade = CascadeType.ALL)
     private List<Token> userTokens;

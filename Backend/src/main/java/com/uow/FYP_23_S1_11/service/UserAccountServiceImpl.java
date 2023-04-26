@@ -68,6 +68,12 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Value("${refresh.jwtexpirationms}")
     private int refreshTokenExpiry;
 
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Value("${spring.mail.username}")
+    private String sender;
+
     @Override
     public void refresh(HttpServletRequest request,
             HttpServletResponse response, String token) throws StreamWriteException, DatabindException, IOException {
@@ -196,17 +202,25 @@ public class UserAccountServiceImpl implements UserAccountService {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try {
-            UserAccount newAccount = (UserAccount) mapper.convertValue(patientReq, UserAccount.class);
-            UserAccount registeredAccount = registerAccount(newAccount, patientReq.getEmail(), ERole.PATIENT);
+            String siteURL = "http://localhost:8080/swagger-ui/index.html#/auth-controller/";
+            String randomCode = createVerificationCode();
 
+            UserAccount newAccount = (UserAccount) mapper.convertValue(patientReq, UserAccount.class);
+            newAccount.setVerificationCode(randomCode);
+
+            UserAccount registeredAccount = registerAccount(newAccount, patientReq.getEmail(), ERole.PATIENT);
             Patient newPatient = (Patient) mapper.convertValue(patientReq, Patient.class);
             newPatient.setPatientAccount(registeredAccount);
             patientRepo.save(newPatient);
+
+            String email = patientReq.getEmail();
+            sendVerificationEmail(newAccount, siteURL, email);
 
             return true;
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
+            System.out.println(e);
             return false;
         }
     }
@@ -235,6 +249,48 @@ public class UserAccountServiceImpl implements UserAccountService {
                 .toString();
 
         return generatedString;
+    }
+
+    private void sendVerificationEmail(UserAccount user, String siteURL, String email)
+            throws MessagingException, UnsupportedEncodingException {
+        // String toAddress = user.getPatient().getEmail();
+        String senderName = "GoDoctor";
+        String subject = "Please verify your registration";
+        String content = "Dear [[name]],<br>"
+                + "Please click the link below to verify your registration:<br>"
+                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
+                + "Thank you,<br>"
+                + "GoDoctor.";
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+
+        helper.setFrom(sender, senderName);
+        helper.setTo(email);
+        helper.setSubject(subject);
+
+        content = content.replace("[[name]]", user.getUsername());
+        String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
+
+        content = content.replace("[[URL]]", verifyURL);
+
+        helper.setText(content, true);
+
+        javaMailSender.send(message);
+    }
+
+    @Override
+    public boolean verify(String verificationCode) {
+        UserAccount user = userAccRepo.findByVerificationCode(verificationCode);
+
+        if (user == null || user.getIsEnabled()) {
+            return false;
+        } else {
+            user.setVerificationCode(null);
+            user.setIsEnabled(true);
+            userAccRepo.save(user);
+            return true;
+        }
     }
 
 }

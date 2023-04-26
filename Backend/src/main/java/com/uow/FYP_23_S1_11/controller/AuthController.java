@@ -25,6 +25,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
+//import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestParam;
+
 @RestController
 @RequestMapping(value = "/api/auth", produces = { MediaType.APPLICATION_JSON_VALUE })
 @Validated
@@ -57,6 +60,15 @@ public class AuthController {
             HttpServletRequest request) {
         Boolean result = userAccountService.registerPatientAccount(patientReq, request);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/verify")
+        public String verifyUser(@RequestParam("code") String code) {
+        if (userAccountService.verify(code)) {
+            return "verify_success";
+        } else {
+            return "verify_fail";
+        }
     }
 
     @PostMapping("/logout")
