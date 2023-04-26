@@ -8,26 +8,26 @@ interface Props {
 
 export default function Step1({ formData, setFormData }: Props) {
   const axiosPrivate = useAxiosPrivate();
-  const doctorRef = useRef<HTMLSelectElement>(null);
-  const [speciality, setSpeciality] = useState([]);
-  const [clinic, setClinic] = useState<any>([]);
-  const [doctor, setDoctor] = useState<any>([]);
+  const clinicRef = useRef<HTMLSelectElement>(null),
+    doctorRef = useRef<HTMLSelectElement>(null);
+
+  const [speciality, setSpeciality] = useState<any>([]),
+    [clinic, setClinic] = useState<any>([]),
+    [doctor, setDoctor] = useState<any>([]);
 
   let isMounted = false;
-  const handleSpecialtyChange = async (
-    event: ChangeEvent<HTMLSelectElement>
-  ) => {
+  const handleSpecialtyChange = async (e: ChangeEvent<HTMLSelectElement>) => {
     if (!isMounted) {
       isMounted = true;
       try {
         const response = await axiosPrivate.get(
-          `/patient/getClinicsBySpecialty?specialty=${event.target.value}`
+          `/patient/getClinicsBySpecialty?specialty=${e.target.value}`
         );
         isMounted && setClinic(response.data);
-        //trigger change on doctor select box
-        doctorRef.current?.dispatchEvent(
-          new Event("change", { bubbles: true })
-        );
+        isMounted && setDoctor([]);
+
+        clinicRef.current!.value = "DEFAULT";
+        doctorRef.current!.value = "DEFAULT";
       } catch (error) {
         console.log(error);
       }
@@ -80,14 +80,14 @@ export default function Step1({ formData, setFormData }: Props) {
           <option value="DEFAULT" disabled>
             Open this to select specialty
           </option>
-          {speciality.map((val, idx) => (
+          {speciality.map((val: any, idx: number) => (
             <option key={idx} value={val}>
               {val}
             </option>
           ))}
         </select>
         <select
-          ref={doctorRef}
+          ref={clinicRef}
           className="form-select"
           defaultValue={"DEFAULT"}
           aria-label="Open this to select clinic"
@@ -104,6 +104,7 @@ export default function Step1({ formData, setFormData }: Props) {
           ))}
         </select>
         <select
+          ref={doctorRef}
           className="form-select"
           defaultValue={"DEFAULT"}
           aria-label="Open this to select doctor"

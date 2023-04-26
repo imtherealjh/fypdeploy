@@ -1,31 +1,31 @@
 import { useEffect, useState } from "react";
-import PatientList from "../../components/PatientList";
+import { Calendar, DateObject } from "react-multi-date-picker";
+import "/node_modules/react-multi-date-picker/styles/layouts/mobile.css";
 
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
-import { format } from "date-fns";
+import PatientList from "../../components/PatientList";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 function Dashboard() {
   const axiosPrivate = useAxiosPrivate();
-  const [value, setValue] = useState<any>(new Date());
+  const [value, setValue] = useState<any>(new DateObject());
   const [data, setData] = useState<any>({
     patientList: [],
     noOfPatients: 0,
   });
 
   useEffect(() => {
-    const formattedDate = format(value, "dd/MM/yyyy");
     let isMounted = true;
     let controller = new AbortController();
 
     const fetchData = async () => {
       let response = await axiosPrivate.get(
-        `/doctor/getPatientsByDate?apptDate=${formattedDate}`,
+        `/clinicOwner/getVisitingPatients?apptDate=${value}`,
         {
           signal: controller.signal,
         }
       );
+
+      console.log(response.data);
 
       isMounted && setData(response.data);
     };
@@ -67,7 +67,11 @@ function Dashboard() {
             </span>
           </div>
           <div className="col d-flex justify-content-center">
-            <Calendar onChange={setValue} value={value} />
+            <Calendar
+              format="YYYY-MM-DD"
+              value={value}
+              onChange={(date: DateObject) => setValue(date.format())}
+            />
           </div>
         </div>
         <div className="mt-3">

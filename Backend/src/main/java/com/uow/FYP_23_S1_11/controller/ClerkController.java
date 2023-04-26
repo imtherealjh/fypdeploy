@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
-import com.uow.FYP_23_S1_11.domain.request.GenerateClinicAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.service.ClerkService;
 
@@ -30,19 +28,6 @@ public class ClerkController {
     @Autowired
     private ClerkService clerkService;
 
-    @PostMapping("/generateClinicAppointmentSlots")
-    public ResponseEntity<Boolean> generateClinicAppointmentSlots(
-            @RequestBody GenerateClinicAppointmentRequest generateClinicAppointmentReq) {
-        return ResponseEntity.ok(clerkService.generateClinicAppointmentSlots(generateClinicAppointmentReq));
-    }
-
-    @PostMapping("/generateAppointmentSlots")
-    public ResponseEntity<Boolean> generateDoctorAppointmentSlots(
-            @RequestBody GenerateAppointmentRequest generateAppointmentReq) {
-        return ResponseEntity.ok(clerkService.generateDoctorAppointmentSlots(generateAppointmentReq));
-    }
-
-    //
     @PostMapping("/createEduMaterial")
     public ResponseEntity<Boolean> createEduMaterial(@RequestBody EducationalMaterialRequest eduMaterialRequest) {
         return ResponseEntity.ok(clerkService.createEduMaterial(eduMaterialRequest));

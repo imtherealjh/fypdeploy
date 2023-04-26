@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import Step1 from "./AppointmentStep/Step1";
 import Step2 from "./AppointmentStep/Step2";

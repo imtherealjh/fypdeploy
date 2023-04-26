@@ -1,5 +1,6 @@
 package com.uow.FYP_23_S1_11.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
-import com.uow.FYP_23_S1_11.domain.request.DoctorScheduleRequest;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
-import com.uow.FYP_23_S1_11.domain.request.GenerateClinicAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
-import com.uow.FYP_23_S1_11.service.ClerkService;
 import com.uow.FYP_23_S1_11.service.ClinicOwnerService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping(value = "/api/clinicOwner", produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -36,12 +35,20 @@ import jakarta.validation.constraints.NotEmpty;
 public class ClinicOwnerController {
     @Autowired
     private ClinicOwnerService clincOwnerService;
-    @Autowired
-    private ClerkService clerkService;
+
+    @GetMapping("/getVisitingPatients")
+    public ResponseEntity<?> getAllVisitingPatientByDate(@NotNull @RequestParam LocalDate apptDate) {
+        return ResponseEntity.ok(clincOwnerService.getVisitingPaitents(apptDate));
+    }
 
     @GetMapping("/getAllStaffs")
     public ResponseEntity<List<?>> getAllStaffs() {
         return ResponseEntity.ok(clincOwnerService.getAllStaffs());
+    }
+
+    @GetMapping("/getAllDoctors")
+    public ResponseEntity<List<?>> getAllDoctors() {
+        return ResponseEntity.ok(clincOwnerService.getAllDoctors());
     }
 
     @PostMapping("/registerDoctor")
@@ -58,26 +65,20 @@ public class ClinicOwnerController {
 
     @PostMapping("/registerClerk")
     public ResponseEntity<Boolean> registerClerk(
-            @RequestBody @NotEmpty(message = "Clerk Registration List cannot be empty") List<RegisterFrontDeskRequest> registerFrontDeskReq) {
+            @RequestBody @NotEmpty(message = "Clerk Registration List cannot be empty") List<@Valid RegisterFrontDeskRequest> registerFrontDeskReq) {
         return ResponseEntity.ok(clincOwnerService.registerFrontDesk(registerFrontDeskReq));
-    }
-
-    @PostMapping("/insertDoctorSchedule")
-    public ResponseEntity<Boolean> insertDoctorSchedule(
-            @Valid @RequestBody DoctorScheduleRequest doctorScheduleRequest) {
-        return ResponseEntity.ok(clincOwnerService.insertDoctorSchedule(doctorScheduleRequest));
     }
 
     @PostMapping("/generateClinicAppointmentSlots")
     public ResponseEntity<Boolean> generateClinicAppointmentSlots(
-            @RequestBody GenerateClinicAppointmentRequest generateClinicAppointmentReq) {
-        return ResponseEntity.ok(clerkService.generateClinicAppointmentSlots(generateClinicAppointmentReq));
+            @NotEmpty(message = "Date List cannot be empty") @RequestBody List<@NotNull LocalDate> generateClinicAppointmentReq) {
+        return ResponseEntity.ok(clincOwnerService.generateClinicAppointmentSlots(generateClinicAppointmentReq));
     }
 
     @PostMapping("/generateAppointmentSlots")
     public ResponseEntity<Boolean> generateDoctorAppointmentSlots(
-            @RequestBody GenerateAppointmentRequest generateAppointmentReq) {
-        return ResponseEntity.ok(clerkService.generateDoctorAppointmentSlots(generateAppointmentReq));
+            @Valid @RequestBody GenerateAppointmentRequest generateAppointmentReq) {
+        return ResponseEntity.ok(clincOwnerService.generateDoctorAppointmentSlots(generateAppointmentReq));
     }
 
     @GetMapping("/getByClinicFeedbackId")

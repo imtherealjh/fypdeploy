@@ -35,6 +35,7 @@ import com.uow.FYP_23_S1_11.domain.request.MailRequest;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 
 @RestController
 @RequestMapping(value = "/api/patient", produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -56,7 +57,7 @@ public class PatientController {
     }
 
     @GetMapping("/getClinicsBySpecialty")
-    public ResponseEntity<List<?>> getClinicBySpecialty(@RequestParam String specialty) {
+    public ResponseEntity<List<?>> getClinicBySpecialty(@RequestParam @NotEmpty String specialty) {
         return ResponseEntity.ok(patientService.getAllClinicBySpecialty(specialty));
     }
 

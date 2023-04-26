@@ -77,15 +77,13 @@ export default function ManageAccount() {
                     .indexOf(searchInput.toLowerCase()) !== -1
               )
               .map((data: any, idx) => (
-                <>
-                  <tr key={idx}>
-                    <th scope="row">{idx + 1}</th>
-                    <td scope="col">{data.name}</td>
-                    <td scope="col">{data.role}</td>
-                    <td scope="col">{data.email}</td>
-                    <td scope="col">Edit</td>
-                  </tr>
-                </>
+                <tr key={idx}>
+                  <th scope="row">{idx + 1}</th>
+                  <td scope="col">{data.name}</td>
+                  <td scope="col">{data.role}</td>
+                  <td scope="col">{data.email}</td>
+                  <td scope="col">Edit</td>
+                </tr>
               ))}
           </tbody>
         </table>

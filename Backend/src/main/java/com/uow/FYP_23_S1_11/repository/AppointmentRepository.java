@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.uow.FYP_23_S1_11.domain.Appointment;
+import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 
@@ -19,6 +20,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
         public List<Appointment> findByApptPatient(Patient apptPatient);
 
         public List<Appointment> findByStatus(EAppointmentStatus status);
+
+        public List<Appointment> findByApptDateAndApptDoctor(LocalDate apptDate, Doctor apptDoctor);
 
         @Query("SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.clinicName) "
                         + "FROM Appointment A WHERE A.apptPatient = :patient AND "

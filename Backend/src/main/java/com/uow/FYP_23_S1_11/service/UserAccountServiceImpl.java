@@ -170,7 +170,6 @@ public class UserAccountServiceImpl implements UserAccountService {
             UserAccount registeredAccount = registerAccount(newAccount, clinicReq.getEmail(), ERole.CLINIC_OWNER);
 
             Clinic newClinic = (Clinic) mapper.convertValue(clinicReq, Clinic.class);
-            System.out.println(clinicReq.getCustomLicenseProof().getBytes());
             newClinic.setLicenseProof(clinicReq.getCustomLicenseProof().getBytes());
             newClinic.setClinicAccount(registeredAccount);
             clincRepo.save(newClinic);

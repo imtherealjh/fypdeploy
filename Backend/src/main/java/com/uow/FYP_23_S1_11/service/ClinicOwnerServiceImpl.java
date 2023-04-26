@@ -1,21 +1,22 @@
 package com.uow.FYP_23_S1_11.service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
-import javax.management.Query;
-
-import org.hibernate.boot.jaxb.mapping.NamedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.uow.FYP_23_S1_11.Constants;
+import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.DoctorSchedule;
@@ -25,11 +26,17 @@ import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.DoctorScheduleRequest;
+import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
+import com.uow.FYP_23_S1_11.domain.response.PatientAppointmentDetails;
+import com.uow.FYP_23_S1_11.domain.response.RetrieveDoctorPatient;
 import com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails;
+import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.enums.ERole;
+import com.uow.FYP_23_S1_11.enums.EWeekdays;
+import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorScheduleRepository;
 import com.uow.FYP_23_S1_11.repository.FrontDeskRepository;
@@ -48,9 +55,13 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     @PersistenceContext
     private EntityManager entityManager;
     @Autowired
+    private UserAccountService userAccountService;
+    @Autowired
+    private DoctorRepository doctorRepo;
+    @Autowired
     private DoctorScheduleRepository doctorScheduleRepo;
     @Autowired
-    private DoctorRepository doctorRepository;
+    private AppointmentRepository apptRepo;
     @Autowired
     private NurseRepository nurseRepo;
     @Autowired
@@ -58,9 +69,32 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     @Autowired
     private SpecialtyRepository specialtyRepo;
     @Autowired
-    private UserAccountService userAccountService;
-    @Autowired
     private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
+
+    @Override
+    public Object getVisitingPaitents(LocalDate date) {
+        UserAccount user = Constants.getAuthenticatedUser();
+        Clinic clinic = user.getClinic();
+
+        TypedQuery<PatientAppointmentDetails> query = entityManager.createQuery(
+                "SELECT "
+                        + "new com.uow.FYP_23_S1_11.domain.response.PatientAppointmentDetails(a.apptPatient, a.apptTime) "
+                        + "FROM Appointment a "
+                        + "LEFT JOIN a.apptDoctor d "
+                        + "WHERE a.apptPatient IS NOT NULL AND "
+                        + "d.doctorClinic = :clinic AND "
+                        + "a.status = :status AND "
+                        + "a.apptDate = :date "
+                        + "GROUP BY a.apptPatient, a.apptTime",
+                PatientAppointmentDetails.class);
+        query.setParameter("clinic", clinic);
+        query.setParameter("date", date);
+        query.setParameter("status", EAppointmentStatus.BOOKED);
+
+        RetrieveDoctorPatient object = new RetrieveDoctorPatient(query.getResultList(),
+                query.getResultList().size());
+        return object;
+    }
 
     @Override
     public List<?> getAllStaffs() {
@@ -76,6 +110,110 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
                 StaffAccountDetails.class);
         query.setParameter("clinic", account.getClinic());
         return query.getResultList();
+    }
+
+    @Override
+    public List<?> getAllDoctors() {
+        UserAccount account = Constants.getAuthenticatedUser();
+        return doctorRepo.findByDoctorClinic(account.getClinic());
+    }
+
+    private List<Appointment> generateTimeSlots(LocalDate date, Doctor doctor) {
+        DayOfWeek dow = date.getDayOfWeek();
+        String output = dow.getDisplayName(TextStyle.FULL, Locale.US);
+        EWeekdays day = EWeekdays.valueOf(output.toUpperCase());
+
+        List<Appointment> appointments = apptRepo.findByApptDateAndApptDoctor(date, doctor);
+        // check if user have a schedule or have already generated a schedule
+        DoctorSchedule doctorSchedule = doctorScheduleRepo.findByDoctorAndDay(doctor, day);
+        if (appointments.size() > 0 || doctorSchedule == null) {
+            return null;
+        }
+
+        Clinic clinic = doctor.getDoctorClinic();
+        LocalTime duration = clinic.getApptDuration();
+
+        LocalTime newTime = doctorSchedule.getStartTime();
+        List<Appointment> timeslots = new ArrayList<>();
+        while (newTime.compareTo(doctorSchedule.getEndTime()) < 0) {
+            timeslots.add(Appointment
+                    .builder()
+                    .status(EAppointmentStatus.AVAILABLE)
+                    .apptDoctor(doctor)
+                    .apptClinic(doctor.getDoctorClinic())
+                    .apptDate(date)
+                    .apptTime(newTime)
+                    .build());
+            newTime = newTime.plusHours(duration.getHour())
+                    .plusMinutes(duration.getMinute());
+        }
+
+        return timeslots;
+    }
+
+    @Override
+    public Boolean generateClinicAppointmentSlots(List<LocalDate> generateClinicAppointmentReq) {
+        try {
+            // get clinic object...
+            UserAccount userAccount = Constants.getAuthenticatedUser();
+            Clinic clinic = userAccount.getClinic();
+
+            List<Appointment> appointmentList = new ArrayList<Appointment>();
+            for (LocalDate date : generateClinicAppointmentReq) {
+                if (date.isBefore(LocalDate.now())) {
+                    continue;
+                }
+
+                List<Doctor> doctors = doctorRepo.findByDoctorClinic(clinic);
+                for (Doctor doctor : doctors) {
+                    List<Appointment> generatedSlots = generateTimeSlots(date, doctor);
+                    if (generatedSlots == null) {
+                        continue;
+                    }
+                    appointmentList.addAll(generatedSlots);
+                }
+            }
+            apptRepo.saveAll(appointmentList);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean generateDoctorAppointmentSlots(GenerateAppointmentRequest generateDoctorApptReq) {
+        try {
+            UserAccount userAccount = Constants.getAuthenticatedUser();
+            Clinic clinic = userAccount.getClinic();
+
+            List<LocalDate> dates = generateDoctorApptReq.getApptDates();
+            List<Doctor> doctors = generateDoctorApptReq.getDoctorIds().stream()
+                    .map(id -> doctorRepo.findByDoctorIdAndDoctorClinic(id, clinic)).filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+
+            List<Appointment> appointmentList = new ArrayList<Appointment>();
+            for (LocalDate date : dates) {
+                if (date.isBefore(LocalDate.now())) {
+                    continue;
+                }
+
+                // validate is it the same clinic
+                for (Doctor doctor : doctors) {
+                    List<Appointment> generatedSlots = generateTimeSlots(date, doctor);
+                    if (generatedSlots == null) {
+                        continue;
+                    }
+                    appointmentList.addAll(generatedSlots);
+                }
+            }
+
+            apptRepo.saveAll(appointmentList);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
     }
 
     @Override
@@ -101,7 +239,7 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
                 newDoctor.setDoctorClinic(clinic);
                 newDoctor.setDoctorSpecialty(specialty);
 
-                newDoctorList.add(doctorRepository.save(newDoctor));
+                newDoctorList.add(doctorRepo.save(newDoctor));
 
                 List<DoctorScheduleRequest> schedule = object.getSchedule();
                 if (schedule != null && schedule.size() > 0) {
@@ -191,32 +329,6 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
             return true;
         } catch (IllegalArgumentException e) {
             throw e;
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-    }
-
-    @Override
-    public Boolean insertDoctorSchedule(DoctorScheduleRequest doctorScheduleReq) {
-        // TODO: implement checker for whether doctor is the same clinic as owner
-        // TODO: implement to check whether schedule conflicts with original schedule
-        // and if it is before opening hours or after closing hours
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.registerModule(new JavaTimeModule());
-        try {
-            Optional<Doctor> doctor = doctorRepository.findById(doctorScheduleReq.getDoctorId());
-            if (doctor.isEmpty()) {
-                throw new IllegalArgumentException("Doctor not found!!!");
-            }
-            DoctorSchedule newSchedule = (DoctorSchedule) mapper.convertValue(doctorScheduleReq, DoctorSchedule.class);
-            newSchedule.setDoctor(doctor.get());
-            doctorScheduleRepo.save(newSchedule);
-            return true;
-        } catch (IllegalArgumentException e) {
-            System.out.println(e);
-            return false;
         } catch (Exception e) {
             System.out.println(e);
             return false;
