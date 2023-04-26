@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
 // Layouts
-import LandingPageLayout from "./Layout/LandingPageLayout";
+import LandingPageLayout from "./layout/LandingPageLayout";
 
 // Components
 import PersistLogin from "./components/PersistLogin";
@@ -16,7 +16,6 @@ import ClinicRoutes from "./routes/ClinicRoutes";
 import DoctorRoutes from "./routes/DoctorRoutes";
 import VerifyEmail from "./pages/VerifyEmail";
 import AdminRoutes from "./routes/AdminRoutes";
-import SideBar from "./components/sidenavbar";
 import ClerkRoutes from "./routes/ClerkRoutes";
 
 function App() {
