@@ -94,12 +94,16 @@ public class UserAccountServiceImpl implements UserAccountService {
 
             String newAccessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
 
-            TypedQuery<String> query = entityManager.createNamedQuery("findNameInTables", String.class);
-            query.setParameter("account", user);
+            String name = "admin";
+            if (user.getRole() != ERole.SYSTEM_ADMIN) {
+                TypedQuery<String> query = entityManager.createNamedQuery("findNameInTables", String.class);
+                query.setParameter("account", user);
+                name = query.getSingleResult();
+            }
 
             AuthResponse auth = AuthResponse
                     .builder()
-                    .name(query.getSingleResult())
+                    .name(name)
                     .role(user.getRole().name())
                     .accessToken(newAccessToken)
                     .build();
@@ -140,12 +144,16 @@ public class UserAccountServiceImpl implements UserAccountService {
 
         response.addCookie(cookie);
 
-        TypedQuery<String> query = entityManager.createNamedQuery("findNameInTables", String.class);
-        query.setParameter("account", user);
+        String name = "admin";
+        if (user.getRole() != ERole.SYSTEM_ADMIN) {
+            TypedQuery<String> query = entityManager.createNamedQuery("findNameInTables", String.class);
+            query.setParameter("account", user);
+            name = query.getSingleResult();
+        }
 
         AuthResponse auth = AuthResponse
                 .builder()
-                .name(query.getSingleResult())
+                .name(name)
                 .role(user.getRole().name())
                 .accessToken(accessToken)
                 .build();

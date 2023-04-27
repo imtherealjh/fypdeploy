@@ -53,7 +53,7 @@ public class InitialSetup {
             account.setUsername("admin");
             account.setPassword("admin");
             account.setIsEnabled(true);
-            UserAccount createdUser = userAccService.registerAccount(account, sender, ERole.SYSTEM_ADMIN);
+            userAccService.registerAccount(account, sender, ERole.SYSTEM_ADMIN);
         }
 
     }
