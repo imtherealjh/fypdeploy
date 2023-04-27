@@ -4,13 +4,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +21,6 @@ import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.uow.FYP_23_S1_11.Constants;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
@@ -39,7 +36,6 @@ import com.uow.FYP_23_S1_11.repository.UserAccountRepository;
 import com.uow.FYP_23_S1_11.utils.JwtUtils;
 
 import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeMessage;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -59,6 +55,8 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Autowired
     private PatientRepository patientRepo;
     @Autowired
+    private EmailService emailService;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtUtils jwtUtils;
@@ -68,11 +66,11 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Value("${refresh.jwtexpirationms}")
     private int refreshTokenExpiry;
 
-    @Autowired
-    private JavaMailSender javaMailSender;
-
     @Value("${spring.mail.username}")
     private String sender;
+
+    @Value("${frontend.verify}")
+    private String frontendUrl;
 
     @Override
     public void refresh(HttpServletRequest request,
@@ -197,25 +195,32 @@ public class UserAccountServiceImpl implements UserAccountService {
         }
     }
 
+    private String generateVerificationCode() {
+        String verificationCode;
+        while (true) {
+            verificationCode = UUID.randomUUID().toString();
+            UserAccount user = userAccRepo.findByVerificationCode(verificationCode);
+            if (user == null) {
+                return verificationCode;
+            }
+        }
+    }
+
     @Override
     public Boolean registerPatientAccount(RegisterPatientRequest patientReq, HttpServletRequest request) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try {
-            String siteURL = "http://localhost:8080/swagger-ui/index.html#/auth-controller/";
-            String randomCode = createVerificationCode();
 
             UserAccount newAccount = (UserAccount) mapper.convertValue(patientReq, UserAccount.class);
-            newAccount.setVerificationCode(randomCode);
+            newAccount.setVerificationCode(generateVerificationCode());
 
             UserAccount registeredAccount = registerAccount(newAccount, patientReq.getEmail(), ERole.PATIENT);
             Patient newPatient = (Patient) mapper.convertValue(patientReq, Patient.class);
             newPatient.setPatientAccount(registeredAccount);
             patientRepo.save(newPatient);
 
-            String email = patientReq.getEmail();
-            sendVerificationEmail(newAccount, siteURL, email);
-
+            sendVerificationEmail(registeredAccount, patientReq.getEmail());
             return true;
         } catch (IllegalArgumentException e) {
             throw e;
@@ -236,61 +241,35 @@ public class UserAccountServiceImpl implements UserAccountService {
         response.addCookie(cookie);
     }
 
-    public String createVerificationCode() {
-        int leftLimit = 48; // numeral '0'
-        int rightLimit = 122; // letter 'z'
-        int targetStringLength = 10;
-        Random random = new Random();
-
-        String generatedString = random.ints(leftLimit, rightLimit + 1)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
-                .limit(targetStringLength)
-                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-                .toString();
-
-        return generatedString;
-    }
-
-    private void sendVerificationEmail(UserAccount user, String siteURL, String email)
+    private void sendVerificationEmail(UserAccount user, String email)
             throws MessagingException, UnsupportedEncodingException {
-        // String toAddress = user.getPatient().getEmail();
+
         String senderName = "GoDoctor";
         String subject = "Please verify your registration";
-        String content = "Dear [[name]],<br>"
-                + "Please click the link below to verify your registration:<br>"
-                + "<h3><a href=\"[[URL]]\" target=\"_self\">VERIFY</a></h3>"
-                + "Thank you,<br>"
+        String content = "Dear [[name]],<br/>"
+                + "Please click the link below to verify your registration:"
+                + "<h3 style='margin: 0'><a href=\"[[URL]]\" target=\"_self\">[[URL]]</a></h3><br/>"
+                + "Thank you,<br/>"
                 + "GoDoctor.";
 
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-
-        helper.setFrom(sender, senderName);
-        helper.setTo(email);
-        helper.setSubject(subject);
-
-        content = content.replace("[[name]]", user.getUsername());
-        String verifyURL = siteURL + "/verify?code=" + user.getVerificationCode();
-
+        String verifyURL = frontendUrl + "/verify?code=" + user.getVerificationCode();
         content = content.replace("[[URL]]", verifyURL);
+        content = content.replace("[[name]]", user.getUsername());
 
-        helper.setText(content, true);
-
-        javaMailSender.send(message);
+        emailService.sendEmail(sender, senderName, email, subject, content);
     }
 
     @Override
     public boolean verify(String verificationCode) {
         UserAccount user = userAccRepo.findByVerificationCode(verificationCode);
-
         if (user == null || user.getIsEnabled()) {
             return false;
-        } else {
-            user.setVerificationCode(null);
-            user.setIsEnabled(true);
-            userAccRepo.save(user);
-            return true;
         }
+
+        user.setVerificationCode(null);
+        user.setIsEnabled(true);
+        userAccRepo.save(user);
+        return true;
     }
 
 }

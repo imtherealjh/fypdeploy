@@ -41,7 +41,7 @@ public class ScheduleTaskService {
 
     }
 
-    @Scheduled(cron = "59 59 23 * * *")
+    @Scheduled(cron = "30 * * * * *")
     @Async
     public void sendReminderEmail() {
         TypedQuery<Appointment> query = entityManager.createQuery(
@@ -69,7 +69,8 @@ public class ScheduleTaskService {
                 content = content.replace("[[DOCTORNAME]]", appt.getApptDoctor().getName());
                 content = content.replace("[[APPTDATE]]", appt.getApptDate().toString());
                 content = content.replace("[[APPTTIME]]", appt.getApptTime().toString());
-                emailService.sendEmail(sender, appt.getApptPatient().getEmail(), "Appointment Reminder...", content);
+                emailService.sendEmail(sender, "GoDoctor",
+                        appt.getApptPatient().getEmail(), "Appointment Reminder...", content);
                 log.info("Appointment Reminder successfully sent: {}", LocalDate.now() + " " + LocalTime.now());
             } catch (Exception e) {
                 log.error("Appointment Reminder failed to send: {}", LocalDate.now() + " " + LocalTime.now());

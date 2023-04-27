@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -216,6 +217,18 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
         }
     }
 
+    private boolean conflictSchedule(DoctorScheduleRequest r1, DoctorScheduleRequest r2) {
+        if (!r1.getDay().equals(r2.getDay())) {
+            return false;
+        }
+
+        var aStart = LocalTime.parse(r1.getStartTime());
+        var aEnd = LocalTime.parse(r1.getEndTime());
+        var bStart = LocalTime.parse(r2.getStartTime());
+        var bEnd = LocalTime.parse(r2.getEndTime());
+        return !(aStart.compareTo(bEnd) <= 0 && aEnd.compareTo(bStart) <= 0);
+    }
+
     @Override
     public Boolean registerDoctor(
             List<RegisterDoctorRequest> registerDoctorRequest) {
@@ -241,27 +254,33 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
 
                 newDoctorList.add(doctorRepo.save(newDoctor));
 
-                List<DoctorScheduleRequest> schedule = object.getSchedule();
-                if (schedule != null && schedule.size() > 0) {
-                    List<DoctorSchedule> _schedule = schedule.stream()
-                            .distinct()
-                            .map(obj -> {
-                                if (LocalTime.parse(obj.getStartTime()).isBefore(clinic.getOpeningHrs())) {
-                                    throw new IllegalArgumentException(
-                                            "Doctor's work start time should not be before the opening hours of the clinic...");
-                                } else if (LocalTime.parse(obj.getEndTime()).isAfter(clinic.getClosingHrs())) {
-                                    throw new IllegalArgumentException(
-                                            "Doctor's end start time should not be after the closing hours of the clinic...");
-                                }
+                TreeSet<DoctorScheduleRequest> ts = object.getSchedule();
+                List<DoctorScheduleRequest> dsl = new ArrayList<DoctorScheduleRequest>(ts);
+                if (dsl != null && dsl.size() > 0) {
+                    List<DoctorSchedule> _schedules = new ArrayList<DoctorSchedule>();
+                    for (int i = 0; i < dsl.size(); i++) {
+                        var elem1 = dsl.get(i);
 
-                                DoctorSchedule newSchedule = (DoctorSchedule) mapper.convertValue(obj,
-                                        DoctorSchedule.class);
-                                newSchedule.setDoctor(newDoctor);
-                                return newSchedule;
-                            })
-                            .collect(Collectors.toList());
+                        if (i != dsl.size() - 1) {
+                            var elem2 = dsl.get(i + 1);
+                            if (conflictSchedule(elem1, elem2)) {
+                                throw new IllegalArgumentException("Conflicting schedules");
+                            }
+                        } else if (LocalTime.parse(elem1.getStartTime()).isBefore(clinic.getOpeningHrs())) {
+                            throw new IllegalArgumentException(
+                                    "Doctor's work start time should not be before the opening hours of the clinic...");
+                        } else if (LocalTime.parse(elem1.getEndTime()).isAfter(clinic.getClosingHrs())) {
+                            throw new IllegalArgumentException(
+                                    "Doctor's end start time should not be after the closing hours of the clinic...");
+                        }
 
-                    doctorScheduleRepo.saveAll(_schedule);
+                        DoctorSchedule newSchedule = (DoctorSchedule) mapper.convertValue(elem1,
+                                DoctorSchedule.class);
+                        newSchedule.setDoctor(newDoctor);
+                        _schedules.add(newSchedule);
+                    }
+
+                    doctorScheduleRepo.saveAll(_schedules);
                 }
             }
             return true;

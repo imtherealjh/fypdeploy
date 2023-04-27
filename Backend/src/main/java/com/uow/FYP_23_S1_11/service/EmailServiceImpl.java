@@ -18,10 +18,8 @@ public class EmailServiceImpl implements EmailService {
     private JavaMailSender mailSender;
 
     @Override
-    public void sendEmail(String from, String to, String subject, String content)
+    public void sendEmail(String from, String senderName, String to, String subject, String content)
             throws MessagingException, UnsupportedEncodingException {
-        String senderName = "GoDoctor";
-
         MimeMessage _message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(_message);
 

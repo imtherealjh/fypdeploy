@@ -1,6 +1,7 @@
 package com.uow.FYP_23_S1_11.domain.request;
 
 import java.time.LocalTime;
+import java.util.Comparator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DoctorScheduleRequest {
+public class DoctorScheduleRequest implements Comparable<DoctorScheduleRequest> {
     @JsonProperty("doctorId")
     private Integer doctorId;
 
@@ -44,6 +45,14 @@ public class DoctorScheduleRequest {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public int compareTo(DoctorScheduleRequest o) {
+        return Comparator.comparing(DoctorScheduleRequest::getDay)
+                .thenComparing(DoctorScheduleRequest::getStartTime)
+                .thenComparing(DoctorScheduleRequest::getEndTime)
+                .compare(this, o);
     }
 
 }

@@ -5,6 +5,6 @@ import java.io.UnsupportedEncodingException;
 import jakarta.mail.MessagingException;
 
 public interface EmailService {
-    public void sendEmail(String from, String to, String subject, String message)
+    public void sendEmail(String from, String name, String to, String subject, String message)
             throws MessagingException, UnsupportedEncodingException;
 }

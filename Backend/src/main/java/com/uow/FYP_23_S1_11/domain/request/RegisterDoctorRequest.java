@@ -1,6 +1,7 @@
 package com.uow.FYP_23_S1_11.domain.request;
 
 import java.util.List;
+import java.util.TreeSet;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -44,5 +45,5 @@ public class RegisterDoctorRequest {
 
     @Valid
     @JsonProperty("schedule")
-    private List<DoctorScheduleRequest> schedule;
+    private TreeSet<DoctorScheduleRequest> schedule;
 }
