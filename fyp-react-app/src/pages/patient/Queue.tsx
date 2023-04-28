@@ -1,3 +1,7 @@
 export default function Queue() {
-  return <>Queue</>;
+  return (
+    <>
+      <h1>Queue</h1>
+    </>
+  );
 }
