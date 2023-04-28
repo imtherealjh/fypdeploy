@@ -39,6 +39,27 @@ export default function MedicalRecords() {
     }
   };
 
+  // FAKE DATA TO MIMIC API CALL
+  // const fetchFakeMedicalRecord = () => {
+  //   setTimeout(() => {
+  //     setMedicalRecord({
+  //       username: "John Doe",
+  //       age: 30,
+  //       dateOfBirth: "1993-02-15",
+  //       weight: 75,
+  //       height: 180,
+  //       hospitalizedBefore: true,
+  //       currentMedication: "Aspirin",
+  //       foodAllergies: "Peanuts",
+  //       drugAllergies: "Penicillin",
+  //       bloodType: "A+",
+  //       medicalConditions: "Asthma",
+  //       emergencyContact: "Jane Doe",
+  //       emergencyContactNumber: "123-456-7890",
+  //     });
+  //   }, 1000);
+  // };
+
   return (
     <>
       <h1>Medical Records</h1>
