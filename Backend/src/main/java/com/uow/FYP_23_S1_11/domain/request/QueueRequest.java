@@ -1,7 +1,8 @@
 package com.uow.FYP_23_S1_11.domain.request;
 
 import java.sql.Time;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
@@ -21,11 +22,11 @@ public class QueueRequest {
     private Integer queueId;
 
     @JsonProperty("date")
-    // @NotEmpty(message = "Date field is mandatory")
-    private Date date;
+    // @NotNull(message = "Date field is mandatory")
+    private LocalDate date;
 
     @JsonProperty("time")
-    // @NotEmpty(message = "Time field is mandatory")
+    // @NotNull(message = "Time field is mandatory")
     private Time time;
 
     @JsonProperty("status")
@@ -39,4 +40,16 @@ public class QueueRequest {
     @JsonProperty("checkAppointmentId")
     @NotNull(message = "Appointment id field is mandatory")
     private Integer checkAppointmentId;
+
+    @JsonProperty("response")
+    @NotNull(message = "Response field is mandatory")
+    private String response;
+
+    @JsonProperty("patientId")
+    @NotNull(message = "Patient id field is mandatory")
+    private Integer patientId;
+
+    @JsonProperty("priority")
+    @NotNull(message = "Priority field is mandatory")
+    private String priority;
 }

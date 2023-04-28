@@ -2,13 +2,18 @@ package com.uow.FYP_23_S1_11.service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.uow.FYP_23_S1_11.Constants;
 import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.Patient;
@@ -26,6 +31,7 @@ import com.uow.FYP_23_S1_11.repository.QueueRepository;
 import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackDoctorRepository;
+import com.uow.FYP_23_S1_11.repository.PatientRepository;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +43,9 @@ import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -44,6 +53,8 @@ import jakarta.transaction.Transactional;
 public class PatientServiceImpl implements PatientService {
     @Autowired
     private ClinicRepository clinicRepo;
+    @Autowired
+    private PatientRepository patientRepo;
     @Autowired
     private AppointmentRepository apptRepo;
     @Autowired
@@ -54,6 +65,8 @@ public class PatientServiceImpl implements PatientService {
     private PatientFeedbackDoctorRepository patientFeedbackDoctorRepo;
     @Autowired
     private QueueRepository queueRepo;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     //
     @Autowired
@@ -368,20 +381,50 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Boolean insertQueueNumber(QueueRequest request) {
-        Integer appointmentId = request.getCheckAppointmentId();
-        Optional<Appointment> appointmentOptional = apptRepo
-                .findById(appointmentId);
-        Appointment appointment = appointmentOptional.get();
-        LocalDate date1 = appointment.getApptDate();
-        LocalDate date2 = LocalDate.now();
-        if (date1 == date2) {
-            ObjectMapper mapper = new ObjectMapper();
-            Queue queue = (Queue) mapper.convertValue(request,
-                    Queue.class);
-            queueRepo.save(queue);
-            return true;
-        } else {
-            throw new IllegalArgumentException("Your appointment is not today...");
+        try {
+            String response = request.getResponse();
+            if (response.equalsIgnoreCase("yes")) {
+                Integer apptId = request.getCheckAppointmentId();
+                Integer patientId = request.getPatientId();
+                List<Patient> patient = patientRepo
+                        .findByPatientIdAndDate(patientId, LocalDate.now());
+                System.out.println(LocalDate.now());
+                if (patient.isEmpty()) {
+                    throw new IllegalArgumentException("Your appointment is not today...");
+                } else {
+                    Optional<Appointment> apptOptional = apptRepo.findById(apptId);
+                    Appointment appointment = apptOptional.get();
+                    ObjectMapper mapper = new ObjectMapper();
+                    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+                    mapper.registerModule(new JavaTimeModule());
+                    Queue queue = (Queue) mapper.convertValue(request,
+                            Queue.class);
+                    queue.setDate(LocalDate.now());
+                    queue.setTime(appointment.getApptTime());
+                    queue.setStatus("Waiting");
+                    queue.setPriority("Appointment Made");
+                    queueRepo.save(queue);
+                    return true;
+                }
+            } else if (response.equalsIgnoreCase("no")) {
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+                mapper.registerModule(new JavaTimeModule());
+                Queue queue = (Queue) mapper.convertValue(request,
+                        Queue.class);
+                queue.setDate(LocalDate.now());
+                queue.setTime(LocalTime.now().plusMinutes(45));
+                queue.setStatus("Waiting");
+                queue.setPriority("Walk-in customer");
+                queueRepo.save(queue);
+                return true;
+            } else {
+                throw new IllegalArgumentException("Please select yes or no...");
+            }
+
+        } catch (Exception e) {
+            System.out.print(e);
+            return false;
         }
     }
 

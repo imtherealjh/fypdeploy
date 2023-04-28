@@ -75,6 +75,7 @@ public class DoctorServiceImpl implements DoctorService {
             ObjectMapper mapper = new ObjectMapper();
             PatientMedicalRecords patientMedicalRecords = (PatientMedicalRecords) mapper.convertValue(request,
                     PatientMedicalRecords.class);
+            patientMedicalRecords.setMedicalRecordId(request.getPatientId());
             patientMedicalRecordsRepo.save(patientMedicalRecords);
             return true;
 

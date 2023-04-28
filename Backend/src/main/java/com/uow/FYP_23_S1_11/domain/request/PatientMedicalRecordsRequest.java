@@ -18,6 +18,9 @@ public class PatientMedicalRecordsRequest {
     @JsonProperty("medicalRecordId")
     private Integer medicalRecordId;
 
+    @JsonProperty("patientId")
+    private Integer patientId;
+
     @JsonProperty("height")
     @NotNull(message = "Height field is mandatory")
     private Integer height;
