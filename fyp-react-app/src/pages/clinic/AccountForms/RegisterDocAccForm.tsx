@@ -1,11 +1,11 @@
 import Multiselect from "multiselect-react-dropdown";
 import { useState, ChangeEvent, useEffect, FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { CgMathMinus, CgMathPlus } from "react-icons/cg";
 
-import { CgMathPlus } from "react-icons/cg";
 import axios from "../../../api/axios";
 import { IObjectKeys } from "../../../hooks/types";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import { useNavigate } from "react-router-dom";
 
 interface ScheduleInputs extends IObjectKeys {
   day: string;
@@ -202,8 +202,30 @@ export default function DoctorAccount() {
                     searchBox: { paddingLeft: "0.55rem", background: "white" },
                   }}
                   placeholder="Select Doctor Specialty"
-                  onSelect={(e) => (doctorInput[idx]["specialty"] = e)}
-                  onRemove={(e) => (doctorInput[idx]["specialty"] = e)}
+                  onSelect={(e) =>
+                    setDoctorInput((prev) =>
+                      prev.map((el, index) =>
+                        index === idx
+                          ? {
+                              ...el,
+                              ["specialty"]: e,
+                            }
+                          : el
+                      )
+                    )
+                  }
+                  onRemove={(e) =>
+                    setDoctorInput((prev) =>
+                      prev.map((el, index) =>
+                        index === idx
+                          ? {
+                              ...el,
+                              ["specialty"]: e,
+                            }
+                          : el
+                      )
+                    )
+                  }
                   selectedValues={customInput.specialty}
                   options={speciality}
                   isObject={false}
@@ -289,6 +311,27 @@ export default function DoctorAccount() {
                         }
                         value={scheduleInput.endTime || ""}
                       />
+
+                      <button
+                        type="button"
+                        className="btn btn-danger"
+                        onClick={() =>
+                          setDoctorInput((prev) =>
+                            prev.map((el, index) =>
+                              idx === index
+                                ? {
+                                    ...el,
+                                    ["schedule"]: el.schedule.filter(
+                                      (el: any, z: number) => i !== z
+                                    ),
+                                  }
+                                : el
+                            )
+                          )
+                        }
+                      >
+                        <CgMathMinus />
+                      </button>
                     </div>
                   ))}
               </div>

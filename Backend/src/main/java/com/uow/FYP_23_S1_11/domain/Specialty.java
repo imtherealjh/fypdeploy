@@ -3,6 +3,8 @@ package com.uow.FYP_23_S1_11.domain;
 import java.io.Serializable;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="Specialty")
+@Table(name = "Specialty")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,6 +31,7 @@ public class Specialty implements Serializable {
     private String type;
     private String description;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "doctorSpecialty")
     private List<Doctor> doctorList;
 }

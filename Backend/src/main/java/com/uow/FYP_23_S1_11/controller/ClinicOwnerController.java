@@ -10,11 +10,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uow.FYP_23_S1_11.constraints.OnCreate;
+import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
@@ -51,22 +54,97 @@ public class ClinicOwnerController {
         return ResponseEntity.ok(clincOwnerService.getAllDoctors());
     }
 
+    @GetMapping("/getDoctorById")
+    public ResponseEntity<?> getDoctorById(@RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(clincOwnerService.getDoctorById(id));
+    }
+
+    @GetMapping("/getNurseById")
+    public ResponseEntity<?> getNurseById(@RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(clincOwnerService.getNurseById(id));
+    }
+
+    @GetMapping("/getClerkById")
+    public ResponseEntity<?> getClerkById(@RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(clincOwnerService.getClerkById(id));
+    }
+
+    @Validated(OnCreate.class)
     @PostMapping("/registerDoctor")
     public ResponseEntity<Boolean> registerDoctor(
             @RequestBody @NotEmpty(message = "Doctor Registration List cannot be empty") List<@Valid RegisterDoctorRequest> registerDoctorReq) {
         return ResponseEntity.ok(clincOwnerService.registerDoctor(registerDoctorReq));
     }
 
+    @Validated(OnCreate.class)
     @PostMapping("/registerNurse")
     public ResponseEntity<Boolean> registerNurse(
             @RequestBody @NotEmpty(message = "Nurse Registration List cannot be empty") List<@Valid RegisterNurseRequest> registerNurseReq) {
         return ResponseEntity.ok(clincOwnerService.registerNurse(registerNurseReq));
     }
 
+    @Validated(OnCreate.class)
     @PostMapping("/registerClerk")
     public ResponseEntity<Boolean> registerClerk(
             @RequestBody @NotEmpty(message = "Clerk Registration List cannot be empty") List<@Valid RegisterFrontDeskRequest> registerFrontDeskReq) {
         return ResponseEntity.ok(clincOwnerService.registerFrontDesk(registerFrontDeskReq));
+    }
+
+    @Validated(OnUpdate.class)
+    @PutMapping("/updateDoctor")
+    public ResponseEntity<Boolean> updateDoctor(
+            @RequestBody @Valid RegisterDoctorRequest registerDoctorReq) {
+        return ResponseEntity.ok(clincOwnerService.updateDoctor(registerDoctorReq));
+    }
+
+    @Validated(OnUpdate.class)
+    @PutMapping("/updateNurse")
+    public ResponseEntity<Boolean> updateNurse(
+            @RequestBody @Valid RegisterNurseRequest registerNurseReq) {
+        return ResponseEntity.ok(clincOwnerService.updateNurse(registerNurseReq));
+    }
+
+    @Validated(OnUpdate.class)
+    @PutMapping("/updateClerk")
+    public ResponseEntity<Boolean> updateClerk(
+            @RequestBody @Valid RegisterFrontDeskRequest registerFrontDeskReq) {
+        return ResponseEntity.ok(clincOwnerService.updateClerk(registerFrontDeskReq));
+    }
+
+    @PutMapping("/suspendDoctor")
+    public ResponseEntity<Boolean> suspendDoctor(
+            @RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(clincOwnerService.suspendDoctor(id));
+    }
+
+    @PutMapping("/suspendNurse")
+    public ResponseEntity<Boolean> suspendNurse(
+            @RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(clincOwnerService.suspendNurse(id));
+    }
+
+    @PutMapping("/suspendClerk")
+    public ResponseEntity<Boolean> suspendClerk(
+            @RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(clincOwnerService.suspendClerk(id));
+    }
+
+    @PutMapping("/activateDoctor")
+    public ResponseEntity<Boolean> activateDoctor(
+            @RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(clincOwnerService.activateDoctor(id));
+    }
+
+    @PutMapping("/activateNurse")
+    public ResponseEntity<Boolean> activateNurse(
+            @RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(clincOwnerService.activateNurse(id));
+    }
+
+    @PutMapping("/activateClerk")
+    public ResponseEntity<Boolean> activateClerk(
+            @RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(clincOwnerService.activateClerk(id));
     }
 
     @PostMapping("/generateClinicAppointmentSlots")

@@ -15,6 +15,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -61,23 +62,23 @@ public class UserAccount implements UserDetails {
     private List<Token> userTokens;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "clinicAccount", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "clinicAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Clinic clinic;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "patientAccount", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "patientAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Patient patient;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "doctorAccount", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "doctorAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Doctor doctor;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "nurseAccount", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "nurseAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Nurse nurse;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "frontDeskAccount", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "frontDeskAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private FrontDesk frontDesk;
 
     @Override
@@ -102,6 +103,6 @@ public class UserAccount implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isEnabled;
     }
 }

@@ -49,7 +49,7 @@ export default function ClincRoutes() {
           <Route path="register-account" element={<RegisterAccount />} />
           <Route path="manage-account">
             <Route index path="" element={<ManageAccount />} />
-            <Route path="edit/:id" element={<EditAccount />} />
+            <Route path="edit" element={<EditAccount />} />
           </Route>
           <Route
             path="create-appointment-slots"

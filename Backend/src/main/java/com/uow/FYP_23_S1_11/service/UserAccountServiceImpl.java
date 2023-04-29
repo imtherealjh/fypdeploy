@@ -92,8 +92,26 @@ public class UserAccountServiceImpl implements UserAccountService {
                 throw new IllegalArgumentException("Token is not valid...");
             }
 
-            String newAccessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
+            if (user.getRole() == ERole.DOCTOR || user.getRole() == ERole.NURSE || user.getRole() == ERole.FRONT_DESK) {
+                Clinic clinic = new Clinic();
+                if (user.getRole() == ERole.DOCTOR) {
+                    clinic = user.getDoctor().getDoctorClinic();
+                } else if (user.getRole() == ERole.NURSE) {
+                    clinic = user.getNurse().getNurseClinic();
+                } else if (user.getRole() == ERole.FRONT_DESK) {
+                    clinic = user.getFrontDesk().getFrontDeskClinic();
+                }
 
+                TypedQuery<Boolean> query = entityManager
+                        .createQuery("SELECT ua.isEnabled FROM UserAccount ua WHERE ua.clinic = :clinic",
+                                Boolean.class);
+                query.setParameter("clinic", clinic);
+                if (!query.getSingleResult()) {
+                    throw new IllegalArgumentException("Unable to login...");
+                }
+            }
+
+            String newAccessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
             String name = "admin";
             if (user.getRole() != ERole.SYSTEM_ADMIN) {
                 TypedQuery<String> query = entityManager.createNamedQuery("findNameInTables", String.class);
@@ -133,16 +151,26 @@ public class UserAccountServiceImpl implements UserAccountService {
         var user = userAccRepo.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
 
+        if (user.getRole() == ERole.DOCTOR || user.getRole() == ERole.NURSE || user.getRole() == ERole.FRONT_DESK) {
+            Clinic clinic = new Clinic();
+            if (user.getRole() == ERole.DOCTOR) {
+                clinic = user.getDoctor().getDoctorClinic();
+            } else if (user.getRole() == ERole.NURSE) {
+                clinic = user.getNurse().getNurseClinic();
+            } else if (user.getRole() == ERole.FRONT_DESK) {
+                clinic = user.getFrontDesk().getFrontDeskClinic();
+            }
+
+            TypedQuery<Boolean> query = entityManager
+                    .createQuery("SELECT ua.isEnabled FROM UserAccount ua WHERE ua.clinic = :clinic", Boolean.class);
+            query.setParameter("clinic", clinic);
+            if (!query.getSingleResult()) {
+                throw new IllegalArgumentException("Unable to login...");
+            }
+        }
+
         String refreshToken = jwtUtils.generateToken(ETokenType.REFRESH_TOKEN, user);
         String accessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
-
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setAttribute("SameSite", "None");
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(refreshTokenExpiry / 1000);
-
-        response.addCookie(cookie);
 
         String name = "admin";
         if (user.getRole() != ERole.SYSTEM_ADMIN) {
@@ -150,6 +178,15 @@ public class UserAccountServiceImpl implements UserAccountService {
             query.setParameter("account", user);
             name = query.getSingleResult();
         }
+
+        Cookie cookie = new Cookie("refreshToken",
+                refreshToken);
+        cookie.setAttribute("SameSite", "None");
+        cookie.setSecure(true);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(refreshTokenExpiry / 1000);
+
+        response.addCookie(cookie);
 
         AuthResponse auth = AuthResponse
                 .builder()

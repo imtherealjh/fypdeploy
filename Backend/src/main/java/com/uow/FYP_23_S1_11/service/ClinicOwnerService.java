@@ -16,6 +16,12 @@ public interface ClinicOwnerService {
 
     public List<?> getAllDoctors();
 
+    public Object getDoctorById(Integer doctorId);
+
+    public Object getNurseById(Integer nurseId);
+
+    public Object getClerkById(Integer clerkId);
+
     public Boolean registerDoctor(
             List<RegisterDoctorRequest> registerDoctorRequest);
 
@@ -28,4 +34,23 @@ public interface ClinicOwnerService {
     public Boolean generateDoctorAppointmentSlots(GenerateAppointmentRequest generateDoctorApptReq);
 
     public List<PatientFeedbackClinic> getByClinicFeedbackId(Integer clinicFeedbackId);
+
+    public Boolean updateDoctor(RegisterDoctorRequest registerDoctorReq);
+
+    public Boolean updateNurse(RegisterNurseRequest registerNurseReq);
+
+    public Boolean updateClerk(RegisterFrontDeskRequest registerFrontDeskRequest);
+
+    public Boolean suspendDoctor(Integer id);
+
+    public Boolean suspendNurse(Integer id);
+
+    public Boolean suspendClerk(Integer id);
+
+    public Boolean activateDoctor(Integer id);
+
+    public Boolean activateNurse(Integer id);
+
+    public Boolean activateClerk(Integer id);
+
 }

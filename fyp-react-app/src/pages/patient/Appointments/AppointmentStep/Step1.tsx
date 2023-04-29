@@ -23,6 +23,7 @@ export default function Step1({ formData, setFormData }: Props) {
         const response = await axiosPrivate.get(
           `/patient/getClinicsBySpecialty?specialty=${e.target.value}`
         );
+
         isMounted && setClinic(response.data);
         isMounted && setDoctor([]);
 
@@ -56,7 +57,7 @@ export default function Step1({ formData, setFormData }: Props) {
 
         isMounted && setSpeciality(_specialty);
       } catch (err) {
-        console.log(err);
+        console.error(err);
       }
     };
 

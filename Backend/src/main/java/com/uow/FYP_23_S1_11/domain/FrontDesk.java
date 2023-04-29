@@ -2,6 +2,8 @@ package com.uow.FYP_23_S1_11.domain;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,10 +33,12 @@ public class FrontDesk implements Serializable {
     @Column(nullable = false)
     private String email;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "frontDeskAccount", referencedColumnName = "accountId")
     private UserAccount frontDeskAccount;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "frontDeskClinic", referencedColumnName = "clinicId")
     private Clinic frontDeskClinic;

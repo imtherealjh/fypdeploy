@@ -28,8 +28,8 @@ export default function LoginForm() {
 
     try {
       const response = await axiosPrivate.post("/auth/login", inputs);
-      const { role, accessToken } = response.data;
-      setAuth({ role: role, accessToken: accessToken });
+      const { name, role, accessToken } = response.data;
+      setAuth({ name: name, role: role, accessToken: accessToken });
 
       document.getElementById("closeModalBtn")?.click();
 

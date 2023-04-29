@@ -86,7 +86,7 @@ export default function ManageAccount() {
                   <td scope="col">{data.role}</td>
                   <td scope="col">{data.email}</td>
                   <td scope="col">
-                    <Link to={`edit/${data.accountId}`} state={data}>
+                    <Link to={`edit`} state={data}>
                       <button className="btn btn-primary">Edit</button>
                     </Link>
                   </td>

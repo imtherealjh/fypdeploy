@@ -17,6 +17,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -44,18 +45,24 @@ public class Clinic implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer clinicId;
+
     @Column(name = "clinicName", nullable = false)
     private String clinicName;
+
     @Column(name = "location", nullable = false)
     private String location;
+
     @JsonIgnore
     @Lob
     @Column(name = "licenseProof", columnDefinition = "MEDIUMBLOB")
     private byte[] licenseProof;
+
     @Column(name = "email", nullable = false)
     private String email;
+
     @Column(name = "contactName", nullable = false)
     private String contactName;
+
     @Enumerated(EnumType.STRING)
     private EClinicStatus status = EClinicStatus.PENDING;
 
@@ -80,7 +87,7 @@ public class Clinic implements Serializable {
     @Temporal(TemporalType.TIME)
     private LocalTime apptDuration;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinicAccount", referencedColumnName = "accountId")
     @JsonIgnore
     private UserAccount clinicAccount;
@@ -88,19 +95,19 @@ public class Clinic implements Serializable {
     @OneToMany(mappedBy = "doctorClinic", cascade = CascadeType.ALL)
     private List<Doctor> doctor;
 
-    @OneToMany(mappedBy = "nurseClinic", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "nurseClinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Nurse> nurse;
 
-    @OneToMany(mappedBy = "frontDeskClinic", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "frontDeskClinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<FrontDesk> frontDesk;
 
-    @OneToMany(mappedBy = "apptClinic")
+    @OneToMany(mappedBy = "apptClinic", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Appointment> clinicsAppt;
 
-    @ManyToMany(cascade = CascadeType.ALL) // mappedBy = "educationalMaterial")
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // mappedBy = "educationalMaterial")
     @JoinTable(name = "edu_Material", joinColumns = @JoinColumn(name = "clinicId"), inverseJoinColumns = @JoinColumn(name = "materialId"))
     private List<EducationalMaterial> eduMatList;
 
