@@ -81,6 +81,10 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
         UserAccount user = Constants.getAuthenticatedUser();
         Clinic clinic = user.getClinic();
 
+        if (!clinic.getClinicAccount().getIsEnabled()) {
+            throw new IllegalArgumentException("Unable to detect clinic");
+        }
+
         TypedQuery<PatientAppointmentDetails> query = entityManager.createQuery(
                 "SELECT "
                         + "new com.uow.FYP_23_S1_11.domain.response.PatientAppointmentDetails(a.apptPatient, a.apptTime) "
@@ -104,6 +108,10 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     @Override
     public List<?> getAllStaffs() {
         UserAccount account = Constants.getAuthenticatedUser();
+        Clinic clinic = account.getClinic();
+        if (!clinic.getClinicAccount().getIsEnabled()) {
+            throw new IllegalArgumentException("Unable to detect clinic");
+        }
 
         TypedQuery<StaffAccountDetails> query = entityManager.createQuery(
                 "SELECT new com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails(d.doctorId, d.name, ua.role, d.email) FROM UserAccount ua "
@@ -120,12 +128,20 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     @Override
     public List<?> getAllDoctors() {
         UserAccount account = Constants.getAuthenticatedUser();
+        Clinic clinic = account.getClinic();
+        if (!clinic.getClinicAccount().getIsEnabled()) {
+            throw new IllegalArgumentException("Unable to detect clinic");
+        }
         return doctorRepo.findByDoctorClinic(account.getClinic());
     }
 
     @Override
     public Object getDoctorById(Integer doctorId) {
         UserAccount account = Constants.getAuthenticatedUser();
+        Clinic clinic = account.getClinic();
+        if (!clinic.getClinicAccount().getIsEnabled()) {
+            throw new IllegalArgumentException("Unable to detect clinic");
+        }
         var doctor = doctorRepo.findByDoctorIdAndDoctorClinic(doctorId, account.getClinic());
         return new StaffAccount(doctor.getDoctorAccount().getIsEnabled(), doctor);
     }
@@ -133,6 +149,10 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     @Override
     public Object getNurseById(Integer nurseId) {
         UserAccount account = Constants.getAuthenticatedUser();
+        Clinic clinic = account.getClinic();
+        if (!clinic.getClinicAccount().getIsEnabled()) {
+            throw new IllegalArgumentException("Unable to detect clinic");
+        }
         var nurse = nurseRepo.findByNurseIdAndNurseClinic(nurseId, account.getClinic());
         return new StaffAccount(nurse.getNurseAccount().getIsEnabled(), nurse);
     }
@@ -140,6 +160,10 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     @Override
     public Object getClerkById(Integer clerkId) {
         UserAccount account = Constants.getAuthenticatedUser();
+        Clinic clinic = account.getClinic();
+        if (!clinic.getClinicAccount().getIsEnabled()) {
+            throw new IllegalArgumentException("Unable to detect clinic");
+        }
         var clerk = frontDeskRepo.findByFrontDeskIdAndFrontDeskClinic(clerkId, account.getClinic());
         return new StaffAccount(clerk.getFrontDeskAccount().getIsEnabled(), clerk);
     }
@@ -183,6 +207,9 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
             // get clinic object...
             UserAccount userAccount = Constants.getAuthenticatedUser();
             Clinic clinic = userAccount.getClinic();
+            if (!clinic.getClinicAccount().getIsEnabled()) {
+                throw new IllegalArgumentException("Unable to detect clinic");
+            }
 
             List<Appointment> appointmentList = new ArrayList<Appointment>();
             for (LocalDate date : generateClinicAppointmentReq) {
@@ -212,6 +239,9 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
         try {
             UserAccount userAccount = Constants.getAuthenticatedUser();
             Clinic clinic = userAccount.getClinic();
+            if (!clinic.getClinicAccount().getIsEnabled()) {
+                throw new IllegalArgumentException("Unable to detect clinic");
+            }
 
             List<LocalDate> dates = generateDoctorApptReq.getApptDates();
             List<Doctor> doctors = generateDoctorApptReq.getDoctorIds().stream()
@@ -263,6 +293,9 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
             // get owner's clinic object...
             UserAccount userAccount = Constants.getAuthenticatedUser();
             Clinic clinic = userAccount.getClinic();
+            if (!clinic.getClinicAccount().getIsEnabled()) {
+                throw new IllegalArgumentException("Unable to detect clinic");
+            }
 
             List<Doctor> newDoctorList = new ArrayList<Doctor>();
             for (RegisterDoctorRequest object : registerDoctorRequest) {
@@ -326,6 +359,9 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
             // get owner's clinic object...
             UserAccount userAccount = Constants.getAuthenticatedUser();
             Clinic clinic = userAccount.getClinic();
+            if (!clinic.getClinicAccount().getIsEnabled()) {
+                throw new IllegalArgumentException("Unable to detect clinic");
+            }
 
             registerNurseReq.stream().forEach(obj -> {
                 UserAccount newAccount = (UserAccount) mapper.convertValue(obj, UserAccount.class);
@@ -356,6 +392,9 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
             // get owner's clinic object...
             UserAccount userAccount = Constants.getAuthenticatedUser();
             Clinic clinic = userAccount.getClinic();
+            if (!clinic.getClinicAccount().getIsEnabled()) {
+                throw new IllegalArgumentException("Unable to detect clinic");
+            }
 
             registerFrontDeskReq.stream().forEach(obj -> {
                 UserAccount newAccount = (UserAccount) mapper.convertValue(obj, UserAccount.class);
