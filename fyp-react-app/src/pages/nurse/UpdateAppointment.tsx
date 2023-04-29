@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../css/register.css";
+import "../../css/register.css";
 
 export default function UpdateAppointment() {
   const navigate = useNavigate();
@@ -77,8 +77,7 @@ export default function UpdateAppointment() {
             />
             <label htmlFor="name">Appointment Time</label>
           </div>
-          <div className="input-group mb-3">
-          </div>
+          <div className="input-group mb-3"></div>
           <div className="d-grid">
             <button
               type="submit"

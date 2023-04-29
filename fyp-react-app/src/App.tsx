@@ -17,6 +17,7 @@ import DoctorRoutes from "./routes/DoctorRoutes";
 import VerifyEmail from "./pages/VerifyEmail";
 import AdminRoutes from "./routes/AdminRoutes";
 import ClerkRoutes from "./routes/ClerkRoutes";
+import NurseRoutes from "./routes/NurseRoutes";
 
 function App() {
   return (
@@ -46,6 +47,10 @@ function App() {
             {/* </Route> */}
             {/* <Route element={<RequireAuth role={"clerk"} />}> */}
             <Route path="/clerk/*" element={<ClerkRoutes />} />
+            {/* </Route> */}
+            {/* <Route element={<RequireAuth role={"nurse"} />}> */}
+            <Route path="/nurse/*" element={<NurseRoutes />} />
+            {/* </Route> */}
           </Route>
         </Routes>
       </div>
