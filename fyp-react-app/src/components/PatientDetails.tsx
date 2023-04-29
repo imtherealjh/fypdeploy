@@ -1,8 +1,6 @@
 import React from "react";
 import "../css/patientdetails.css";
 
-//note: replace the patient variable with the actual data from backend l8r
-
 interface Props {
   patient: any;
 }

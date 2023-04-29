@@ -8,6 +8,8 @@ import MedicalRecords from "../pages/nurse/MedicalRecords";
 import Profile from "../pages/nurse/Profile";
 import Schedule from "../pages/nurse/Schedule";
 import UpdateAppointment from "../pages/nurse/UpdateAppointment";
+import PatientList from "../pages/nurse/PatientList";
+
 import NotFound from "../pages/NotFound";
 
 export default function NurseRoutes() {
@@ -22,6 +24,7 @@ export default function NurseRoutes() {
                   { name: "Dashboard", link: "" },
                   { name: "Appointments", link: "appointments" },
                   { name: "Update Appointment", link: "update-appointment" },
+                  { name: "Patient List", link: "patients" },
                   { name: "Schedule", link: "schedule" },
                   { name: "Medical Records", link: "medical-records" },
                   { name: "Feedback", link: "feedbacks" },
@@ -33,6 +36,7 @@ export default function NurseRoutes() {
           <Route index path="" element={<NurseHome />} />
           <Route path="profile" element={<Profile />} />
           <Route path="appointments" element={<Appointment />} />
+          <Route path="patients" element={<PatientList />} />
           <Route path="feedbacks" element={<Feedback />} />
           <Route path="medical-records" element={<MedicalRecords />} />
           <Route path="schedule" element={<Schedule />} />
