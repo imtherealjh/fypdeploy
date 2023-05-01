@@ -63,6 +63,9 @@ public class Clinic implements Serializable {
     @Column(name = "contactName", nullable = false)
     private String contactName;
 
+    @Column(name = "contactNo", nullable = false)
+    private Integer contactNo;
+
     @Enumerated(EnumType.STRING)
     private EClinicStatus status = EClinicStatus.PENDING;
 
@@ -95,11 +98,11 @@ public class Clinic implements Serializable {
     @OneToMany(mappedBy = "doctorClinic", cascade = CascadeType.ALL)
     private List<Doctor> doctor;
 
-    @OneToMany(mappedBy = "nurseClinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "nurseClinic", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Nurse> nurse;
 
-    @OneToMany(mappedBy = "frontDeskClinic", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "frontDeskClinic", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<FrontDesk> frontDesk;
 

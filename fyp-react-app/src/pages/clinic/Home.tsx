@@ -25,8 +25,6 @@ function Dashboard() {
         }
       );
 
-      console.log(response.data);
-
       isMounted && setData(response.data);
     };
 

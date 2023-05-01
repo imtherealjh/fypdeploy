@@ -12,6 +12,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -47,27 +48,22 @@ public class Patient implements Serializable {
     private EGender gender;
     private Integer contactNo;
 
-    @OneToOne
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patientAccount", referencedColumnName = "accountId")
     private UserAccount patientAccount;
 
-    @OneToMany(mappedBy = "patient")
-    private List<PatientFeedback> patientFeedback;
-
     @OneToMany(mappedBy = "apptPatient")
-    @JsonIgnore
     private List<Appointment> patientAppt;
 
-    @JsonIgnore
     @OneToOne(mappedBy = "patientmd", cascade = CascadeType.ALL)
     private PatientMedicalRecords patientMedicalRecords;
 
-    @OneToMany(mappedBy = "patientClinicFeedback")
     @JsonIgnore
+    @OneToMany(mappedBy = "patientClinicFeedback")
     private List<PatientFeedbackClinic> feedbackPatientClinic;
 
-    @OneToMany(mappedBy = "patientDoctorFeedback")
     @JsonIgnore
+    @OneToMany(mappedBy = "patientDoctorFeedback")
     private List<PatientFeedbackDoctor> feedbackPatientDoctor;
-
 }

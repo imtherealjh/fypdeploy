@@ -89,6 +89,16 @@ export default function RegisterClinic() {
           </div>
           <div className="form-floating mb-3">
             <input
+              type="number"
+              className="form-control"
+              name="contactNo"
+              placeholder="contact..."
+              onChange={handleChange}
+            />
+            <label htmlFor="contactNo">Contact No</label>
+          </div>
+          <div className="form-floating mb-3">
+            <input
               type="email"
               className="form-control"
               name="email"

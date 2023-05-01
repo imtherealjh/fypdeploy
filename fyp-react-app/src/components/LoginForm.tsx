@@ -41,7 +41,7 @@ export default function LoginForm() {
         navigate("doctor", { replace: true });
       else if (role.toLowerCase() == "nurse")
         navigate("nurse", { replace: true });
-      else if (role.toLowerCase() == "front-desk")
+      else if (role.toLowerCase() == "front_desk")
         navigate("clerk", { replace: true });
       else if (role.toLowerCase() == "system_admin")
         navigate("admin", { replace: true });

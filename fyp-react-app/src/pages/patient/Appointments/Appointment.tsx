@@ -15,12 +15,16 @@ export default function Appointment() {
     let isMounted = true;
     let controller = new AbortController();
     const fetchData = async () => {
+      console.log(`/patient/get${appointmentType}Appointment`);
+
       const response = await axiosPrivate.get(
         `/patient/get${appointmentType}Appointment`,
         {
           signal: controller.signal,
         }
       );
+
+      console.log(response);
 
       isMounted && setAppointments(response.data);
     };

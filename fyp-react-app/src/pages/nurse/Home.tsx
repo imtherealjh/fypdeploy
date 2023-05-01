@@ -18,18 +18,16 @@ function Dashboard() {
     let controller = new AbortController();
 
     const fetchData = async () => {
-      try {
-        let response = await axiosPrivate.get(
-          `/doctor/getPatientsByDate?apptDate=${value}`,
-          {
-            signal: controller.signal,
-          }
-        );
+      let response = await axiosPrivate.get(
+        `/nurse/getVisitingPatients?apptDate=${value}`,
+        {
+          signal: controller.signal,
+        }
+      );
 
-        isMounted && setData(response.data);
-      } catch (err) {
-        console.log(err);
-      }
+      console.log(response.data);
+
+      isMounted && setData(response.data);
     };
 
     fetchData();

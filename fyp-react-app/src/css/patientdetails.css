@@ -1,18 +1,15 @@
 .patient-details {
-  background-color: #edf0f7;
-  padding: 1rem;
-  border: 2px solid black;
+  background-color: white;
+  padding: 1.3rem;
   border-radius: 4px;
-  text-align: center;
 }
 
 .patient-details h1 {
   color: #2d3648;
   margin-bottom: 1rem;
-  font-size: 24px;
 }
 
-.patient-details p {
-  color: #717d96;
-  margin-bottom: 0.5rem;
+.patient-details .row label {
+  font-weight: bold;
+  margin: 0;
 }

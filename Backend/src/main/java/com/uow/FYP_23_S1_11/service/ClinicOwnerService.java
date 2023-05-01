@@ -10,8 +10,6 @@ import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
 
 public interface ClinicOwnerService {
-    public Object getVisitingPaitents(LocalDate date);
-
     public List<?> getAllStaffs();
 
     public List<?> getAllDoctors();

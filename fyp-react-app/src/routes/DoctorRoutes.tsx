@@ -2,11 +2,11 @@ import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
 import DashboardLayout from "../layout/DashboardLayout";
 import DoctorHome from "../pages/doctor/Home";
-import Appointment from "../pages/doctor/Appointment";
 import PatientList from "../pages/doctor/PatientList";
 import Feedback from "../pages/doctor/Feedback";
 import NotFound from "../pages/NotFound";
 import Profile from "../pages/doctor/Profile";
+import ViewMedicalDetails from "../pages/doctor/ViewMedicalDetails";
 
 export default function DoctorRoutes() {
   return (
@@ -18,7 +18,7 @@ export default function DoctorRoutes() {
               <SideBar
                 navList={[
                   { name: "Dashboard", link: "" },
-                  { name: "Patient List", link: "patients" },
+                  { name: "Patient List", link: "patients", end: false },
                   { name: "Feed Back", link: "feedbacks" },
                 ]}
               />
@@ -27,7 +27,10 @@ export default function DoctorRoutes() {
         >
           <Route index path="" element={<DoctorHome />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="patients" element={<PatientList />} />
+          <Route path="patients">
+            <Route index path="" element={<PatientList />} />
+            <Route path="details" element={<ViewMedicalDetails />} />
+          </Route>
           <Route path="feedbacks" element={<Feedback />} />
           <Route path="*" element={<NotFound />} />
         </Route>

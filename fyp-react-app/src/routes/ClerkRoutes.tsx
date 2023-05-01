@@ -24,6 +24,7 @@ export default function ClerkRoutes() {
                   { name: "Dashboard", link: "" },
                   { name: "Appointments", link: "appointments" },
                   { name: "Queue", link: "queue" },
+                  { name: "Patient List", link: "patients" },
                   { name: "Articles", link: "articles" },
                   { name: "Payment", link: "payment" },
                   { name: "Feedbacks", link: "feedbacks" },

@@ -31,8 +31,6 @@ import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
-import com.uow.FYP_23_S1_11.domain.response.PatientAppointmentDetails;
-import com.uow.FYP_23_S1_11.domain.response.RetrieveDoctorPatient;
 import com.uow.FYP_23_S1_11.domain.response.StaffAccount;
 import com.uow.FYP_23_S1_11.domain.response.StaffAccountDetails;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
@@ -75,35 +73,6 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     private UserAccountRepository userAccRepo;
     @Autowired
     private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
-
-    @Override
-    public Object getVisitingPaitents(LocalDate date) {
-        UserAccount user = Constants.getAuthenticatedUser();
-        Clinic clinic = user.getClinic();
-
-        if (!clinic.getClinicAccount().getIsEnabled()) {
-            throw new IllegalArgumentException("Unable to detect clinic");
-        }
-
-        TypedQuery<PatientAppointmentDetails> query = entityManager.createQuery(
-                "SELECT "
-                        + "new com.uow.FYP_23_S1_11.domain.response.PatientAppointmentDetails(a.apptPatient, a.apptTime) "
-                        + "FROM Appointment a "
-                        + "LEFT JOIN a.apptDoctor d "
-                        + "WHERE a.apptPatient IS NOT NULL AND "
-                        + "d.doctorClinic = :clinic AND "
-                        + "a.status = :status AND "
-                        + "a.apptDate = :date "
-                        + "GROUP BY a.apptPatient, a.apptTime",
-                PatientAppointmentDetails.class);
-        query.setParameter("clinic", clinic);
-        query.setParameter("date", date);
-        query.setParameter("status", EAppointmentStatus.BOOKED);
-
-        RetrieveDoctorPatient object = new RetrieveDoctorPatient(query.getResultList(),
-                query.getResultList().size());
-        return object;
-    }
 
     @Override
     public List<?> getAllStaffs() {

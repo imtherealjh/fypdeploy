@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
 import com.uow.FYP_23_S1_11.domain.response.PatientAppointmentDetails;
-import com.uow.FYP_23_S1_11.domain.response.RetrieveDoctorPatient;
+import com.uow.FYP_23_S1_11.domain.response.RetrievePatient;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackDoctorRepository;
 import com.uow.FYP_23_S1_11.repository.PatientMedicalRecordsRepository;
@@ -38,13 +38,10 @@ public class DoctorServiceImpl implements DoctorService {
     private PatientFeedbackDoctorRepository patientFeedbackDoctorRepo;
 
     @Override
-    public Object getPatientsByApptDate(String apptDate) {
+    public Object getPatientsByApptDate(LocalDate apptDate) {
         try {
             UserAccount user = Constants.getAuthenticatedUser();
             Doctor doctor = user.getDoctor();
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-            LocalDate parseDate = LocalDate.parse(apptDate, formatter);
 
             TypedQuery<PatientAppointmentDetails> query = entityManager.createQuery(
                     "SELECT "
@@ -57,60 +54,16 @@ public class DoctorServiceImpl implements DoctorService {
                             + "GROUP BY a.apptPatient, a.apptTime",
                     PatientAppointmentDetails.class);
             query.setParameter("doctor", doctor);
-            query.setParameter("date", parseDate);
+            query.setParameter("date", apptDate);
             query.setParameter("status", EAppointmentStatus.BOOKED);
 
-            RetrieveDoctorPatient object = new RetrieveDoctorPatient(query.getResultList(),
+            RetrievePatient object = new RetrievePatient(query.getResultList(),
                     query.getResultList().size());
             return object;
         } catch (Exception e) {
             System.out.println(e);
             return null;
         }
-    }
-
-    @Override
-    public Boolean insertMedicalRecords(PatientMedicalRecordsRequest request) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            PatientMedicalRecords patientMedicalRecords = (PatientMedicalRecords) mapper.convertValue(request,
-                    PatientMedicalRecords.class);
-            patientMedicalRecords.setMedicalRecordId(request.getPatientId());
-            patientMedicalRecordsRepo.save(patientMedicalRecords);
-            return true;
-
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-    }
-
-    @Override
-    public Boolean updateMedicalRecords(Integer medicalRecordsId,
-            PatientMedicalRecordsRequest updateMedicalRecordsRequest) {
-        Optional<PatientMedicalRecords> originalMedicalRecord = patientMedicalRecordsRepo
-                .findById(medicalRecordsId);
-
-        if (originalMedicalRecord.isEmpty() == false) {
-            PatientMedicalRecords origPatientMedicalRecords = originalMedicalRecord.get();
-            origPatientMedicalRecords.setHeight(updateMedicalRecordsRequest.getHeight());
-            origPatientMedicalRecords.setWeight(updateMedicalRecordsRequest.getWeight());
-            origPatientMedicalRecords.setHospitalizedHistory(updateMedicalRecordsRequest.getHospitalizedHistory());
-            origPatientMedicalRecords.setCurrentMedication(updateMedicalRecordsRequest.getCurrentMedication());
-            origPatientMedicalRecords.setFoodAllergies(updateMedicalRecordsRequest.getFoodAllergies());
-            origPatientMedicalRecords.setDrugAllergies(updateMedicalRecordsRequest.getDrugAllergies());
-            origPatientMedicalRecords.setBloodType(updateMedicalRecordsRequest.getBloodType());
-            origPatientMedicalRecords.setMedicalConditions(updateMedicalRecordsRequest.getMedicalConditions());
-            origPatientMedicalRecords.setEmergencyContact(updateMedicalRecordsRequest.getEmergencyContact());
-            origPatientMedicalRecords
-                    .setEmergencyContactNumber(updateMedicalRecordsRequest.getEmergencyContactNumber());
-
-            patientMedicalRecordsRepo.save(origPatientMedicalRecords);
-            return true;
-        } else {
-            throw new IllegalArgumentException("Medical records not found...");
-        }
-
     }
 
     @Override
@@ -135,4 +88,45 @@ public class DoctorServiceImpl implements DoctorService {
         }
     }
 
+    @Override
+    public Boolean insertMedicalRecords(PatientMedicalRecordsRequest request) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            PatientMedicalRecords patientMedicalRecords = (PatientMedicalRecords) mapper.convertValue(request,
+                    PatientMedicalRecords.class);
+            patientMedicalRecords.setMedicalRecordId(request.getPatientId());
+            patientMedicalRecordsRepo.save(patientMedicalRecords);
+            return true;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean updateMedicalRecords(PatientMedicalRecordsRequest updateMedicalRecordsRequest) {
+        Optional<PatientMedicalRecords> originalMedicalRecord = patientMedicalRecordsRepo
+                .findById(updateMedicalRecordsRequest.getMedicalRecordId());
+
+        if (originalMedicalRecord.isEmpty()) {
+            throw new IllegalArgumentException("Medical records not found...");
+        }
+
+        PatientMedicalRecords origPatientMedicalRecords = originalMedicalRecord.get();
+        origPatientMedicalRecords.setHeight(updateMedicalRecordsRequest.getHeight());
+        origPatientMedicalRecords.setWeight(updateMedicalRecordsRequest.getWeight());
+        origPatientMedicalRecords.setHospitalizedHistory(updateMedicalRecordsRequest.getHospitalizedHistory());
+        origPatientMedicalRecords.setCurrentMedication(updateMedicalRecordsRequest.getCurrentMedication());
+        origPatientMedicalRecords.setFoodAllergies(updateMedicalRecordsRequest.getFoodAllergies());
+        origPatientMedicalRecords.setDrugAllergies(updateMedicalRecordsRequest.getDrugAllergies());
+        origPatientMedicalRecords.setBloodType(updateMedicalRecordsRequest.getBloodType());
+        origPatientMedicalRecords.setMedicalConditions(updateMedicalRecordsRequest.getMedicalConditions());
+        origPatientMedicalRecords.setEmergencyContact(updateMedicalRecordsRequest.getEmergencyContact());
+        origPatientMedicalRecords
+                .setEmergencyContactNumber(updateMedicalRecordsRequest.getEmergencyContactNumber());
+
+        patientMedicalRecordsRepo.save(origPatientMedicalRecords);
+        return true;
+    }
 }

@@ -45,8 +45,8 @@ public class RegisterPatientRequest {
     private String address;
 
     @NotNull
-    @JsonProperty("contact")
-    private Integer contact;
+    @JsonProperty("contactNo")
+    private Integer contactNo;
 
     @NotEmpty
     @Email

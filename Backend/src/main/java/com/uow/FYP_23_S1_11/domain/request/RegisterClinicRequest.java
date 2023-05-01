@@ -47,6 +47,10 @@ public class RegisterClinicRequest {
     @JsonProperty("contactName")
     private String contactName;
 
+    @NotNull
+    @JsonProperty("contactNo")
+    private Integer contactNo;
+
     @NotEmpty
     @JsonProperty("location")
     private String location;

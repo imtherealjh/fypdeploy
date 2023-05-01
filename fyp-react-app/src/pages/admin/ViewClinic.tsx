@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Buffer } from "buffer";
 
@@ -8,7 +8,8 @@ import axios from "axios";
 import "../../css/viewclinic.css";
 
 export default function ViewClinic() {
-  const { id } = useParams();
+  const state = useLocation()?.state;
+
   const [imageData, setImageData] = useState<any>();
   const [data, setData] = useState<any>({
     clinic: {},
@@ -22,13 +23,19 @@ export default function ViewClinic() {
     let controller = new AbortController();
 
     let endpoints = [
-      axiosPrivate.get(`/sysAdmin/getClinicById?clinicId=${Number(id)}`, {
-        signal: controller.signal,
-      }),
-      axiosPrivate.get(`/sysAdmin/getClinicLicense?clinicId=${Number(id)}`, {
-        responseType: "arraybuffer",
-        signal: controller.signal,
-      }),
+      axiosPrivate.get(
+        `/sysAdmin/getClinicById?clinicId=${Number(state.clinicId)}`,
+        {
+          signal: controller.signal,
+        }
+      ),
+      axiosPrivate.get(
+        `/sysAdmin/getClinicLicense?clinicId=${state.clinicId}`,
+        {
+          responseType: "arraybuffer",
+          signal: controller.signal,
+        }
+      ),
     ];
 
     const fetchData = () => {

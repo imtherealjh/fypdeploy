@@ -9,7 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class RetrieveDoctorPatient {
+public class RetrievePatient {
     private List<PatientAppointmentDetails> patientList;
     private long noOfPatients;
 }

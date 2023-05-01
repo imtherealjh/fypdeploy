@@ -24,6 +24,7 @@ import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
 import com.uow.FYP_23_S1_11.service.ClinicOwnerService;
+import com.uow.FYP_23_S1_11.service.StaffService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
@@ -38,10 +39,12 @@ import jakarta.validation.constraints.NotNull;
 public class ClinicOwnerController {
     @Autowired
     private ClinicOwnerService clincOwnerService;
+    @Autowired
+    private StaffService staffService;
 
     @GetMapping("/getVisitingPatients")
     public ResponseEntity<?> getAllVisitingPatientByDate(@NotNull @RequestParam LocalDate apptDate) {
-        return ResponseEntity.ok(clincOwnerService.getVisitingPaitents(apptDate));
+        return ResponseEntity.ok(staffService.getPatientsByDate(apptDate));
     }
 
     @GetMapping("/getAllStaffs")

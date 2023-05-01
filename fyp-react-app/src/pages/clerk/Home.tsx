@@ -88,11 +88,13 @@ function ClerkHome() {
   return (
     <>
       <h1>Dashboard</h1>
-      <AppointmentList
-        appointmentsList={dummyAppointments}
-        onAppointmentSelect={handleAppointmentSelection}
-      />
-      <PatientDetails patient={selectedPatient} />
+      <div className="w-100">
+        <AppointmentList
+          appointmentsList={dummyAppointments}
+          onAppointmentSelect={handleAppointmentSelection}
+        />
+        <PatientDetails patient={selectedPatient} />
+      </div>
     </>
   );
 }

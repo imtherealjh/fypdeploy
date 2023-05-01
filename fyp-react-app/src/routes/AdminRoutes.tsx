@@ -17,7 +17,7 @@ export default function AdminRoutes() {
           }
         >
           <Route index path="" element={<Home />} />
-          <Route path="/view/:id" element={<ViewClinic />} />
+          <Route path="/view" element={<ViewClinic />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

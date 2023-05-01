@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Patient;
+import com.uow.FYP_23_S1_11.domain.PatientMedicalRecords;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.RegisterClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.LoginRequest;
@@ -31,6 +32,7 @@ import com.uow.FYP_23_S1_11.domain.response.AuthResponse;
 import com.uow.FYP_23_S1_11.enums.ETokenType;
 import com.uow.FYP_23_S1_11.enums.ERole;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
+import com.uow.FYP_23_S1_11.repository.PatientMedicalRecordsRepository;
 import com.uow.FYP_23_S1_11.repository.PatientRepository;
 import com.uow.FYP_23_S1_11.repository.UserAccountRepository;
 import com.uow.FYP_23_S1_11.utils.JwtUtils;
@@ -48,6 +50,17 @@ import jakarta.servlet.http.HttpServletResponse;
 public class UserAccountServiceImpl implements UserAccountService {
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtUtils jwtUtils;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private EmailService emailService;
+
     @Autowired
     private UserAccountRepository userAccRepo;
     @Autowired
@@ -55,13 +68,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Autowired
     private PatientRepository patientRepo;
     @Autowired
-    private EmailService emailService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private JwtUtils jwtUtils;
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private PatientMedicalRecordsRepository patientMdRepo;
 
     @Value("${refresh.jwtexpirationms}")
     private int refreshTokenExpiry;
@@ -264,6 +271,10 @@ public class UserAccountServiceImpl implements UserAccountService {
             Patient newPatient = (Patient) mapper.convertValue(patientReq, Patient.class);
             newPatient.setPatientAccount(registeredAccount);
             patientRepo.save(newPatient);
+
+            PatientMedicalRecords patientMd = new PatientMedicalRecords();
+            patientMd.setPatientmd(newPatient);
+            patientMdRepo.save(patientMd);
 
             sendVerificationEmail(registeredAccount, patientReq.getEmail());
             return true;

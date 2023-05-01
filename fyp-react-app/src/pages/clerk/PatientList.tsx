@@ -1,25 +1,31 @@
-import { ChangeEvent, useEffect, useState } from "react";
-import { CgSearch } from "react-icons/cg";
-import useAxiosPrivate from "../../lib/useAxiosPrivate";
+import { useState, useEffect, ChangeEvent } from "react";
 import { Link } from "react-router-dom";
+import { CgSearch } from "react-icons/cg";
 
-export default function Dashboard() {
-  const [searchInput, setSearchInput] = useState("");
-  const [clinics, setClinics] = useState([]);
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
+
+function PatientListPage() {
   const axiosPrivate = useAxiosPrivate();
+  const [searchInput, setSearchInput] = useState("");
+  const [patientList, setPatientList] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
     let controller = new AbortController();
-    const fetchData = async () => {
-      let response = await axiosPrivate.get("/sysAdmin/getAllClinics", {
-        signal: controller.signal,
-      });
 
-      isMounted && setClinics(response.data);
+    const fetchPatients = async () => {
+      try {
+        const response = await axiosPrivate.get("/staff/getAllPatients", {
+          signal: controller.signal,
+        });
+
+        isMounted && setPatientList(response.data);
+      } catch (error) {
+        console.error("Error fetching patient list:", error);
+      }
     };
 
-    fetchData();
+    fetchPatients();
 
     return () => {
       isMounted = false;
@@ -29,7 +35,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <h1>Dashboard</h1>
+      <h1>Patient - Profile Overview</h1>
       <div>
         <div className="input-group mb-3">
           <input
@@ -55,25 +61,24 @@ export default function Dashboard() {
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Clinic</th>
-              <th scope="col">Location</th>
-              <th scope="col">Contact Person</th>
+              <th scope="col">Patient Name</th>
               <th scope="col">Email</th>
+              <th scope="col">Contact No</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
-            {clinics.length < 1 ? (
+            {patientList.length < 1 ? (
               <tr>
                 <td colSpan={6}>No data available....</td>
               </tr>
             ) : null}
-            {clinics
+            {patientList
               .filter((obj: any) => {
                 return (
-                  obj.clinicName.includes(searchInput) ||
-                  obj.location.includes(searchInput) ||
-                  obj.contactName.includes(searchInput) ||
-                  obj.email.includes(searchInput)
+                  obj.name.includes(searchInput) ||
+                  obj.email.includes(searchInput) ||
+                  obj.contactNo.includes(searchInput)
                 );
               })
               .map((data: any, idx: number) => (
@@ -81,14 +86,14 @@ export default function Dashboard() {
                   <th className="align-middle" scope="row">
                     {idx + 1}
                   </th>
+                  <td>{data.name}</td>
+                  <td>{data.email}</td>
+                  <td>{data.contactNo}</td>
                   <td>
-                    <Link to={`view`} state={data}>
-                      {data.clinicName}
+                    <Link to="details" state={data}>
+                      <button className="btn btn-primary">View</button>
                     </Link>
                   </td>
-                  <td>{data.location}</td>
-                  <td>{data.contactName}</td>
-                  <td>{data.email}</td>
                 </tr>
               ))}
           </tbody>
@@ -97,3 +102,5 @@ export default function Dashboard() {
     </>
   );
 }
+
+export default PatientListPage;

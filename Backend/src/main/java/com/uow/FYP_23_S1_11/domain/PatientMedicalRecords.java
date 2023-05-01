@@ -2,6 +2,8 @@ package com.uow.FYP_23_S1_11.domain;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -36,6 +38,7 @@ public class PatientMedicalRecords implements Serializable {
     private String emergencyContact;
     private Integer emergencyContactNumber;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "patientmd", referencedColumnName = "patientId")
     private Patient patientmd;

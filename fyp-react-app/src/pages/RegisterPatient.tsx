@@ -95,11 +95,11 @@ export default function RegisterPatient() {
             <input
               type="number"
               className="form-control"
-              name="contact"
+              name="contactNo"
               placeholder="contact..."
               onChange={handleChange}
             />
-            <label htmlFor="contact">Contact</label>
+            <label htmlFor="contactNo">Contact No</label>
           </div>
           <select
             name="gender"
