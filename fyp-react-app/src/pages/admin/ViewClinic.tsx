@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Buffer } from "buffer";
 
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 import axios from "axios";
 
 import "../../css/viewclinic.css";

@@ -93,7 +93,8 @@ public class PublicController {
         messageBodyPart.setHeader("Content-Class", "urn:content-classes:calendarmessage");
         messageBodyPart.setHeader("Content-ID", "calendar_message");
         messageBodyPart.setDataHandler(new DataHandler(
-                new ByteArrayDataSource(builder.toString(), "text/calendar;method=REQUEST;name=\"invite.ics\"")));
+                new ByteArrayDataSource(builder.toString(),
+                        "text/calendar;method=REQUEST;name=\"AppointmentInv.ics\"")));
 
         MimeMultipart multipart = new MimeMultipart();
 

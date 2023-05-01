@@ -6,7 +6,7 @@ import { CgMathPlus, CgMathMinus } from "react-icons/cg";
 
 import axios from "axios";
 import axiosIn from "../../api/axios";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 import { IObjectKeys } from "../../hooks/types";
 
 interface ScheduleInputs extends IObjectKeys {

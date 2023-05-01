@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 import { useState, useEffect } from "react";
 
 export default function SearchClinic() {

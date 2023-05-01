@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Step2 from "./AppointmentStep/Step2";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../../lib/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 
 interface Props {

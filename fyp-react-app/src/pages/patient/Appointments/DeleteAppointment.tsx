@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../../lib/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 
 interface Props {

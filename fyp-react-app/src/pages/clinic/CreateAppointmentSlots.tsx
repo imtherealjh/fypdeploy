@@ -4,7 +4,7 @@ import DatePanel from "react-multi-date-picker/plugins/date_panel";
 
 import "/node_modules/react-multi-date-picker/styles/layouts/mobile.css";
 import Multiselect from "multiselect-react-dropdown";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 
 export default function CreateAppointmentSlots() {

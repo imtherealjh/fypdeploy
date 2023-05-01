@@ -5,11 +5,11 @@ import { ReactNode, useEffect, useState } from "react";
 import NavBar from "../components/navbar";
 import Dropdown from "../components/dropdown";
 
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../lib/useAxiosPrivate";
 import { useWindowDimensions } from "../hooks/hooks";
 
 import "../css/dashboard.css";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../lib/useAuth";
 
 interface Props {
   children: ReactNode;

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Calendar, DateObject } from "react-multi-date-picker";
 
 import PatientList from "../../components/PatientList";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 
 function Dashboard() {
   const axiosPrivate = useAxiosPrivate();

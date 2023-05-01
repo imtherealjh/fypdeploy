@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { CgSearch } from "react-icons/cg";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 import { Link } from "react-router-dom";
 
 export default function Dashboard() {

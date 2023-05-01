@@ -1,9 +1,7 @@
 package com.uow.FYP_23_S1_11.service;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.uow.FYP_23_S1_11.Constants;
 import com.uow.FYP_23_S1_11.domain.Appointment;
@@ -45,7 +42,6 @@ import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -123,6 +119,7 @@ public class PatientServiceImpl implements PatientService {
             // appointment date is not after today
             // ensure that the doctor is not suspended
             if (appt == null ||
+                    appt.getApptClinic().getClinicAccount().getIsEnabled() ||
                     appt.getStatus() != EAppointmentStatus.AVAILABLE ||
                     appt.getApptDate().isBefore(LocalDate.now())) {
                 throw new IllegalArgumentException("Appointment cannot be booked...");
@@ -152,10 +149,12 @@ public class PatientServiceImpl implements PatientService {
             Patient patient = currentUser.getPatient();
 
             Appointment origAppt = getAppointmentById(updateApptReq.getOriginalApptId());
+
             // validate if is the actual person updating the appointment
             // and ensure that older appointments cannot be updated
             if (origAppt == null ||
                     patient.getPatientId() != origAppt.getApptPatient().getPatientId() ||
+                    origAppt.getApptClinic().getClinicAccount().getIsEnabled() ||
                     origAppt.getStatus() != EAppointmentStatus.BOOKED ||
                     origAppt.getApptDate().isBefore(LocalDate.now())) {
                 throw new IllegalArgumentException("Appointment cannot be updated...");

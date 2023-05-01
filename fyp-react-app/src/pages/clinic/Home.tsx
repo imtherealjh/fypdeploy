@@ -3,7 +3,7 @@ import { Calendar, DateObject } from "react-multi-date-picker";
 import "/node_modules/react-multi-date-picker/styles/layouts/mobile.css";
 
 import PatientList from "../../components/PatientList";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 
 function Dashboard() {
   const axiosPrivate = useAxiosPrivate();
