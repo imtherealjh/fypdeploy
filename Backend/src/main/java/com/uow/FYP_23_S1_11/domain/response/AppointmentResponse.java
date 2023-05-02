@@ -17,4 +17,5 @@ public class AppointmentResponse {
     private int doctorId;
     private String doctorName;
     private String clinicName;
+    private String diagnostic;
 }

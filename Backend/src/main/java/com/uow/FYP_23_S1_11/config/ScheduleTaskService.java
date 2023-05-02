@@ -41,7 +41,7 @@ public class ScheduleTaskService {
 
     }
 
-    @Scheduled(cron = "30 * * * * *")
+    @Scheduled(cron = "59 59 23 * * *")
     @Async
     public void sendReminderEmail() {
         TypedQuery<Appointment> query = entityManager.createQuery(

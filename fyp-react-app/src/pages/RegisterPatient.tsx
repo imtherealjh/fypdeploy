@@ -83,16 +83,6 @@ export default function RegisterPatient() {
           </div>
           <div className="form-floating mb-3">
             <input
-              type="text"
-              className="form-control"
-              name="address"
-              placeholder="address..."
-              onChange={handleChange}
-            />
-            <label htmlFor="address">Address</label>
-          </div>
-          <div className="form-floating mb-3">
-            <input
               type="number"
               className="form-control"
               name="contactNo"
@@ -101,24 +91,6 @@ export default function RegisterPatient() {
             />
             <label htmlFor="contactNo">Contact No</label>
           </div>
-          <select
-            name="gender"
-            className="form-select mb-3"
-            defaultValue={"DEFAULT"}
-            aria-label="Select gender"
-            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-              setInputs((prev) => {
-                return { ...prev, [e.target.name]: e.target.value };
-              });
-            }}
-          >
-            <option value={"DEFAULT"} disabled>
-              Select gender
-            </option>
-            <option value="M">Male</option>
-            <option value="F">Female</option>
-          </select>
-
           <div className="form-floating mb-3">
             <input
               type="date"
@@ -128,6 +100,58 @@ export default function RegisterPatient() {
               onChange={handleChange}
             />
             <label htmlFor="date">Date Of Birth</label>
+          </div>
+          <div className="form-floating mb-3">
+            <select
+              style={{ paddingTop: 0, paddingBottom: 0 }}
+              name="gender"
+              className="form-select"
+              defaultValue={"DEFAULT"}
+              aria-label="Select gender"
+              onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                setInputs((prev) => {
+                  return { ...prev, [e.target.name]: e.target.value };
+                });
+              }}
+            >
+              <option value={"DEFAULT"} disabled>
+                Select gender
+              </option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+            </select>
+          </div>
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              className="form-control"
+              name="address"
+              placeholder="address..."
+              onChange={handleChange}
+            />
+            <label htmlFor="address">Address</label>
+          </div>
+
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              className="form-control"
+              name="emergencyContact"
+              placeholder="emergencyContact..."
+              onChange={handleChange}
+            />
+            <label htmlFor="emergencyContact">Emergency Contact</label>
+          </div>
+
+          <div className="form-floating mb-3">
+            <input
+              type="text"
+              className="form-control"
+              name="emergencyContactNo"
+              placeholder="emergencyContactNo..."
+              onChange={handleChange}
+            />
+            <label htmlFor="emergencyContactNo">Emergency Contact No</label>
           </div>
 
           <div className="d-grid">

@@ -23,12 +23,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
         public List<Appointment> findByApptDateAndApptDoctor(LocalDate apptDate, Doctor apptDoctor);
 
-        @Query("SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.clinicName) "
+        @Query("SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.clinicName, A.diagnostic) "
                         + "FROM Appointment A WHERE A.apptPatient = :patient AND "
                         + "(A.apptDate < CURRENT_DATE OR (A.apptDate = CURRENT_DATE AND A.apptTime < CURRENT_TIME))")
         public List<?> getPastAppointments(@Param("patient") Patient patient);
 
-        @Query("SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.clinicName) "
+        @Query("SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.clinicName, A.diagnostic) "
                         + "FROM Appointment A WHERE A.apptPatient = :patient AND "
                         + "(A.apptDate > CURRENT_DATE OR (A.apptDate = CURRENT_DATE AND A.apptTime > CURRENT_TIME))")
         public List<?> getUpcomingAppointments(@Param("patient") Patient patient);

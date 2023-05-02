@@ -49,6 +49,14 @@ public class RegisterPatientRequest {
     private Integer contactNo;
 
     @NotEmpty
+    @JsonProperty("emergencyContact")
+    private String emergencyContact;
+
+    @NotNull
+    @JsonProperty("emergencyContactNo")
+    private Integer emergencyContactNo;
+
+    @NotEmpty
     @Email
     @JsonProperty("email")
     private String email;

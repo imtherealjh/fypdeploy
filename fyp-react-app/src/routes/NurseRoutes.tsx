@@ -4,13 +4,11 @@ import DashboardLayout from "../layout/DashboardLayout";
 import NurseHome from "../pages/nurse/Home";
 import Appointment from "../pages/nurse/Appointment";
 import Feedback from "../pages/nurse/Feedback";
-import MedicalRecords from "../pages/nurse/MedicalRecords";
 import Profile from "../pages/nurse/Profile";
-import Schedule from "../pages/nurse/Schedule";
-import UpdateAppointment from "../pages/nurse/UpdateAppointment";
 import PatientList from "../pages/nurse/PatientList";
 
 import NotFound from "../pages/NotFound";
+import ViewMedicalDetails from "../pages/nurse/ViewMedicalDetails";
 
 export default function NurseRoutes() {
   return (
@@ -23,10 +21,7 @@ export default function NurseRoutes() {
                 navList={[
                   { name: "Dashboard", link: "" },
                   { name: "Appointments", link: "appointments" },
-                  { name: "Update Appointment", link: "update-appointment" },
-                  { name: "Patient List", link: "patients" },
-                  { name: "Schedule", link: "schedule" },
-                  { name: "Medical Records", link: "medical-records" },
+                  { name: "Patient List", link: "patients", end: false },
                   { name: "Feedback", link: "feedbacks" },
                 ]}
               />
@@ -36,11 +31,11 @@ export default function NurseRoutes() {
           <Route index path="" element={<NurseHome />} />
           <Route path="profile" element={<Profile />} />
           <Route path="appointments" element={<Appointment />} />
-          <Route path="patients" element={<PatientList />} />
+          <Route path="patients">
+            <Route index path="" element={<PatientList />} />
+            <Route path="details" element={<ViewMedicalDetails />} />
+          </Route>
           <Route path="feedbacks" element={<Feedback />} />
-          <Route path="medical-records" element={<MedicalRecords />} />
-          <Route path="schedule" element={<Schedule />} />
-          <Route path="update-appointment" element={<UpdateAppointment />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

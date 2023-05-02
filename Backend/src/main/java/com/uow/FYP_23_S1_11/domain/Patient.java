@@ -19,9 +19,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
@@ -47,16 +49,19 @@ public class Patient implements Serializable {
     @Enumerated(EnumType.STRING)
     private EGender gender;
     private Integer contactNo;
+    private String emergencyContact;
+    private Integer emergencyContactNo;
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patientAccount", referencedColumnName = "accountId")
     private UserAccount patientAccount;
 
-    @OneToMany(mappedBy = "apptPatient")
+    @JsonIgnore
+    @OneToMany(mappedBy = "apptPatient", fetch = FetchType.LAZY)
     private List<Appointment> patientAppt;
 
-    @OneToOne(mappedBy = "patientmd", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "patientmd", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private PatientMedicalRecords patientMedicalRecords;
 
     @JsonIgnore

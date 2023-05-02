@@ -113,6 +113,9 @@ public class SystemAdminServiceImpl implements SystemAdminService {
             if (clinic == null || clinic.getStatus() != EClinicStatus.APPROVED) {
                 throw new IllegalArgumentException("Unable to suspend clinic...");
             }
+
+            // TODO: Add functionality to remove appointments and update patient about the
+            // status
             clinic.setStatus(EClinicStatus.SUSPENDED);
             clinicRepo.save(clinic);
 

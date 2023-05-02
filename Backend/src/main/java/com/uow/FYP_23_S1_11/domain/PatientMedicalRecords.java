@@ -5,6 +5,7 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,21 +23,18 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-
 public class PatientMedicalRecords implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer medicalRecordId;
-    private Integer height;
-    private Integer weight;
-    private String hospitalizedHistory;
-    private String currentMedication;
-    private String foodAllergies;
-    private String drugAllergies;
-    private String bloodType;
-    private String medicalConditions;
-    private String emergencyContact;
-    private Integer emergencyContactNumber;
+    private Integer height = 0;
+    private Integer weight = 0;
+    private String hospitalizedHistory = "NIL";
+    private String currentMedication = "NIL";
+    private String foodAllergies = "NIL";
+    private String drugAllergies = "NIL";
+    private String bloodType = "NIL";
+    private String medicalConditions = "NIL";
 
     @JsonIgnore
     @OneToOne

@@ -16,6 +16,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -54,7 +55,9 @@ public class Appointment implements Serializable {
     @Enumerated(EnumType.STRING)
     private EAppointmentStatus status;
 
-    @ManyToOne
+    private String diagnostic;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patientId", referencedColumnName = "patientId")
     @JsonIgnore
     private Patient apptPatient;
@@ -71,4 +74,75 @@ public class Appointment implements Serializable {
     @JsonIgnore
     @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
     private Queue queue;
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((appointmentId == null) ? 0 : appointmentId.hashCode());
+        result = prime * result + ((description == null) ? 0 : description.hashCode());
+        result = prime * result + ((apptDate == null) ? 0 : apptDate.hashCode());
+        result = prime * result + ((apptTime == null) ? 0 : apptTime.hashCode());
+        result = prime * result + ((status == null) ? 0 : status.hashCode());
+        result = prime * result + ((diagnostic == null) ? 0 : diagnostic.hashCode());
+        result = prime * result + ((apptPatient == null) ? 0 : apptPatient.hashCode());
+        result = prime * result + ((apptDoctor == null) ? 0 : apptDoctor.hashCode());
+        result = prime * result + ((apptClinic == null) ? 0 : apptClinic.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Appointment other = (Appointment) obj;
+        if (appointmentId == null) {
+            if (other.appointmentId != null)
+                return false;
+        } else if (!appointmentId.equals(other.appointmentId))
+            return false;
+        if (description == null) {
+            if (other.description != null)
+                return false;
+        } else if (!description.equals(other.description))
+            return false;
+        if (apptDate == null) {
+            if (other.apptDate != null)
+                return false;
+        } else if (!apptDate.equals(other.apptDate))
+            return false;
+        if (apptTime == null) {
+            if (other.apptTime != null)
+                return false;
+        } else if (!apptTime.equals(other.apptTime))
+            return false;
+        if (status != other.status)
+            return false;
+        if (diagnostic == null) {
+            if (other.diagnostic != null)
+                return false;
+        } else if (!diagnostic.equals(other.diagnostic))
+            return false;
+        if (apptPatient == null) {
+            if (other.apptPatient != null)
+                return false;
+        } else if (!apptPatient.equals(other.apptPatient))
+            return false;
+        if (apptDoctor == null) {
+            if (other.apptDoctor != null)
+                return false;
+        } else if (!apptDoctor.equals(other.apptDoctor))
+            return false;
+        if (apptClinic == null) {
+            if (other.apptClinic != null)
+                return false;
+        } else if (!apptClinic.equals(other.apptClinic))
+            return false;
+        return true;
+    }
+
 }
