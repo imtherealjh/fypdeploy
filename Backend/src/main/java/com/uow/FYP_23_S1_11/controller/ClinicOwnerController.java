@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uow.FYP_23_S1_11.constraints.OnCreate;
 import com.uow.FYP_23_S1_11.constraints.OnStaffUpdate;
+import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.RegisterClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
@@ -41,6 +43,11 @@ public class ClinicOwnerController {
     private ClinicOwnerService clincOwnerService;
     @Autowired
     private StaffService staffService;
+
+    @GetMapping("/getProfile")
+    public ResponseEntity<?> getProfile() {
+        return ResponseEntity.ok(clincOwnerService.getProfile());
+    }
 
     @GetMapping("/getVisitingPatients")
     public ResponseEntity<?> getAllVisitingPatientByDate(@NotNull @RequestParam LocalDate apptDate) {
@@ -91,6 +98,12 @@ public class ClinicOwnerController {
     public ResponseEntity<Boolean> registerClerk(
             @RequestBody @NotEmpty(message = "Clerk Registration List cannot be empty") List<@Valid RegisterFrontDeskRequest> registerFrontDeskReq) {
         return ResponseEntity.ok(clincOwnerService.registerFrontDesk(registerFrontDeskReq));
+    }
+
+    @Validated(OnUpdate.class)
+    @PutMapping("/updateProfile")
+    public ResponseEntity<?> updateProfile(@RequestBody @Valid RegisterClinicRequest registerClinicRequest) {
+        return ResponseEntity.ok(clincOwnerService.updateProfile(registerClinicRequest));
     }
 
     @Validated(OnStaffUpdate.class)

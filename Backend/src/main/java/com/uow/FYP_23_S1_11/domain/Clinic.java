@@ -90,32 +90,33 @@ public class Clinic implements Serializable {
     @Temporal(TemporalType.TIME)
     private LocalTime apptDuration;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "clinicAccount", referencedColumnName = "accountId")
-    @JsonIgnore
     private UserAccount clinicAccount;
 
-    @OneToMany(mappedBy = "doctorClinic", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "doctorClinic", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Doctor> doctor;
 
-    @OneToMany(mappedBy = "nurseClinic", cascade = CascadeType.ALL)
     @JsonIgnore
+    @OneToMany(mappedBy = "nurseClinic", cascade = CascadeType.ALL)
     private List<Nurse> nurse;
 
-    @OneToMany(mappedBy = "frontDeskClinic", cascade = CascadeType.ALL)
     @JsonIgnore
+    @OneToMany(mappedBy = "frontDeskClinic", cascade = CascadeType.ALL)
     private List<FrontDesk> frontDesk;
 
-    @OneToMany(mappedBy = "apptClinic", fetch = FetchType.LAZY)
     @JsonIgnore
+    @OneToMany(mappedBy = "apptClinic", fetch = FetchType.LAZY)
     private List<Appointment> clinicsAppt;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // mappedBy = "educationalMaterial")
     @JoinTable(name = "edu_Material", joinColumns = @JoinColumn(name = "clinicId"), inverseJoinColumns = @JoinColumn(name = "materialId"))
     private List<EducationalMaterial> eduMatList;
 
-    @OneToMany(mappedBy = "clinicFeedback")
     @JsonIgnore
+    @OneToMany(mappedBy = "clinicFeedback")
     private List<PatientFeedbackClinic> feedbackClinic;
 
 }

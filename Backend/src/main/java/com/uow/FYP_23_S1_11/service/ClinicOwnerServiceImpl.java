@@ -28,6 +28,7 @@ import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.DoctorScheduleRequest;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.RegisterClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
@@ -37,6 +38,7 @@ import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.enums.ERole;
 import com.uow.FYP_23_S1_11.enums.EWeekdays;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
+import com.uow.FYP_23_S1_11.repository.ClinicRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorScheduleRepository;
 import com.uow.FYP_23_S1_11.repository.FrontDeskRepository;
@@ -55,24 +57,38 @@ import jakarta.transaction.Transactional;
 public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     @PersistenceContext
     private EntityManager entityManager;
+
     @Autowired
     private UserAccountService userAccountService;
     @Autowired
+    private UserAccountRepository userAccRepo;
+
+    @Autowired
+    private ClinicRepository clinicRepo;
+
+    @Autowired
     private DoctorRepository doctorRepo;
     @Autowired
-    private DoctorScheduleRepository doctorScheduleRepo;
+    private SpecialtyRepository specialtyRepo;
     @Autowired
-    private AppointmentRepository apptRepo;
+    private DoctorScheduleRepository doctorScheduleRepo;
+
     @Autowired
     private NurseRepository nurseRepo;
     @Autowired
     private FrontDeskRepository frontDeskRepo;
+
     @Autowired
-    private SpecialtyRepository specialtyRepo;
-    @Autowired
-    private UserAccountRepository userAccRepo;
+    private AppointmentRepository apptRepo;
+
     @Autowired
     private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
+
+    @Override
+    public Object getProfile() {
+        UserAccount user = Constants.getAuthenticatedUser();
+        return user.getClinic();
+    }
 
     @Override
     public List<?> getAllStaffs() {
@@ -496,6 +512,23 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
             System.out.println(e);
             return false;
         }
+    }
+
+    @Override
+    public Boolean updateProfile(RegisterClinicRequest registerClinicRequest) {
+        UserAccount user = Constants.getAuthenticatedUser();
+        Clinic clinic = user.getClinic();
+
+        clinic.setContactName(registerClinicRequest.getContactName());
+        clinic.setContactNo(registerClinicRequest.getContactNo());
+        clinic.setEmail(registerClinicRequest.getEmail());
+        clinic.setLocation(registerClinicRequest.getLocation());
+        clinic.setOpeningHrs(LocalTime.parse(registerClinicRequest.getOpeningHrs()));
+        clinic.setClosingHrs(LocalTime.parse(registerClinicRequest.getClosingHrs()));
+        clinic.setApptDuration(LocalTime.parse(registerClinicRequest.getApptDuration()));
+
+        clinicRepo.save(clinic);
+        return true;
     }
 
     @Override

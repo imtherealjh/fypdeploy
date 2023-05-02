@@ -52,12 +52,12 @@ public class Doctor implements Serializable {
     @JsonIgnore
     private Clinic doctorClinic;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "doctor_specialty", joinColumns = @JoinColumn(name = "doctorId"), inverseJoinColumns = @JoinColumn(name = "specialtyId"))
     private List<Specialty> doctorSpecialty;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "doctor")
     private List<DoctorSchedule> doctorSchedule;
 
     @OneToMany(mappedBy = "apptDoctor")

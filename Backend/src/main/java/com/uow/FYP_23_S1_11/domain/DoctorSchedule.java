@@ -71,7 +71,6 @@ public class DoctorSchedule implements Serializable {
         result = prime * result + ((day == null) ? 0 : day.hashCode());
         result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
         result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
-        result = prime * result + ((doctor == null) ? 0 : doctor.hashCode());
         return result;
     }
 
@@ -95,11 +94,6 @@ public class DoctorSchedule implements Serializable {
             if (other.endTime != null)
                 return false;
         } else if (!endTime.equals(other.endTime))
-            return false;
-        if (doctor == null) {
-            if (other.doctor != null)
-                return false;
-        } else if (!doctor.equals(other.doctor))
             return false;
         return true;
     }

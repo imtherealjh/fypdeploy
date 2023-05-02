@@ -5,11 +5,14 @@ import java.util.List;
 
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.RegisterClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
 
 public interface ClinicOwnerService {
+    public Object getProfile();
+
     public List<?> getAllStaffs();
 
     public List<?> getAllDoctors();
@@ -32,6 +35,8 @@ public interface ClinicOwnerService {
     public Boolean generateDoctorAppointmentSlots(GenerateAppointmentRequest generateDoctorApptReq);
 
     public List<PatientFeedbackClinic> getByClinicFeedbackId(Integer clinicFeedbackId);
+
+    public Boolean updateProfile(RegisterClinicRequest registerClinicRequest);
 
     public Boolean updateDoctor(RegisterDoctorRequest registerDoctorReq);
 

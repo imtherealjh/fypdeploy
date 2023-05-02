@@ -50,6 +50,7 @@ public class AuthController {
         userAccountService.authenticate(loginRequest, request, response, token);
     }
 
+    @Validated(OnCreate.class)
     @PostMapping(value = "/registerClinic", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<Boolean> registerClinic(@Valid @ModelAttribute RegisterClinicRequest clinicReq) {
         Boolean result = userAccountService.registerClinicAccount(clinicReq);

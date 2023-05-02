@@ -11,11 +11,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.uow.FYP_23_S1_11.constraints.OnCreate;
+import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,46 +29,47 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegisterClinicRequest {
-    @NotEmpty
+    @NotEmpty(groups = OnCreate.class)
     @JsonProperty("username")
     private String username;
 
-    @NotEmpty
+    @NotEmpty(groups = OnCreate.class)
     @JsonProperty("password")
     private String password;
 
-    @NotEmpty
+    @NotEmpty(groups = OnCreate.class)
     @JsonProperty("clinicName")
     private String clinicName;
 
-    @NotEmpty
-    @Email
+    @NotEmpty(groups = { OnCreate.class, OnUpdate.class })
+    @Email(groups = { OnCreate.class, OnUpdate.class })
     @JsonProperty("email")
     private String email;
 
-    @NotEmpty
+    @NotEmpty(groups = { OnCreate.class, OnUpdate.class })
     @JsonProperty("contactName")
     private String contactName;
 
-    @NotNull
+    @NotNull(groups = { OnCreate.class, OnUpdate.class })
     @JsonProperty("contactNo")
     private Integer contactNo;
 
-    @NotEmpty
+    @NotEmpty(groups = { OnCreate.class, OnUpdate.class })
     @JsonProperty("location")
     private String location;
 
-    @NotEmpty
+    @NotEmpty(groups = { OnCreate.class, OnUpdate.class })
     @JsonFormat(pattern = "HH:mm")
     @JsonProperty("openingHrs")
     private String openingHrs;
 
-    @NotEmpty
+    @NotEmpty(groups = { OnCreate.class, OnUpdate.class })
     @JsonFormat(pattern = "HH:mm")
     @JsonProperty("closingHrs")
     private String closingHrs;
 
-    @AssertTrue(message = "Start Time and End Time must be valid (HH:mm) and End Time must be later than Start Time")
+    @AssertTrue(groups = { OnCreate.class,
+            OnUpdate.class }, message = "Start Time and End Time must be valid (HH:mm) and End Time must be later than Start Time")
     private boolean isValid() {
         try {
             return LocalTime.parse(closingHrs).isAfter(LocalTime.parse(openingHrs));
@@ -74,12 +78,12 @@ public class RegisterClinicRequest {
         }
     }
 
-    @NotEmpty
+    @NotEmpty(groups = { OnCreate.class, OnUpdate.class })
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "HH:mm")
     @JsonProperty("apptDuration")
     private String apptDuration;
 
-    @AssertTrue(message = "Appt Duration must be a valid format (HH:mm)")
+    @AssertTrue(groups = { OnCreate.class, OnUpdate.class }, message = "Appt Duration must be a valid format (HH:mm)")
     private Boolean isValidApptDuration() {
         try {
             LocalTime.parse(closingHrs);
@@ -89,12 +93,12 @@ public class RegisterClinicRequest {
         }
     }
 
-    @NotNull
+    @NotNull(groups = OnCreate.class)
     @JsonIgnore
     @JsonProperty("customLicenseProof")
     private MultipartFile customLicenseProof;
 
-    @AssertTrue(message = "License Proof must be a valid format")
+    @AssertTrue(groups = OnCreate.class, message = "License Proof must be a valid format")
     private Boolean isValidLicenseProof() {
         try {
             InputStream inputStream = customLicenseProof.getInputStream();

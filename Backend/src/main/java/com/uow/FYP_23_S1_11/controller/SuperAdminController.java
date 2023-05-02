@@ -15,12 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.uow.FYP_23_S1_11.service.SystemAdminService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping(value = "/api/sysAdmin", produces = { MediaType.APPLICATION_JSON_VALUE })
 @Validated
 @PreAuthorize("hasAuthority('SYSTEM_ADMIN')")
+@SecurityRequirement(name = "bearerAuth")
 public class SuperAdminController {
     @Autowired
     private SystemAdminService sysAdminService;
