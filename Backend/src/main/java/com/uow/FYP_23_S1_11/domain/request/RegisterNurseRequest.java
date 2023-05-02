@@ -2,6 +2,7 @@ package com.uow.FYP_23_S1_11.domain.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.uow.FYP_23_S1_11.constraints.OnCreate;
+import com.uow.FYP_23_S1_11.constraints.OnStaffUpdate;
 import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 
 import jakarta.validation.constraints.Email;
@@ -18,27 +19,27 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegisterNurseRequest {
-    @Null(groups = OnCreate.class)
-    @NotNull(groups = OnUpdate.class)
+    @Null(groups = { OnCreate.class, OnUpdate.class })
+    @NotNull(groups = OnStaffUpdate.class)
     @JsonProperty("staffId")
     private Integer staffId;
 
-    @Null(groups = OnUpdate.class)
+    @Null(groups = { OnStaffUpdate.class, OnUpdate.class })
     @NotEmpty(groups = OnCreate.class)
     @JsonProperty("username")
     private String username;
 
-    @Null(groups = OnUpdate.class)
+    @Null(groups = { OnStaffUpdate.class, OnUpdate.class })
     @NotEmpty(groups = OnCreate.class)
     @JsonProperty("password")
     private String password;
 
-    @NotEmpty(groups = { OnUpdate.class, OnCreate.class })
+    @NotEmpty(groups = { OnStaffUpdate.class, OnUpdate.class, OnCreate.class })
     @JsonProperty("name")
     private String name;
 
-    @Email(groups = { OnUpdate.class, OnCreate.class })
-    @NotEmpty(groups = { OnUpdate.class, OnCreate.class })
+    @Email(groups = { OnStaffUpdate.class, OnUpdate.class, OnCreate.class })
+    @NotEmpty(groups = { OnStaffUpdate.class, OnUpdate.class, OnCreate.class })
     @JsonProperty("email")
     private String email;
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.uow.FYP_23_S1_11.domain.request.RegisterClinicRequest;
+import com.uow.FYP_23_S1_11.constraints.OnCreate;
 import com.uow.FYP_23_S1_11.domain.request.LoginRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
 import com.uow.FYP_23_S1_11.service.UserAccountService;
@@ -55,6 +56,7 @@ public class AuthController {
         return ResponseEntity.ok(result);
     }
 
+    @Validated(OnCreate.class)
     @PostMapping("/registerPatient")
     public ResponseEntity<Boolean> registerPatient(@Valid @RequestBody RegisterPatientRequest patientReq,
             HttpServletRequest request) {
@@ -63,7 +65,7 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-        public String verifyUser(@RequestParam("code") String code) {
+    public String verifyUser(@RequestParam("code") String code) {
         if (userAccountService.verify(code)) {
             return "verify_success";
         } else {

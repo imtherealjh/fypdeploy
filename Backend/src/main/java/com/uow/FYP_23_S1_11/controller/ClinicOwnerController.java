@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uow.FYP_23_S1_11.constraints.OnCreate;
-import com.uow.FYP_23_S1_11.constraints.OnUpdate;
+import com.uow.FYP_23_S1_11.constraints.OnStaffUpdate;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
@@ -93,21 +93,21 @@ public class ClinicOwnerController {
         return ResponseEntity.ok(clincOwnerService.registerFrontDesk(registerFrontDeskReq));
     }
 
-    @Validated(OnUpdate.class)
+    @Validated(OnStaffUpdate.class)
     @PutMapping("/updateDoctor")
     public ResponseEntity<Boolean> updateDoctor(
             @RequestBody @Valid RegisterDoctorRequest registerDoctorReq) {
         return ResponseEntity.ok(clincOwnerService.updateDoctor(registerDoctorReq));
     }
 
-    @Validated(OnUpdate.class)
+    @Validated(OnStaffUpdate.class)
     @PutMapping("/updateNurse")
     public ResponseEntity<Boolean> updateNurse(
             @RequestBody @Valid RegisterNurseRequest registerNurseReq) {
         return ResponseEntity.ok(clincOwnerService.updateNurse(registerNurseReq));
     }
 
-    @Validated(OnUpdate.class)
+    @Validated(OnStaffUpdate.class)
     @PutMapping("/updateClerk")
     public ResponseEntity<Boolean> updateClerk(
             @RequestBody @Valid RegisterFrontDeskRequest registerFrontDeskReq) {

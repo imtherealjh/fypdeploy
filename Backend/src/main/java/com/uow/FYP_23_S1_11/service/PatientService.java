@@ -11,11 +11,11 @@ import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
-
-import com.uow.FYP_23_S1_11.domain.request.MailRequest;
-//
+import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
 
 public interface PatientService {
+
+        public Object getPatientProfile();
 
         public List<?> getUpcomingAppointments();
 
@@ -31,15 +31,13 @@ public interface PatientService {
 
         public Boolean updateAppointment(BookUpdateAppointmentRequest updateApptReq);
 
+        public Boolean updateProfile(RegisterPatientRequest updateProfileReq);
+
         public Boolean deleteAppointment(Integer apptId);
 
         public List<EducationalMaterial> getAllEduMaterial();
 
         public EducationalMaterial getEduMaterialById(Integer materialId);
-
-        public String sendSimpleMail(MailRequest details);
-
-        // public String sendMailWithAttachment(MailRequest details);
 
         public Boolean insertClinicAndDoctorFeedback(ClinicAndDoctorFeedbackRequest request);
 

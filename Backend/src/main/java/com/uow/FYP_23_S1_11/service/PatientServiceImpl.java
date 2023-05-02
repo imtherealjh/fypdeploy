@@ -39,6 +39,7 @@ import com.uow.FYP_23_S1_11.domain.request.MailRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
+import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -65,13 +66,11 @@ public class PatientServiceImpl implements PatientService {
     @Autowired
     private QueueRepository queueRepo;
 
-    //
-    @Autowired
-    private JavaMailSender javaMailSender;
-
-    @Value("${spring.mail.username}")
-    private String sender;
-    //
+    @Override
+    public Object getPatientProfile() {
+        UserAccount userAccount = Constants.getAuthenticatedUser();
+        return userAccount.getPatient();
+    }
 
     @Override
     public List<?> getUpcomingAppointments() {
@@ -179,6 +178,26 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
+    public Boolean updateProfile(RegisterPatientRequest updateProfileReq) {
+        try {
+            UserAccount currentUser = Constants.getAuthenticatedUser();
+            Patient patient = currentUser.getPatient();
+
+            patient.setName(updateProfileReq.getName());
+            patient.setEmail(updateProfileReq.getEmail());
+            patient.setAddress(updateProfileReq.getAddress());
+            patient.setContactNo(updateProfileReq.getContactNo());
+            patient.setEmergencyContact(updateProfileReq.getEmergencyContact());
+            patient.setEmergencyContactNo(updateProfileReq.getEmergencyContactNo());
+
+            patientRepo.save(patient);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
     public Boolean deleteAppointment(Integer apptId) {
         try {
             UserAccount currentUser = Constants.getAuthenticatedUser();
@@ -215,90 +234,6 @@ public class PatientServiceImpl implements PatientService {
             return new EducationalMaterial();
         }
     }
-
-    // Test email function (this is a page)
-    // To implement to function, just copy code and paste into functions,
-    // change variables accordingly (require recipient's email in string)
-    @Override
-    public String sendSimpleMail(MailRequest details) {
-
-        // Try block to check for exceptions
-        try {
-            // Setting up current user
-            UserAccount currentUser = Constants.getAuthenticatedUser();
-            // String recipientEmail = currentUser.getPatient().getEmail();
-
-            // Creating a simple mail message
-            SimpleMailMessage mailMessage = new SimpleMailMessage();
-
-            // Setting up necessary details
-            mailMessage.setFrom(sender);
-
-            // dynamic allocation of recipient
-            // mailMessage.setTo(details.getRecipient());
-            // mailMessage.setTo(currentUser.getPatient().getEmail()) //to set based on
-            // roles
-
-            // multiple recipient test
-            mailMessage.setTo(new String[] { "soosteven96@gmail.com", "animecrazysteve@gmail.com" });
-
-            // setting the message and subject by defining a template
-            String template = "Hello " +
-                    String.valueOf(currentUser.getUsername()) +
-                    ",\n\n\ttesting sent message\n" +
-                    String.valueOf(details.getMsgBody()) +
-                    "\n\tnewline test\n\n" +
-                    "Best Regards\n" +
-                    "Good Doctor Team";
-            mailMessage.setText(template);
-            mailMessage.setSubject(details.getSubject());
-
-            // Sending the mail
-            javaMailSender.send(mailMessage);
-            return "Mail Sent Successfully...";
-        }
-
-        // Catch block to handle the exceptions
-        catch (Exception e) {
-            System.out.println(e);
-            return "Error While Sending Mail..";
-        }
-    }
-
-    // Not working
-    // @Override
-    // public String sendMailWithAttachment(MailRequest details) {
-    // // Creating a mime message
-    // MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-    // MimeMessageHelper mimeMessageHelper;
-
-    // try {
-    // // Setting multipart as true for attachments to
-    // // be send
-    // mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-    // mimeMessageHelper.setFrom(sender);
-    // mimeMessageHelper.setTo(details.getRecipient());
-    // mimeMessageHelper.setText(details.getMsgBody());
-    // mimeMessageHelper.setSubject(details.getSubject());
-
-    // // Adding the attachment
-    // FileSystemResource file = new FileSystemResource(new
-    // File(details.getAttachment()));
-
-    // mimeMessageHelper.addAttachment("test.txt", file);
-
-    // // Sending the mail
-    // javaMailSender.send(mimeMessage);
-    // return "Mail sent Successfully";
-    // }
-
-    // // Catch block to handle MessagingException
-    // catch (MessagingException e) {
-
-    // // Display message when exception occurred
-    // return "Error while sending mail!!!";
-    // }
-    // }
 
     @Override
     public Boolean insertClinicAndDoctorFeedback(ClinicAndDoctorFeedbackRequest request) {
@@ -441,4 +376,5 @@ public class PatientServiceImpl implements PatientService {
             throw new IllegalArgumentException("Queue number not found...");
         }
     }
+
 }

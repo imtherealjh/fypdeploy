@@ -21,6 +21,7 @@ import com.uow.FYP_23_S1_11.domain.DoctorSchedule;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
+import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.enums.EWeekdays;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
@@ -30,9 +31,11 @@ import com.uow.FYP_23_S1_11.repository.DoctorScheduleRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
+import com.uow.FYP_23_S1_11.domain.FrontDesk;
 import com.uow.FYP_23_S1_11.domain.Queue;
 import com.uow.FYP_23_S1_11.domain.request.EducationalMaterialRequest;
 import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
+import com.uow.FYP_23_S1_11.repository.FrontDeskRepository;
 import com.uow.FYP_23_S1_11.repository.QueueRepository;
 
 import jakarta.transaction.Transactional;
@@ -41,11 +44,29 @@ import jakarta.transaction.Transactional;
 @Transactional
 public class ClerkServiceImpl implements ClerkService {
     @Autowired
-    private DoctorScheduleRepository doctorScheduleRepo;
+    private FrontDeskRepository clerkRepo;
     @Autowired
     private QueueRepository queueRepo;
     @Autowired
     private EduMaterialRepository eduMaterialRepo;
+
+    @Override
+    public Object getProfile() {
+        UserAccount user = Constants.getAuthenticatedUser();
+        return user.getFrontDesk();
+    }
+
+    @Override
+    public Boolean updateProfile(RegisterFrontDeskRequest registerFrontDeskRequest) {
+        UserAccount user = Constants.getAuthenticatedUser();
+
+        FrontDesk clerk = user.getFrontDesk();
+        clerk.setName(registerFrontDeskRequest.getName());
+        clerk.setEmail(registerFrontDeskRequest.getEmail());
+
+        clerkRepo.save(clerk);
+        return true;
+    }
 
     //
     @Override

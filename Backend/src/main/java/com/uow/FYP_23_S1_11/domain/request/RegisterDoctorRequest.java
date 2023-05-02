@@ -5,6 +5,7 @@ import java.util.TreeSet;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.uow.FYP_23_S1_11.constraints.OnCreate;
+import com.uow.FYP_23_S1_11.constraints.OnStaffUpdate;
 import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 
 import jakarta.validation.Valid;
@@ -22,36 +23,35 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegisterDoctorRequest {
-
-    @Null(groups = OnCreate.class)
-    @NotNull(groups = OnUpdate.class)
+    @Null(groups = { OnCreate.class, OnUpdate.class })
+    @NotNull(groups = OnStaffUpdate.class)
     @JsonProperty("staffId")
     private Integer staffId;
 
+    @Null(groups = { OnStaffUpdate.class, OnUpdate.class })
     @NotEmpty(groups = OnCreate.class)
-    @Null(groups = OnUpdate.class)
     @JsonProperty("username")
     private String username;
 
+    @Null(groups = { OnStaffUpdate.class, OnUpdate.class })
     @NotEmpty(groups = OnCreate.class)
-    @Null(groups = OnUpdate.class)
     @JsonProperty("password")
     private String password;
 
-    @NotEmpty(groups = { OnUpdate.class, OnCreate.class })
+    @NotEmpty(groups = { OnStaffUpdate.class, OnUpdate.class, OnCreate.class })
     @JsonProperty("name")
     private String name;
 
-    @Email
-    @NotEmpty(groups = { OnUpdate.class, OnCreate.class })
+    @Email(groups = { OnStaffUpdate.class, OnUpdate.class, OnCreate.class })
+    @NotEmpty(groups = { OnStaffUpdate.class, OnUpdate.class, OnCreate.class })
     @JsonProperty("email")
     private String email;
 
-    @NotEmpty(groups = { OnUpdate.class, OnCreate.class })
+    @NotEmpty(groups = { OnStaffUpdate.class, OnUpdate.class, OnCreate.class })
     @JsonProperty("profile")
     private String profile;
 
-    @NotEmpty(groups = { OnUpdate.class, OnCreate.class })
+    @NotEmpty(groups = { OnStaffUpdate.class, OnCreate.class })
     @JsonProperty("specialty")
     private List<String> specialty;
 

@@ -8,13 +8,16 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
+import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.service.ClerkService;
-
+import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 import com.uow.FYP_23_S1_11.domain.request.EducationalMaterialRequest;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,6 +30,17 @@ import jakarta.validation.Valid;
 public class ClerkController {
     @Autowired
     private ClerkService clerkService;
+
+    @GetMapping("/getProfile")
+    public ResponseEntity<?> getProfile() {
+        return ResponseEntity.ok(clerkService.getProfile());
+    }
+
+    @Validated(OnUpdate.class)
+    @PutMapping("/updateProfile")
+    public ResponseEntity<?> updateProfile(@RequestBody @Valid RegisterFrontDeskRequest registerFrontDeskRequest) {
+        return ResponseEntity.ok(clerkService.updateProfile(registerFrontDeskRequest));
+    }
 
     @PostMapping("/createEduMaterial")
     public ResponseEntity<Boolean> createEduMaterial(@RequestBody EducationalMaterialRequest eduMaterialRequest) {

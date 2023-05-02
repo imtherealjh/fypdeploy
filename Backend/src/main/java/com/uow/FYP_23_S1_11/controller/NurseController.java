@@ -8,13 +8,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.uow.FYP_23_S1_11.constraints.OnUpdate;
+import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
+import com.uow.FYP_23_S1_11.service.NurseService;
 import com.uow.FYP_23_S1_11.service.StaffService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 @RestController
@@ -26,9 +32,23 @@ public class NurseController {
     @Autowired
     private StaffService staffService;
 
+    @Autowired
+    private NurseService nurseService;
+
     @GetMapping("/getVisitingPatients")
     public ResponseEntity<?> getAllVisitingPatientByDate(@NotNull @RequestParam LocalDate apptDate) {
         return ResponseEntity.ok(staffService.getPatientsByDate(apptDate));
+    }
+
+    @GetMapping("/getProfile")
+    public ResponseEntity<?> getProfile() {
+        return ResponseEntity.ok(nurseService.getProfile());
+    }
+
+    @Validated(OnUpdate.class)
+    @PutMapping("/updateProfile")
+    public ResponseEntity<?> updateProfile(@RequestBody @Valid RegisterNurseRequest registerNurseRequest) {
+        return ResponseEntity.ok(nurseService.updateProfile(registerNurseRequest));
     }
 
 }

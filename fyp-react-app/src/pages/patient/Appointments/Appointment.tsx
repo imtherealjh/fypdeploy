@@ -24,8 +24,6 @@ export default function Appointment() {
         }
       );
 
-      console.log(response);
-
       isMounted && setAppointments(response.data);
     };
 
