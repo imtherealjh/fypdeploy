@@ -1,0 +1,27 @@
+h1,
+h2 {
+  margin-bottom: 1rem;
+}
+
+table {
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+table th,
+table td {
+  text-align: left;
+  vertical-align: middle;
+}
+
+table th {
+  font-weight: bold;
+}
+
+table tbody tr:nth-child(odd) {
+  background-color: #f8f9fa;
+}
+
+.component-container {
+  margin-bottom: 2rem;
+}

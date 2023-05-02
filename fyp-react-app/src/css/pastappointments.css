@@ -1,0 +1,30 @@
+.past-appointments-container {
+  margin-bottom: 2rem;
+}
+
+.past-appointments-container h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.past-appointments-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.past-appointments-container table th,
+.past-appointments-container table td {
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  text-align: left;
+}
+
+.past-appointments-container table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+.past-appointments-container table tbody tr:nth-child(odd) {
+  background-color: #f8f9fa;
+}
