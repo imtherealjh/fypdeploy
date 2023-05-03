@@ -1,70 +1,97 @@
-import React, { useEffect, useState } from "react";
-import "../css/viewarticles.css";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useEffect, useState } from "react";
+import useAxiosPrivate from "../lib/useAxiosPrivate";
+import { Link } from "react-router-dom";
 
-interface Article {
-  id: string;
-  title: string;
-  author: string;
-  content: string;
-}
+export default function Articles() {
+  const axiosPrivate = useAxiosPrivate();
+  const [articles, setArticles] = useState([]);
+  const [page, setPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
 
-function ViewArticles() {
-  const dummyData: Article[] = [
-    {
-      id: "1",
-      title: "How to Stay Healthy",
-      author: "Dr. John Doe",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-    },
-    {
-      id: "2",
-      title: "Understanding Diabetes",
-      author: "Dr. Jane Smith",
-      content: "Suspendisse tincidunt ut lacus nec cursus...",
-    },
-    {
-      id: "3",
-      title: "What is AIDS",
-      author: "Dr. Mary Jane",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-    },
-    {
-      id: "4",
-      title: "Who is Spiderman?",
-      author: "Dr. Eddie Brock",
-      content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-    },
-  ];
+  useEffect(() => {
+    let isMounted = true;
+    let controller = new AbortController();
 
-  const [articles, setArticles] = useState<Article[]>(dummyData);
-  // const axiosPrivate = useAxiosPrivate();
+    const fetchData = async () => {
+      try {
+        let response = await axiosPrivate.get(
+          `/article/getAllEduMaterial?page=${page}`
+        );
 
-  // useEffect(() => {
-  //   const fetchArticles = async () => {
-  //     try {
-  //       const response = await axiosPrivate.get("<your-backend-api-url>/articles");
-  //       setArticles(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching articles:", error);
-  //     }
-  //   };
+        const { content, current_page, total_pages } = response.data;
 
-  //   fetchArticles();
-  // }, []);
+        isMounted && setArticles(content);
+        isMounted && setPage(current_page);
+        isMounted && setTotalPage(total_pages);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [page]);
+
+  const pagination: any = [];
+  if (totalPage > 1) {
+    let startPage, endPage;
+    startPage = endPage = page;
+
+    if (page == 0) {
+      endPage = startPage + 2;
+    } else {
+      endPage = page + 1;
+      startPage = page - 1;
+    }
+
+    if (page + 1 == totalPage) {
+      startPage = page - 2;
+      endPage = totalPage - 1;
+    }
+
+    while (startPage <= endPage) {
+      pagination.push(startPage++);
+    }
+  }
 
   return (
-    <div className="view-articles">
-      <h2>Public Articles</h2>
-      {articles.map((article: Article) => (
-        <div key={article.id} className="article-card">
-          <h3>{article.title}</h3>
-          <p className="author">By {article.author}</p>
-          <p>{article.content}</p>
-        </div>
-      ))}
-    </div>
+    <>
+      <div className="d-flex flex-wrap justify-content-center gap-2">
+        {articles.length < 1 && <p>No articles to be displayed...</p>}
+        {articles.map((article: any, idx: number) => (
+          <div key={idx} className="card" style={{ width: "18rem" }}>
+            <div className="card-body">
+              <h5 className="card-title">{article.title}</h5>
+              <h6 className="card-subtitle mb-2 text-muted">
+                {article.clinicName}
+              </h6>
+              <p className="card-text">{article.content}</p>
+              <Link to="view" state={article}>
+                <button className="btn btn-primary">View</button>
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+      <nav>
+        <ul style={{ background: "transparent" }} className="pagination">
+          {pagination.map((el: any) => (
+            <li className="page-item">
+              <a
+                className={el === page ? `page-link active` : "page-link"}
+                href="#"
+                onClick={() => setPage(el)}
+              >
+                {el + 1}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </>
   );
 }
-
-export default ViewArticles;

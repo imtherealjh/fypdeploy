@@ -4,6 +4,7 @@ import { Calendar, DateObject } from "react-multi-date-picker";
 
 import PatientList from "../../components/PatientList";
 import useAxiosPrivate from "../../lib/useAxiosPrivate";
+import ViewArticles from "../../components/ViewArticles";
 
 function Dashboard() {
   const axiosPrivate = useAxiosPrivate();
@@ -45,6 +46,7 @@ function Dashboard() {
       <h1>Dashboard</h1>
       <div className="dashboard-container">
         <div className="d-flex flex-wrap gap-2">
+          <ViewArticles />
           <div
             style={{
               background: "#737373",

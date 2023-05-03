@@ -1,13 +1,16 @@
 package com.uow.FYP_23_S1_11.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,9 +30,11 @@ public class EducationalMaterial implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer materialId;
     private String title;
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     // many to many for front-desk, doctor and patient
-    @ManyToMany(mappedBy = "eduMatList")
-    private List<Clinic> clinicList;
+    @ManyToOne
+    @JoinColumn(name = "clinic", referencedColumnName = "clinicId", nullable = false)
+    private Clinic clinic;
 }

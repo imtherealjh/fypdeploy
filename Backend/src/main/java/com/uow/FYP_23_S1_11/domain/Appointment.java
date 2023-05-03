@@ -43,7 +43,7 @@ public class Appointment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer appointmentId;
-    private String description;
+
     private LocalDate apptDate;
 
     @JsonFormat(pattern = "HH:mm")
@@ -80,7 +80,6 @@ public class Appointment implements Serializable {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((appointmentId == null) ? 0 : appointmentId.hashCode());
-        result = prime * result + ((description == null) ? 0 : description.hashCode());
         result = prime * result + ((apptDate == null) ? 0 : apptDate.hashCode());
         result = prime * result + ((apptTime == null) ? 0 : apptTime.hashCode());
         result = prime * result + ((status == null) ? 0 : status.hashCode());
@@ -104,11 +103,6 @@ public class Appointment implements Serializable {
             if (other.appointmentId != null)
                 return false;
         } else if (!appointmentId.equals(other.appointmentId))
-            return false;
-        if (description == null) {
-            if (other.description != null)
-                return false;
-        } else if (!description.equals(other.description))
             return false;
         if (apptDate == null) {
             if (other.apptDate != null)

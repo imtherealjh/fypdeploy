@@ -1,35 +1,17 @@
 package com.uow.FYP_23_S1_11.service;
 
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.uow.FYP_23_S1_11.Constants;
-import com.uow.FYP_23_S1_11.domain.Appointment;
-import com.uow.FYP_23_S1_11.domain.Clinic;
-import com.uow.FYP_23_S1_11.domain.Doctor;
-import com.uow.FYP_23_S1_11.domain.DoctorSchedule;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
-import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
-import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
-import com.uow.FYP_23_S1_11.enums.EWeekdays;
-import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
-import com.uow.FYP_23_S1_11.repository.DoctorRepository;
-import com.uow.FYP_23_S1_11.repository.DoctorScheduleRepository;
-
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.FrontDesk;
 import com.uow.FYP_23_S1_11.domain.Queue;
@@ -68,16 +50,19 @@ public class ClerkServiceImpl implements ClerkService {
         return true;
     }
 
-    //
     @Override
     public Boolean createEduMaterial(EducationalMaterialRequest request) {
+        UserAccount currentUser = Constants.getAuthenticatedUser();
+        Clinic clinic = currentUser.getFrontDesk().getFrontDeskClinic();
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         try {
             EducationalMaterial educationalMaterial = (EducationalMaterial) mapper.convertValue(request,
                     EducationalMaterial.class);
-            eduMaterialRepo.save(educationalMaterial);
 
+            educationalMaterial.setClinic(clinic);
+            eduMaterialRepo.save(educationalMaterial);
             return true;
         } catch (Exception e) {
             System.out.println(e);

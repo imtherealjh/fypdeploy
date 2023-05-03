@@ -35,10 +35,6 @@ public interface PatientService {
 
         public Boolean deleteAppointment(Integer apptId);
 
-        public List<EducationalMaterial> getAllEduMaterial();
-
-        public EducationalMaterial getEduMaterialById(Integer materialId);
-
         public Boolean insertClinicAndDoctorFeedback(ClinicAndDoctorFeedbackRequest request);
 
         public Boolean updateClinicFeedback(Integer clinicFeedbackId,

@@ -17,10 +17,6 @@ export default function Profile() {
           signal: controller.signal,
         });
 
-        delete response.data.username;
-        delete response.data.password;
-        delete response.data.gender;
-        delete response.data.dob;
         isMounted && setPatientProfile(response.data);
       } catch (err: any) {
         console.error(err);

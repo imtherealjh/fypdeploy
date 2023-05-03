@@ -1,126 +1,56 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../lib/useAxiosPrivate";
-
-interface MedicalRecord {
-  username: string;
-  age: number;
-  dateOfBirth: string;
-  weight: number;
-  height: number;
-  hospitalizedBefore: boolean;
-  currentMedication: string;
-  foodAllergies: string;
-  drugAllergies: string;
-  bloodType: string;
-  medicalConditions: string;
-  emergencyContact: string;
-  emergencyContactNumber: string;
-}
+import PatientDetails from "../../components/PatientDetails";
 
 export default function MedicalRecords() {
   const axiosPrivate = useAxiosPrivate();
-  const [medicalRecord, setMedicalRecord] = useState<MedicalRecord | null>(
-    null
-  );
+  const [patientData, setPatientData] = useState<any>();
 
   useEffect(() => {
-    fetchMedicalRecord();
+    let isMounted = true;
+    let controller = new AbortController();
+
+    const fetchData = async () => {
+      try {
+        let response = await axiosPrivate.get("/patient/getPatientProfile", {
+          signal: controller.signal,
+        });
+
+        const patientData = response.data?.patientMedicalRecords;
+        patientData.name = response.data?.name;
+        patientData.contactNo = response.data?.contactNo;
+        patientData.sex = response.data?.gender;
+        patientData.dateOfBirth = response.data?.dob;
+        patientData.patientId = response.data?.patientId;
+        patientData.emergencyContact = response.data?.emergencyContact;
+        patientData.emergencyContactNo = response.data?.emergencyContactNo;
+
+        isMounted && setPatientData(patientData);
+      } catch (err: any) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
   }, []);
-
-  const fetchMedicalRecord = async () => {
-    try {
-      const userId = "some-user-id"; // have to replace this with the information used to identify the user
-      const response = await axiosPrivate.get(
-        `/doctor/getByMedicalRecordsId?medicalRecordsId=${userId}`
-      );
-      setMedicalRecord(response.data);
-    } catch (error) {
-      console.error("Error fetching medical record:", error);
-    }
-  };
-
-  // FAKE DATA TO MIMIC API CALL
-  // const fetchFakeMedicalRecord = () => {
-  //   setTimeout(() => {
-  //     setMedicalRecord({
-  //       username: "John Doe",
-  //       age: 30,
-  //       dateOfBirth: "1993-02-15",
-  //       weight: 75,
-  //       height: 180,
-  //       hospitalizedBefore: true,
-  //       currentMedication: "Aspirin",
-  //       foodAllergies: "Peanuts",
-  //       drugAllergies: "Penicillin",
-  //       bloodType: "A+",
-  //       medicalConditions: "Asthma",
-  //       emergencyContact: "Jane Doe",
-  //       emergencyContactNumber: "123-456-7890",
-  //     });
-  //   }, 1000);
-  // };
 
   return (
     <>
       <h1>Medical Records</h1>
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th>
-                {medicalRecord
-                  ? `${medicalRecord.username}, ${medicalRecord.age}`
-                  : "-"}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th>Date of Birth</th>
-              <th>Weight</th>
-              <th>Height</th>
-            </tr>
-            <tr>
-              <td>{medicalRecord?.dateOfBirth || "-"}</td>
-              <td>{medicalRecord?.weight || "-"}</td>
-              <td>{medicalRecord?.height || "-"}</td>
-            </tr>
-            <tr>
-              <th>Hospitalized Before</th>
-              <th>Current Medication</th>
-              <th>Food Allergies</th>
-            </tr>
-            <tr>
-              <td>
-                {medicalRecord
-                  ? medicalRecord.hospitalizedBefore
-                    ? "Yes"
-                    : "No"
-                  : "-"}
-              </td>
-              <td>{medicalRecord?.currentMedication || "-"}</td>
-              <td>{medicalRecord?.foodAllergies || "-"}</td>
-            </tr>
-            <tr>
-              <th>Drug Allergies</th>
-              <th>Blood Type</th>
-              <th>Medical Conditions</th>
-            </tr>
-            <tr>
-              <td>{medicalRecord?.drugAllergies || "-"}</td>
-              <td>{medicalRecord?.bloodType || "-"}</td>
-              <td>{medicalRecord?.medicalConditions || "-"}</td>
-            </tr>
-            <tr>
-              <th>Emergency Contact</th>
-              <th>Emergency Contact Number</th>
-            </tr>
-            <tr>
-              <td>{medicalRecord?.emergencyContact || "-"}</td>
-              <td>{medicalRecord?.emergencyContactNumber || "-"}</td>
-            </tr>
-          </tbody>
-        </table>
+      <div
+        style={{
+          position: "relative",
+          background: "white",
+          padding: "1.2rem",
+          borderRadius: "1.2rem",
+        }}
+      >
+        <PatientDetails patient={patientData} />
       </div>
     </>
   );

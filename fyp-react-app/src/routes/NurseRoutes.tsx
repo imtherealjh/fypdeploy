@@ -5,10 +5,10 @@ import NurseHome from "../pages/nurse/Home";
 import Appointment from "../pages/nurse/Appointment";
 import Feedback from "../pages/nurse/Feedback";
 import Profile from "../pages/nurse/Profile";
-import PatientList from "../pages/nurse/PatientList";
+import PatientList from "../pages/nurseAndDoctor/PatientList";
 
 import NotFound from "../pages/NotFound";
-import ViewMedicalDetails from "../pages/nurse/ViewMedicalDetails";
+import ViewMedicalDetails from "../pages/nurseAndDoctor/ViewMedicalDetails";
 
 export default function NurseRoutes() {
   return (

@@ -2,11 +2,14 @@ import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
 import DashboardLayout from "../layout/DashboardLayout";
 import DoctorHome from "../pages/doctor/Home";
-import PatientList from "../pages/doctor/PatientList";
+
 import Feedback from "../pages/doctor/Feedback";
 import NotFound from "../pages/NotFound";
 import Profile from "../pages/doctor/Profile";
-import ViewMedicalDetails from "../pages/doctor/ViewMedicalDetails";
+
+import PatientList from "../pages/nurseAndDoctor/PatientList";
+import ViewMedicalDetails from "../pages/nurseAndDoctor/ViewMedicalDetails";
+import ViewSingleArticle from "../components/ViewSingleArticle";
 
 export default function DoctorRoutes() {
   return (
@@ -27,6 +30,7 @@ export default function DoctorRoutes() {
         >
           <Route index path="" element={<DoctorHome />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="view" element={<ViewSingleArticle />} />
           <Route path="patients">
             <Route index path="" element={<PatientList />} />
             <Route path="details" element={<ViewMedicalDetails />} />

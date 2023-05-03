@@ -57,8 +57,7 @@ public class PatientServiceImpl implements PatientService {
     private PatientRepository patientRepo;
     @Autowired
     private AppointmentRepository apptRepo;
-    @Autowired
-    private EduMaterialRepository eduMaterialRepo;
+
     @Autowired
     private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
     @Autowired
@@ -127,7 +126,6 @@ public class PatientServiceImpl implements PatientService {
             }
 
             appt.setStatus(EAppointmentStatus.BOOKED);
-            appt.setDescription(bookApptReq.getDescription());
             appt.setApptPatient(patient);
             apptRepo.save(appt);
             return true;
@@ -139,7 +137,6 @@ public class PatientServiceImpl implements PatientService {
 
     private void removeAppointment(Appointment appointment) {
         appointment.setStatus(EAppointmentStatus.AVAILABLE);
-        appointment.setDescription(null);
         appointment.setApptPatient(null);
         apptRepo.save(appointment);
     }
@@ -164,7 +161,6 @@ public class PatientServiceImpl implements PatientService {
             }
 
             if (origAppt.getAppointmentId() == updateApptReq.getApptId()) {
-                origAppt.setDescription(updateApptReq.getDescription());
                 apptRepo.save(origAppt);
             } else {
                 bookAvailableAppointment(updateApptReq);
@@ -213,25 +209,6 @@ public class PatientServiceImpl implements PatientService {
         } catch (Exception e) {
             System.out.println(e);
             return false;
-        }
-    }
-
-    @Override
-    public List<EducationalMaterial> getAllEduMaterial() {
-        return eduMaterialRepo.findAll();
-    }
-
-    @Override
-    public EducationalMaterial getEduMaterialById(Integer materialId) {
-        try {
-            Optional<EducationalMaterial> materialOptional = eduMaterialRepo.findById(materialId);
-            if (materialOptional.isEmpty()) {
-                throw new IllegalArgumentException("Educational material does not exist..");
-            }
-            return materialOptional.get();
-        } catch (Exception e) {
-            System.out.println(e);
-            return new EducationalMaterial();
         }
     }
 

@@ -23,6 +23,4 @@ public class BookUpdateAppointmentRequest {
     @JsonProperty("apptId")
     @NotNull(groups = { OnCreate.class, OnUpdate.class })
     private Integer apptId;
-    @JsonProperty("description")
-    private String description;
 }

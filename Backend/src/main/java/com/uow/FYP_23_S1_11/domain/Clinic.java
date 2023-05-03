@@ -22,9 +22,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -111,8 +109,7 @@ public class Clinic implements Serializable {
     private List<Appointment> clinicsAppt;
 
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY) // mappedBy = "educationalMaterial")
-    @JoinTable(name = "edu_Material", joinColumns = @JoinColumn(name = "clinicId"), inverseJoinColumns = @JoinColumn(name = "materialId"))
+    @OneToMany(mappedBy = "clinic", cascade = CascadeType.ALL)
     private List<EducationalMaterial> eduMatList;
 
     @JsonIgnore

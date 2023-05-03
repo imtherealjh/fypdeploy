@@ -159,31 +159,34 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
         EWeekdays day = EWeekdays.valueOf(output.toUpperCase());
 
         List<Appointment> appointments = apptRepo.findByApptDateAndApptDoctor(date, doctor);
-        DoctorSchedule doctorSchedule = doctorScheduleRepo.findByDoctorAndDay(doctor, day);
+        List<DoctorSchedule> doctorSchedules = doctorScheduleRepo.findByDoctorAndDay(doctor, day);
         // check if user have a schedule or have already generated a schedule
-        if (appointments.size() > 0 || doctorSchedule == null) {
+        if (appointments.size() > 0 || doctorSchedules.size() < 1) {
             return null;
         }
 
         Clinic clinic = doctor.getDoctorClinic();
         LocalTime duration = clinic.getApptDuration();
 
-        LocalTime newTime = doctorSchedule.getStartTime();
         List<Appointment> timeslots = new ArrayList<>();
-        while (newTime.compareTo(doctorSchedule.getEndTime()) < 0) {
-            timeslots.add(Appointment
-                    .builder()
-                    .status(EAppointmentStatus.AVAILABLE)
-                    .apptDoctor(doctor)
-                    .apptClinic(doctor.getDoctorClinic())
-                    .apptDate(date)
-                    .apptTime(newTime)
-                    .build());
-            newTime = newTime.plusHours(duration.getHour())
-                    .plusMinutes(duration.getMinute());
+        for (DoctorSchedule doctorSchedule : doctorSchedules) {
+            LocalTime newTime = doctorSchedule.getStartTime();
+            while (newTime.compareTo(doctorSchedule.getEndTime()) < 0) {
+                timeslots.add(Appointment
+                        .builder()
+                        .status(EAppointmentStatus.AVAILABLE)
+                        .apptDoctor(doctor)
+                        .apptClinic(doctor.getDoctorClinic())
+                        .apptDate(date)
+                        .apptTime(newTime)
+                        .build());
+                newTime = newTime.plusHours(duration.getHour())
+                        .plusMinutes(duration.getMinute());
+            }
         }
 
         return timeslots;
+
     }
 
     @Override

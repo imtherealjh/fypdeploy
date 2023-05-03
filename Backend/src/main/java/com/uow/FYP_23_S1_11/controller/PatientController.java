@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uow.FYP_23_S1_11.constraints.OnCreate;
 import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 import com.uow.FYP_23_S1_11.domain.Appointment;
-import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
@@ -94,16 +93,6 @@ public class PatientController {
     @DeleteMapping("/deleteAppointment")
     public ResponseEntity<Boolean> deleteAppointment(@RequestParam Integer apptId) {
         return ResponseEntity.ok(patientService.deleteAppointment(apptId));
-    }
-
-    @GetMapping("/getAllEduMaterial")
-    public ResponseEntity<List<EducationalMaterial>> getAllEduMaterial() {
-        return ResponseEntity.ok(patientService.getAllEduMaterial());
-    }
-
-    @GetMapping("/getEduMaterialById")
-    public ResponseEntity<EducationalMaterial> getEduMaterialById(@RequestParam Integer id) {
-        return ResponseEntity.ok(patientService.getEduMaterialById(id));
     }
 
     @PostMapping("/insertClinicAndDoctorFeedback")

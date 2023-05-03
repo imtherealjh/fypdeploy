@@ -11,6 +11,8 @@ import Payment from "../pages/clerk/Payment";
 import Feedback from "../pages/clerk/Feedback";
 import NotFound from "../pages/NotFound";
 import Profile from "../pages/clerk/Profile";
+import PublishArticles from "../pages/clerk/PublishArticles";
+import ViewSingleArticle from "../components/ViewSingleArticle";
 
 export default function ClerkRoutes() {
   return (
@@ -25,7 +27,7 @@ export default function ClerkRoutes() {
                   { name: "Appointments", link: "appointments" },
                   { name: "Queue", link: "queue" },
                   { name: "Patient List", link: "patients" },
-                  { name: "Articles", link: "articles" },
+                  { name: "Articles", link: "articles", end: false },
                   { name: "Payment", link: "payment" },
                   { name: "Feedbacks", link: "feedbacks" },
                 ]}
@@ -40,7 +42,11 @@ export default function ClerkRoutes() {
             <Route path="update" element={<UpdateAppointments />} />
           </Route>
           <Route path="queue" element={<Queue />} />
-          <Route path="Articles" element={<Articles />} />
+          <Route path="articles">
+            <Route index path="" element={<Articles />} />
+            <Route path="publish" element={<PublishArticles />} />
+            <Route path="view" element={<ViewSingleArticle />} />
+          </Route>
           <Route path="payment" element={<Payment />} />
           <Route path="feedbacks" element={<Feedback />} />
           <Route path="*" element={<NotFound />} />
