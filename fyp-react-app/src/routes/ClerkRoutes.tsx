@@ -13,6 +13,8 @@ import NotFound from "../pages/NotFound";
 import Profile from "../pages/clerk/Profile";
 import PublishArticles from "../pages/clerk/PublishArticles";
 import ViewSingleArticle from "../components/ViewSingleArticle";
+import PatientListPage from "../pages/clerk/PatientList";
+import ViewPersonalDetails from "../pages/clerk/ViewPersonalDetails";
 
 export default function ClerkRoutes() {
   return (
@@ -26,7 +28,7 @@ export default function ClerkRoutes() {
                   { name: "Dashboard", link: "" },
                   { name: "Appointments", link: "appointments" },
                   { name: "Queue", link: "queue" },
-                  { name: "Patient List", link: "patients" },
+                  { name: "Patient List", link: "patients", end: false },
                   { name: "Articles", link: "articles", end: false },
                   { name: "Payment", link: "payment" },
                   { name: "Feedbacks", link: "feedbacks" },
@@ -46,6 +48,10 @@ export default function ClerkRoutes() {
             <Route index path="" element={<Articles />} />
             <Route path="publish" element={<PublishArticles />} />
             <Route path="view" element={<ViewSingleArticle />} />
+          </Route>
+          <Route path="patients">
+            <Route index path="" element={<PatientListPage />} />
+            <Route path="details" element={<ViewPersonalDetails />} />
           </Route>
           <Route path="payment" element={<Payment />} />
           <Route path="feedbacks" element={<Feedback />} />

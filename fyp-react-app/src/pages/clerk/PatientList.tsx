@@ -21,6 +21,7 @@ function PatientListPage() {
 
         isMounted && setPatientList(response.data);
       } catch (error) {
+        console.log(error);
         console.error("Error fetching patient list:", error);
       }
     };
@@ -86,9 +87,9 @@ function PatientListPage() {
                   <th className="align-middle" scope="row">
                     {idx + 1}
                   </th>
-                  <td>{data.name}</td>
-                  <td>{data.email}</td>
-                  <td>{data.contactNo}</td>
+                  <td className="align-middle">{data.name}</td>
+                  <td className="align-middle">{data.email}</td>
+                  <td className="align-middle">{data.contactNo}</td>
                   <td>
                     <Link to="details" state={data}>
                       <button className="btn btn-primary">View</button>

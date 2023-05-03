@@ -71,28 +71,13 @@ public class ClerkServiceImpl implements ClerkService {
     }
 
     @Override
-    public Boolean deleteEduMaterial(Integer materialId) {
-        try {
-            UserAccount currentUser = Constants.getAuthenticatedUser();
-            Optional<EducationalMaterial> materialOptional = eduMaterialRepo.findById(materialId);
-            if (materialOptional.isEmpty()) {
-                throw new IllegalArgumentException("Educational Material does not exist...");
-            }
-            EducationalMaterial eduMat = materialOptional.get();
-            eduMaterialRepo.delete(eduMat);
-            return true;
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-    }
-
-    @Override
     public Boolean updateEduMaterial(Integer materialId, EducationalMaterialRequest request) {
         try {
             UserAccount currentUser = Constants.getAuthenticatedUser();
+            Clinic clinic = currentUser.getFrontDesk().getFrontDeskClinic();
             Optional<EducationalMaterial> materialOptional = eduMaterialRepo.findById(materialId);
-            if (materialOptional.isEmpty()) {
+            if (materialOptional.isEmpty()
+                    || clinic.getClinicId() != materialOptional.get().getClinic().getClinicId()) {
                 throw new IllegalArgumentException("Educational Material does not exist...");
             }
             EducationalMaterial eduMat = materialOptional.get();

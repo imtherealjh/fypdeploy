@@ -19,7 +19,6 @@ import com.uow.FYP_23_S1_11.domain.PatientMedicalRecords;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
 import com.uow.FYP_23_S1_11.domain.response.AppointmentResponse;
-import com.uow.FYP_23_S1_11.domain.response.PatientAppointmentDetails;
 import com.uow.FYP_23_S1_11.domain.response.RetrievePatient;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.enums.ERole;
@@ -56,12 +55,11 @@ public class StaffServiceImpl implements StaffService {
                                                                                 .orElse(null))));
 
                 TypedQuery<Patient> query = entityManager.createQuery(
-                                "SELECT a.apptPatient "
+                                "SELECT DISTINCT a.apptPatient "
                                                 + "FROM Appointment a "
-                                                + "LEFT JOIN a.apptDoctor d "
                                                 + "WHERE a.apptPatient IS NOT NULL AND "
-                                                + "d.doctorClinic = :clinic "
-                                                + "GROUP BY a.apptPatient, a.apptTime",
+                                                + "a.apptClinic = :clinic "
+                                                + "GROUP BY a.apptPatient",
                                 Patient.class);
                 query.setParameter("clinic", clinic);
 
@@ -98,8 +96,14 @@ public class StaffServiceImpl implements StaffService {
                         throw new IllegalArgumentException("Clinic not able to be found");
                 }
 
+                String results = user.getRole() == ERole.DOCTOR
+                                ? "new map(a.apptPatient.name as patientName, a.apptTime as apptTime, a.status as status) "
+                                : user.getRole() == ERole.FRONT_DESK
+                                                ? "new map(a.appointmentId as id, a.apptPatient.name as patientName, a.apptDoctor.name as doctorName, a.apptTime as apptTime, a.apptDate as date, a.status as status)"
+                                                : "new map(a.apptPatient.name as patientName, a.apptDoctor.name as doctorName, a.apptTime as apptTime, a.status as status) ";
+
                 String hsql = "SELECT "
-                                + "new com.uow.FYP_23_S1_11.domain.response.PatientAppointmentDetails(a.apptPatient, a.apptTime) "
+                                + results
                                 + "FROM Appointment a "
                                 + "JOIN a.apptDoctor d "
                                 + "WHERE a.apptPatient IS NOT NULL AND ";
@@ -107,19 +111,17 @@ public class StaffServiceImpl implements StaffService {
                 hsql += user.getRole() == ERole.DOCTOR ? "a.apptDoctor = :doctor AND " : "";
 
                 hsql += "a.apptClinic = :clinic AND "
-                                + "a.status = :status AND "
                                 + "a.apptDate = :date "
                                 + "GROUP BY a.apptPatient, a.apptTime";
 
-                TypedQuery<PatientAppointmentDetails> query = entityManager.createQuery(
+                TypedQuery<Object> query = entityManager.createQuery(
                                 hsql,
-                                PatientAppointmentDetails.class);
+                                Object.class);
                 if (user.getRole() == ERole.DOCTOR) {
                         query.setParameter("doctor", user.getDoctor());
                 }
                 query.setParameter("clinic", clinic);
                 query.setParameter("date", date);
-                query.setParameter("status", EAppointmentStatus.BOOKED);
 
                 RetrievePatient object = new RetrievePatient(query.getResultList(),
                                 query.getResultList().size());

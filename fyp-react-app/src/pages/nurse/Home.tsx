@@ -19,7 +19,7 @@ function Dashboard() {
 
     const fetchData = async () => {
       let response = await axiosPrivate.get(
-        `/nurse/getVisitingPatients?apptDate=${value}`,
+        `/staff/getPatientsByDate?apptDate=${value}`,
         {
           signal: controller.signal,
         }

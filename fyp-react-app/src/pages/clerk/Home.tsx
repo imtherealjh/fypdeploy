@@ -1,102 +1,58 @@
-import React, { useState } from "react";
 import AppointmentList from "../../components/AppointmentList";
-import PatientDetails from "../../components/PatientDetails";
 
-function ClerkHome() {
-  // State to store appointments when we actually connect to backend
-  // const [appointments, setAppointments] = useState<Appointment[]>([]);
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 
-  const dummyAppointments = [
-    {
-      id: 1,
-      patientName: "Jane Doe",
-      doctorName: "Dr. Smith",
-      date: "25/04/2023",
-      time: "10:00",
-      queue: 1,
-    },
-    {
-      id: 2,
-      patientName: "John Doe",
-      doctorName: "Dr. Smith",
-      date: "25/04/2023",
-      time: "10:30",
-      queue: 2,
-    },
-  ];
+import { useState, useEffect } from "react";
+import { Calendar, DateObject } from "react-multi-date-picker";
 
-  const [selectedPatient, setSelectedPatient] = useState<any>(null);
-
-  const handleAppointmentSelection = (appointmentId: number) => {
-    const selectedAppointment = dummyAppointments.find(
-      (appointment) => appointment.id === appointmentId
-    );
-
-    // Fetch patient details based on the selected appointment
-    const patientDetails = {
-      lastChecked: "24/04/2023",
-      observation: "High fever and cough",
-      prescription: "Paracetamol & Antibiotics",
-      contactNumber: "555-123-4567",
-      sex: "Female",
-      age: 32,
-      dateOfBirth: "15/03/1991",
-      weight: 62,
-      height: 168,
-      hospitalizedBefore: true,
-      lastHospitalizedDate: "12/12/2022",
-      takingMedication: true,
-      foodAllergies: "Peanuts, Shellfish",
-      drugAllergies: "Penicillin",
-      bloodType: "O+",
-      medicalConditions: "Asthma",
-      emergencyContact: "Alice Doe",
-      emergencyContactNumber: "555-987-6543",
-    };
-
-    setSelectedPatient({ ...selectedAppointment, ...patientDetails });
-
-    // When connecting to the backend, replace the above patientDetails object with the code below:
-    // fetchPatientDetails(appointmentId);
-  };
-
-  /*
-  // Uncomment this code when connecting to the backend
-  const fetchAppointments = async () => {
-    try {
-      const response = await axiosPrivate.get("/appointments"); // Replace "/appointments" with the correct endpoint
-      setAppointments(response.data);
-    } catch (error) {
-      console.error("Error fetching appointments:", error);
-    }
-  };
+export default function ClerkHome() {
+  const axiosPrivate = useAxiosPrivate();
+  const [value, setValue] = useState<any>(new DateObject());
+  const [data, setData] = useState<any>({
+    patientList: [],
+    noOfPatients: 0,
+  });
 
   useEffect(() => {
-    fetchAppointments();
-  }, []);
+    let isMounted = true;
+    let controller = new AbortController();
 
-  const fetchPatientDetails = async (appointmentId: number) => {
-    try {
-      const response = await axiosPrivate.get(`/patient-details/${appointmentId}`); // Replace "/patient-details/${appointmentId}" with the correct endpoint
-      setSelectedPatient({ ...response.data });
-    } catch (error) {
-      console.error("Error fetching patient details:", error);
-    }
-  };
-  */
+    const fetchData = async () => {
+      let response = await axiosPrivate.get(
+        `/staff/getPatientsByDate?apptDate=${value}`,
+        {
+          signal: controller.signal,
+        }
+      );
+
+      isMounted && setData(response.data);
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [value]);
 
   return (
     <>
       <h1>Dashboard</h1>
-      <div className="w-100">
-        <AppointmentList
-          appointmentsList={dummyAppointments}
-          onAppointmentSelect={handleAppointmentSelection}
-        />
-        <PatientDetails patient={selectedPatient} />
+      <div className="dashboard-container">
+        <div className="d-flex flex-column justify-content-center gap-2">
+          <Calendar
+            className="align-self-center"
+            format="YYYY-MM-DD"
+            value={value}
+            onChange={(date: DateObject) => setValue(date.format())}
+          />
+
+          <span style={{ fontSize: "1.1rem", textAlign: "center" }}>
+            <AppointmentList appointmentsList={data.patientList} />
+          </span>
+        </div>
       </div>
     </>
   );
 }
-
-export default ClerkHome;

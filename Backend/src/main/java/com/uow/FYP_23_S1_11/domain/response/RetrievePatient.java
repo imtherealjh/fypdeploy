@@ -10,6 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RetrievePatient {
-    private List<PatientAppointmentDetails> patientList;
+    private List<?> patientList;
     private long noOfPatients;
 }

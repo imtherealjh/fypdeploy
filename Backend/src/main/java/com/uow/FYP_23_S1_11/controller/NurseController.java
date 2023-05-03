@@ -1,7 +1,5 @@
 package com.uow.FYP_23_S1_11.controller;
 
-import java.time.LocalDate;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,17 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 import com.uow.FYP_23_S1_11.domain.request.RegisterNurseRequest;
 import com.uow.FYP_23_S1_11.service.NurseService;
-import com.uow.FYP_23_S1_11.service.StaffService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping(value = "/api/nurse", produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -30,15 +25,7 @@ import jakarta.validation.constraints.NotNull;
 @SecurityRequirement(name = "bearerAuth")
 public class NurseController {
     @Autowired
-    private StaffService staffService;
-
-    @Autowired
     private NurseService nurseService;
-
-    @GetMapping("/getVisitingPatients")
-    public ResponseEntity<?> getAllVisitingPatientByDate(@NotNull @RequestParam LocalDate apptDate) {
-        return ResponseEntity.ok(staffService.getPatientsByDate(apptDate));
-    }
 
     @GetMapping("/getProfile")
     public ResponseEntity<?> getProfile() {
