@@ -9,10 +9,7 @@ public interface ClerkService {
 
     public Boolean updateProfile(RegisterFrontDeskRequest registerFrontDeskRequest);
 
-    //
     public Boolean createEduMaterial(EducationalMaterialRequest request);
-
-    public Boolean deleteEduMaterial(Integer materialId);
 
     public Boolean updateEduMaterial(Integer materialId, EducationalMaterialRequest request);
 
