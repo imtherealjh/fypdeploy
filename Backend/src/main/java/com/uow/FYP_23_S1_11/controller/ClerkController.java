@@ -57,11 +57,6 @@ public class ClerkController {
         return ResponseEntity.ok(clerkService.updateEduMaterial(id, eduMaterialRequest));
     }
 
-    @DeleteMapping("/deleteEduMaterial")
-    public ResponseEntity<Boolean> deleteEduMaterial(@RequestParam Integer id) {
-        return ResponseEntity.ok(clerkService.deleteEduMaterial(id));
-    }
-
     @PostMapping("/updateQueueNumber")
     public ResponseEntity<Boolean> updateQueueNumber(@RequestParam Integer queueId,
             @Valid @RequestBody QueueRequest updateQueueRequest) {
