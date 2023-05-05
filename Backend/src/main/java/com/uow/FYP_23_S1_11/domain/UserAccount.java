@@ -20,7 +20,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -57,9 +56,6 @@ public class UserAccount implements UserDetails {
     private Boolean isEnabled = false;
     @Column(name = "verificationCode")
     private String verificationCode;
-
-    @OneToMany(mappedBy = "tokenAccount", cascade = CascadeType.ALL)
-    private List<Token> userTokens;
 
     @JsonIgnore
     @OneToOne(mappedBy = "clinicAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

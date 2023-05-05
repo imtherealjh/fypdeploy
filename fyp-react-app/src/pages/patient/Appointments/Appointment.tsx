@@ -3,11 +3,16 @@ import { Link } from "react-router-dom";
 import useAxiosPrivate from "../../../lib/useAxiosPrivate";
 import UpdateAppointmentComponent from "./UpdateAppointment";
 import DeleteAppointmentComponent from "./DeleteAppointment";
+import FeedbackComponent from "./FeedbackAppointment,";
 
 export default function Appointment() {
-  const [appointmentType, setAppointmentType] = useState("Past");
+  // for updating and deleting appointment
   const [btnClicked, setBtnClicked] = useState("");
   const [data, setData] = useState({});
+
+  const [past, setPast] = useState(true);
+  const [filteredAppt, setFilteredAppt] = useState<any>([]);
+
   const [appointments, setAppointments] = useState<any>([]);
   const axiosPrivate = useAxiosPrivate();
 
@@ -15,16 +20,17 @@ export default function Appointment() {
     let isMounted = true;
     let controller = new AbortController();
     const fetchData = async () => {
-      console.log(`/patient/get${appointmentType}Appointment`);
-
-      const response = await axiosPrivate.get(
-        `/patient/get${appointmentType}Appointment`,
-        {
-          signal: controller.signal,
-        }
-      );
+      const response = await axiosPrivate.get(`/patient/getAllAppointments`, {
+        signal: controller.signal,
+      });
 
       isMounted && setAppointments(response.data);
+      isMounted &&
+        setFilteredAppt(
+          response.data.filter(
+            (obj: any) => new Date(obj.apptDate) < new Date()
+          )
+        );
     };
 
     fetchData();
@@ -33,7 +39,7 @@ export default function Appointment() {
       isMounted = false;
       controller.abort();
     };
-  }, [appointmentType]);
+  }, []);
 
   return (
     <>
@@ -54,8 +60,15 @@ export default function Appointment() {
               className="btn-check"
               name="btnradio"
               autoComplete="off"
-              onChange={() => setAppointmentType("Past")}
-              checked={appointmentType === "Past"}
+              onChange={() => {
+                setPast(true);
+                setFilteredAppt(
+                  appointments.filter(
+                    (obj: any) => new Date(obj.apptDate) < new Date()
+                  )
+                );
+              }}
+              checked={past}
             />
             <label className="btn btn-outline-secondary" htmlFor="Past">
               Past
@@ -67,8 +80,15 @@ export default function Appointment() {
               className="btn-check"
               name="btnradio"
               autoComplete="off"
-              onChange={() => setAppointmentType("Upcoming")}
-              checked={appointmentType === "Upcoming"}
+              onChange={() => {
+                setPast(false);
+                setFilteredAppt(
+                  appointments.filter(
+                    (obj: any) => new Date(obj.apptDate) >= new Date()
+                  )
+                );
+              }}
+              checked={!past}
             />
             <label className="btn btn-outline-secondary" htmlFor="Upcoming">
               Upcoming
@@ -84,23 +104,17 @@ export default function Appointment() {
               <th scope="col">Doctor</th>
               <th scope="col">Date</th>
               <th scope="col">Time</th>
-              {appointmentType === "Upcoming" ? (
-                <>
-                  <th scope="col"></th>
-                  <th scope="col"></th>
-                </>
-              ) : null}
+              <th scope="col"></th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
-            {appointments.length < 1 ? (
+            {filteredAppt.length < 1 ? (
               <tr>
-                <td colSpan={appointmentType === "Upcoming" ? 7 : 5}>
-                  No data available....
-                </td>
+                <td colSpan={7}>No data available....</td>
               </tr>
             ) : null}
-            {appointments.map((value: any, idx: number) => (
+            {filteredAppt.map((value: any, idx: number) => (
               <tr key={value.appointmentId}>
                 <th className="align-middle" scope="row">
                   {idx + 1}
@@ -109,38 +123,57 @@ export default function Appointment() {
                 <td className="align-middle">{value.doctorName}</td>
                 <td className="align-middle">{value.apptDate}</td>
                 <td className="align-middle">{value.apptTime}</td>
-                {appointmentType === "Upcoming" ? (
-                  <td colSpan={2}>
-                    <div className="d-flex justify-content-end gap-2 flex-wrap">
-                      <button
-                        id="updateBtn"
-                        type="button"
-                        className="btn btn-warning"
-                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                          setData(appointments[idx]);
-                          setBtnClicked(e.currentTarget.id);
-                        }}
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal"
-                      >
-                        Update
-                      </button>
-                      <button
-                        id="deleteBtn"
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                          setData(appointments[idx]);
-                          setBtnClicked(e.currentTarget.id);
-                        }}
-                        data-bs-toggle="modal"
-                        data-bs-target="#modal"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                ) : null}
+                <td colSpan={2}>
+                  <div className="d-flex justify-content-end gap-2 flex-wrap">
+                    {!past && value.status !== "COMPLETED" && (
+                      <>
+                        <button
+                          id="updateBtn"
+                          type="button"
+                          className="btn btn-warning"
+                          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                            setData(filteredAppt[idx]);
+                            setBtnClicked(e.currentTarget.id);
+                          }}
+                          data-bs-toggle="modal"
+                          data-bs-target="#modal"
+                        >
+                          Update
+                        </button>
+                        <button
+                          id="deleteBtn"
+                          type="button"
+                          className="btn btn-danger"
+                          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                            setData(filteredAppt[idx]);
+                            setBtnClicked(e.currentTarget.id);
+                          }}
+                          data-bs-toggle="modal"
+                          data-bs-target="#modal"
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
+                    {past && value.status === "COMPLETED" && (
+                      <>
+                        <button
+                          id="feedbackBtn"
+                          type="button"
+                          className="btn btn-primary"
+                          onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                            setData(filteredAppt[idx]);
+                            setBtnClicked(e.currentTarget.id);
+                          }}
+                          data-bs-toggle="modal"
+                          data-bs-target="#modal"
+                        >
+                          Feedback
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -159,6 +192,7 @@ export default function Appointment() {
                 <h5 className="modal-title">
                   {btnClicked === "updateBtn" && "Update Appointment"}
                   {btnClicked === "deleteBtn" && "Delete Appointment"}
+                  {btnClicked === "feedbackBtn" && "Feedback"}
                 </h5>
                 <button
                   id="closeModalBtn"
@@ -175,6 +209,9 @@ export default function Appointment() {
                 )}
                 {btnClicked === "deleteBtn" && (
                   <DeleteAppointmentComponent data={data} />
+                )}
+                {btnClicked === "feedbackBtn" && (
+                  <FeedbackComponent data={data} />
                 )}
               </div>
             </div>

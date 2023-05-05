@@ -2,7 +2,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
 import PatientDetails from "../../components/PatientDetails";
 import useAxiosPrivate from "../../lib/useAxiosPrivate";
-import axios from "axios";
 
 export default function ViewMedicalDetails() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -10,8 +9,7 @@ export default function ViewMedicalDetails() {
 
   //edits
   const [edit, setEdit] = useState(false);
-  const [verify, setVerify] = useState(false);
-  const [currentAppt, setCurrentAppt] = useState([]);
+  const [currentAppt, setCurrentAppt] = useState<any>([]);
   const [formData, setFormData] = useState<any>({});
 
   const navigate = useNavigate();
@@ -32,26 +30,18 @@ export default function ViewMedicalDetails() {
     let isMounted = true;
     let controller = new AbortController();
 
-    const fetchData = () => {
+    const fetchData = async () => {
       try {
-        let endpoints = [
-          axiosPrivate.get(
-            `/staff/getAppointmentDetails?patientId=${obj.patientId}`
-          ),
-          axiosPrivate.get(
-            `/staff/checkVerifyAppointment?patientId=${obj.patientId}`
-          ),
-        ];
-
-        axios.all(endpoints).then(
-          axios.spread((apptData, verify) => {
-            isMounted && setApptData(apptData.data);
-            isMounted && setVerify(verify.data.length > 0);
-            setCurrentAppt(verify.data);
-            setFormData(patientData);
-            setIsLoaded(true);
-          })
+        let response = await axiosPrivate.get(
+          `/staff/getAppointmentDetails?patientId=${obj.patientId}`
         );
+
+        const { pastAppt, todayAppt } = response.data;
+
+        isMounted && setApptData(pastAppt);
+        isMounted && setCurrentAppt(todayAppt);
+        isMounted && setFormData(patientData);
+        isMounted && setIsLoaded(true);
       } catch (err) {
         console.error(err);
       }
@@ -110,7 +100,7 @@ export default function ViewMedicalDetails() {
             borderRadius: "1.2rem",
           }}
         >
-          {verify && !edit && (
+          {currentAppt.length > 0 && !edit && (
             <button
               style={{ position: "absolute", right: "1.2rem" }}
               className="btn btn-success"
@@ -125,7 +115,7 @@ export default function ViewMedicalDetails() {
             editable={edit}
           />
           <div className="d-flex justify-content-end gap-2">
-            {verify && edit && (
+            {currentAppt.length > 0 && edit && (
               <button
                 className="btn btn-danger"
                 onClick={() => {
@@ -136,7 +126,7 @@ export default function ViewMedicalDetails() {
                 Cancel
               </button>
             )}
-            {verify && (
+            {currentAppt.length > 0 && (
               <button
                 className="btn btn-primary"
                 data-bs-toggle="modal"
@@ -213,7 +203,7 @@ export default function ViewMedicalDetails() {
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                     const selectedIndex = e.target.options.selectedIndex;
                     formData.diagnostic =
-                      formData?.currentAppt[selectedIndex - 1]?.diagnostic;
+                      currentAppt[selectedIndex - 1]?.diagnostic;
                     setFormData((prev: any) => ({
                       ...prev,
                       [e.target.name]: e.target.value,

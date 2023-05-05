@@ -21,41 +21,37 @@ export default function UpdateAppointmentComponent({ data }: Props) {
     });
   }, []);
 
-  let isMounted = false;
   const handleClick = async () => {
-    if (!isMounted) {
-      isMounted = true;
+    try {
+      await axiosPrivate.put("/patient/updateAppointment", {
+        originalApptId: data.appointmentId,
+        apptId: formData.apptId,
+      });
 
-      try {
-        await axiosPrivate.put("/patient/updateAppointment", {
-          originalApptId: data.appointmentId,
-          apptId: formData.apptId,
-        });
-
-        alert("Appointment successfully updated...");
-        document.getElementById("closeModalBtn")?.click();
-        navigate(0);
-      } catch (err: any) {
-        if (!err?.response) {
-          alert("No Server Response");
-        } else if (err.response?.status === 400) {
-          alert(err.response?.data.errors);
-        } else {
-          alert("Unknown error occured...");
-        }
+      alert("Appointment successfully updated...");
+      document.getElementById("closeModalBtn")?.click();
+      navigate(0);
+    } catch (err: any) {
+      if (!err?.response) {
+        alert("No Server Response");
+      } else if (err.response?.status === 400) {
+        alert(err.response?.data.errors);
+      } else {
+        alert("Unknown error occured...");
       }
     }
-
-    isMounted = false;
   };
 
   return (
     <>
       <div>
-        <h5>{`Updating appointment from doctor ${data.doctorName}`}</h5>
-        <h5>{`Appointment Date: ${data.apptDate}, Appointment Time: ${data.apptTime}...`}</h5>
+        <h6>{`Updating appointment from doctor ${data.doctorName}`}</h6>
+        <h6>{`Appointment Date: ${data.apptDate}, Appointment Time: ${data.apptTime}...`}</h6>
+        <br />
         <h6>New appointment</h6>
-        <Step2 formData={formData} setFormData={setFormData} />
+        <div className="d-block">
+          <Step2 formData={formData} setFormData={setFormData} />
+        </div>
         <div className="d-grid mt-2">
           <button
             type="button"

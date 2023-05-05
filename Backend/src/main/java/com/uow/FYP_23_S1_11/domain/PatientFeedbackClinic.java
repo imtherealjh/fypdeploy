@@ -1,6 +1,9 @@
 package com.uow.FYP_23_S1_11.domain;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,11 +30,14 @@ public class PatientFeedbackClinic implements Serializable {
     private Integer clinicFeedbackId;
     private Integer ratings;
     private String feedback;
+    private LocalDateTime localDateTime = LocalDateTime.now();
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "clinicId", referencedColumnName = "clinicId")
     private Clinic clinicFeedback;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "patientId", referencedColumnName = "patientId")
     private Patient patientClinicFeedback;

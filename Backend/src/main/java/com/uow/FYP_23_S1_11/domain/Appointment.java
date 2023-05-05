@@ -44,6 +44,7 @@ public class Appointment implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer appointmentId;
 
+    @Temporal(TemporalType.DATE)
     private LocalDate apptDate;
 
     @JsonFormat(pattern = "HH:mm")

@@ -1,7 +1,9 @@
 package com.uow.FYP_23_S1_11.service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.hibernate.Hibernate;
@@ -39,6 +41,8 @@ public class StaffServiceImpl implements StaffService {
         private PatientMedicalRecordsRepository patientMedicalRecordsRepo;
         @Autowired
         private AppointmentRepository apptRepo;
+        @Autowired
+        private UtilService utilService;
 
         @Override
         public List<?> getAllPatients() {
@@ -129,46 +133,7 @@ public class StaffServiceImpl implements StaffService {
         }
 
         @Override
-        public List<?> checkVerifyAppointment(Integer patientId) {
-                UserAccount user = Constants.getAuthenticatedUser();
-
-                Clinic clinic = Optional.ofNullable(user.getClinic())
-                                .orElseGet(() -> Optional.ofNullable(user.getDoctor())
-                                                .map(elem -> elem.getDoctorClinic())
-                                                .orElseGet(() -> Optional.ofNullable(user.getNurse())
-                                                                .map(elem -> elem.getNurseClinic())
-                                                                .orElseGet(() -> Optional
-                                                                                .ofNullable(user.getFrontDesk())
-                                                                                .map(elem -> elem.getFrontDeskClinic())
-                                                                                .orElse(null))));
-
-                if (clinic == null) {
-                        throw new IllegalArgumentException("Clinic not able to be found");
-                }
-
-                String hsql = "SELECT A FROM Appointment A "
-                                + "WHERE A.apptPatient.patientId = :patientId ";
-
-                hsql += user.getRole() == ERole.DOCTOR ? "AND A.apptDoctor = :doctor " : "";
-
-                hsql += "AND A.apptDate = CURRENT_DATE "
-                                + "AND A.apptClinic = :clinic "
-                                + "AND (A.status = 'CHECKED_IN' OR A.status = 'COMPLETED')";
-
-                TypedQuery<Appointment> query = entityManager.createQuery(
-                                hsql,
-                                Appointment.class);
-                query.setParameter("patientId", patientId);
-                if (user.getRole() == ERole.DOCTOR) {
-                        query.setParameter("doctor", user.getDoctor());
-                }
-                query.setParameter("clinic", clinic);
-
-                return query.getResultList();
-        }
-
-        @Override
-        public List<?> getAppointmentDetails(Integer patientId) {
+        public Map<?, ?> getAppointmentDetails(Integer patientId) {
                 TypedQuery<AppointmentResponse> query = entityManager.createQuery(
                                 "SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.clinicName, A.diagnostic) "
                                                 + "FROM Appointment A "
@@ -178,7 +143,15 @@ public class StaffServiceImpl implements StaffService {
                                                 + "ORDER BY A.apptDate DESC, A.apptTime DESC",
                                 AppointmentResponse.class);
                 query.setParameter("patientId", patientId);
-                return query.setMaxResults(6).getResultList();
+
+                List<?> pastAppt = query.setMaxResults(6).getResultList();
+                List<?> currentAppt = utilService.checkVerifyAppointment(patientId);
+
+                Map<String, Object> response = new HashMap<>();
+                response.put("pastAppt", pastAppt);
+                response.put("todayAppt", currentAppt);
+
+                return response;
         }
 
         @Override
@@ -197,7 +170,7 @@ public class StaffServiceImpl implements StaffService {
 
                         PatientMedicalRecords origPatientMedicalRecords = optionalRecords.get();
                         Appointment origAppt = optionalAppt.get();
-                        List<?> apptRecords = checkVerifyAppointment(
+                        List<?> apptRecords = utilService.checkVerifyAppointment(
                                         origPatientMedicalRecords.getPatientmd().getPatientId());
 
                         if (!apptRecords.contains(origAppt)) {

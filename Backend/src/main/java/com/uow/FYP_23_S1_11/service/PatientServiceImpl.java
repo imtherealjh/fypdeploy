@@ -1,8 +1,10 @@
 package com.uow.FYP_23_S1_11.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +27,10 @@ import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
 import com.uow.FYP_23_S1_11.repository.QueueRepository;
-import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackDoctorRepository;
 import com.uow.FYP_23_S1_11.repository.PatientRepository;
-import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import com.uow.FYP_23_S1_11.domain.request.MailRequest;
-
-import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackClinicRequest;
-import com.uow.FYP_23_S1_11.domain.request.PatientFeedbackDoctorRequest;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
 
@@ -72,15 +65,9 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<?> getUpcomingAppointments() {
+    public List<?> getAllAppointments() {
         UserAccount userAccount = Constants.getAuthenticatedUser();
-        return apptRepo.getUpcomingAppointments(userAccount.getPatient());
-    }
-
-    @Override
-    public List<?> getPastAppointments() {
-        UserAccount userAccount = Constants.getAuthenticatedUser();
-        return apptRepo.getPastAppointments(userAccount.getPatient());
+        return apptRepo.findByApptPatient(userAccount.getPatient());
     }
 
     @Override
@@ -215,83 +202,41 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Boolean insertClinicAndDoctorFeedback(ClinicAndDoctorFeedbackRequest request) {
         try {
+            Appointment origAppt = getAppointmentById(request.getAppointmentId());
+            Map<?, ?> params = apptRepo.findByApptId(request.getAppointmentId());
+            if (origAppt.getStatus() != EAppointmentStatus.COMPLETED) {
+                throw new IllegalArgumentException("Appointment feedback cannot be inserted/updated");
+            }
 
-            PatientFeedbackClinic patientFeedbackClinic = new PatientFeedbackClinic();
-
-            patientFeedbackClinic.setClinicFeedbackId(request.getFeedbackId());
+            PatientFeedbackClinic patientFeedbackClinic = params.get("fPC") == null ? new PatientFeedbackClinic()
+                    : (PatientFeedbackClinic) params.get("fPC");
+            patientFeedbackClinic.setClinicFeedback(origAppt.getApptClinic());
+            patientFeedbackClinic.setPatientClinicFeedback(origAppt.getApptPatient());
             patientFeedbackClinic.setFeedback(request.getClinicFeedback());
             patientFeedbackClinic.setRatings(request.getClinicRatings());
 
-            patientFeedbackClinicRepo.save(patientFeedbackClinic);
-
-            PatientFeedbackDoctor patientFeedbackDoctor = new PatientFeedbackDoctor();
-
-            patientFeedbackDoctor.setDoctorFeedbackId(request.getFeedbackId());
+            PatientFeedbackDoctor patientFeedbackDoctor = params.get("fPD") == null ? new PatientFeedbackDoctor()
+                    : (PatientFeedbackDoctor) params.get("fPD");
+            patientFeedbackDoctor.setDoctorFeedback(origAppt.getApptDoctor());
+            patientFeedbackDoctor.setPatientDoctorFeedback(origAppt.getApptPatient());
             patientFeedbackDoctor.setFeedback(request.getDoctorFeedback());
             patientFeedbackDoctor.setRatings(request.getDoctorRatings());
 
+            if (LocalDateTime.now().isAfter(patientFeedbackClinic.getLocalDateTime().plusDays(1))
+                    || LocalDateTime.now().isAfter(patientFeedbackDoctor.getLocalDateTime().plusDays(1))) {
+                throw new IllegalArgumentException("Appointment feedback cannot be inserted/updated");
+            }
+
+            patientFeedbackClinicRepo.save(patientFeedbackClinic);
             patientFeedbackDoctorRepo.save(patientFeedbackDoctor);
 
             return true;
-
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             System.out.println(e);
             return false;
         }
-    }
-
-    @Override
-    public Boolean updateClinicFeedback(Integer clinicFeedbackId,
-            PatientFeedbackClinicRequest updateClinicFeedbackRequest) {
-        Optional<PatientFeedbackClinic> patientFeedbackClinicOptional = patientFeedbackClinicRepo
-                .findById(clinicFeedbackId);
-        if (patientFeedbackClinicOptional.isEmpty()) {
-            throw new IllegalArgumentException("Clinic feedback does not exist...");
-        }
-        PatientFeedbackClinic patientFeedbackClinic = patientFeedbackClinicOptional.get();
-        patientFeedbackClinic.setRatings(updateClinicFeedbackRequest.getRatings());
-        patientFeedbackClinic.setFeedback(updateClinicFeedbackRequest.getFeedback());
-        patientFeedbackClinicRepo.save(patientFeedbackClinic);
-        return true;
-    }
-
-    @Override
-    public Boolean updateDoctorFeedback(Integer doctorFeedbackId,
-            PatientFeedbackDoctorRequest updateDoctorFeedbackRequest) {
-        Optional<PatientFeedbackDoctor> patientFeedbackDoctorOptional = patientFeedbackDoctorRepo
-                .findById(doctorFeedbackId);
-        if (patientFeedbackDoctorOptional.isEmpty()) {
-            throw new IllegalArgumentException("Doctor feedback does not exist...");
-        }
-        PatientFeedbackDoctor patientFeedbackDoctor = patientFeedbackDoctorOptional.get();
-        patientFeedbackDoctor.setRatings(updateDoctorFeedbackRequest.getRatings());
-        patientFeedbackDoctor.setFeedback(updateDoctorFeedbackRequest.getFeedback());
-        patientFeedbackDoctorRepo.save(patientFeedbackDoctor);
-        return true;
-    }
-
-    @Override
-    public Boolean deleteClinicFeedback(Integer clinicFeedbackId) {
-        Optional<PatientFeedbackClinic> patientFeedbackClinicOptional = patientFeedbackClinicRepo
-                .findById(clinicFeedbackId);
-        if (patientFeedbackClinicOptional.isEmpty()) {
-            throw new IllegalArgumentException("Clinic feedback does not exist...");
-        }
-        PatientFeedbackClinic patientFeedbackClinic = patientFeedbackClinicOptional.get();
-        patientFeedbackClinicRepo.delete(patientFeedbackClinic);
-        return true;
-    }
-
-    @Override
-    public Boolean deleteDoctorFeedback(Integer doctorFeedbackId) {
-        Optional<PatientFeedbackDoctor> patientFeedbackDoctorOptional = patientFeedbackDoctorRepo
-                .findById(doctorFeedbackId);
-        if (patientFeedbackDoctorOptional.isEmpty()) {
-            throw new IllegalArgumentException("Doctor feedback does not exist...");
-        }
-        PatientFeedbackDoctor patientFeedbackDoctor = patientFeedbackDoctorOptional.get();
-        patientFeedbackDoctorRepo.delete(patientFeedbackDoctor);
-        return true;
     }
 
     @Override

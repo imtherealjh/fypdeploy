@@ -31,7 +31,7 @@ export default function Step2({ formData, setFormData }: Props) {
 
   return (
     <>
-      <div>
+      <div className="d-flex flex-column flex-wrap">
         <div className="mb-3">
           <label htmlFor="date-picker" className="form-label">
             Appointment Date:
@@ -47,7 +47,7 @@ export default function Step2({ formData, setFormData }: Props) {
         </div>
         <div>
           <h5>Timeslots:</h5>
-          <div className="d-flex gap-2">
+          <div className="d-flex flex-wrap gap-2">
             {timeslots.length < 1 && (
               <p>There is no available timeslots for booking...</p>
             )}

@@ -2,6 +2,7 @@ package com.uow.FYP_23_S1_11.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -42,13 +43,8 @@ public class StaffController {
     }
 
     @GetMapping("/getAppointmentDetails")
-    public ResponseEntity<List<?>> getAppointmentDetails(@RequestParam @NotNull Integer patientId) {
+    public ResponseEntity<Map<?, ?>> getAppointmentDetails(@RequestParam @NotNull Integer patientId) {
         return ResponseEntity.ok(staffService.getAppointmentDetails(patientId));
-    }
-
-    @GetMapping("/checkVerifyAppointment")
-    public ResponseEntity<List<?>> checkVerifyAppointment(@RequestParam @NotNull Integer patientId) {
-        return ResponseEntity.ok(staffService.checkVerifyAppointment(patientId));
     }
 
     @PreAuthorize("hasAnyAuthority('DOCTOR', 'NURSE')")

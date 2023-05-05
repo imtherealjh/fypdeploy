@@ -2,6 +2,7 @@ package com.uow.FYP_23_S1_11.repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,19 +18,23 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
         public List<Appointment> findAvailableApptByDoctorAndDay(@Param("doctorId") Integer doctorId,
                         @Param("status") EAppointmentStatus status, @Param("apptDate") LocalDate date);
 
-        public List<Appointment> findByApptPatient(Patient apptPatient);
+        @Query("SELECT new map(A.appointmentId as appointmentId, A.apptDate as apptDate, A.apptTime as apptTime, A.apptDoctor.doctorId as doctorId, "
+                        + "A.apptDoctor.name as doctorName, A.apptClinic.clinicName as clinicName, A.status as status, fPC as fPC, fPD as fPD) "
+                        + "FROM Appointment A "
+                        + "JOIN A.apptPatient aP "
+                        + "LEFT JOIN aP.feedbackPatientClinic fPC "
+                        + "LEFT JOIN aP.feedbackPatientDoctor fPD "
+                        + "WHERE A.apptPatient=:patient GROUP BY A.appointmentId")
+        public List<?> findByApptPatient(@Param("patient") Patient apptPatient);
 
-        public List<Appointment> findByStatus(EAppointmentStatus status);
+        @Query("SELECT new map(A.appointmentId as appointmentId, A.apptDate as apptDate, A.apptTime as apptTime, A.apptDoctor.doctorId as doctorId, "
+                        + "A.apptDoctor.name as doctorName, A.apptClinic.clinicName as clinicName, A.status as status, fPC as fPC, fPD as fPD) "
+                        + "FROM Appointment A "
+                        + "JOIN A.apptPatient aP "
+                        + "LEFT JOIN aP.feedbackPatientClinic fPC "
+                        + "LEFT JOIN aP.feedbackPatientDoctor fPD "
+                        + "WHERE A.appointmentId=:appointmentId GROUP BY A.appointmentId")
+        public Map<?, ?> findByApptId(@Param("appointmentId") Integer appointmentId);
 
         public List<Appointment> findByApptDateAndApptDoctor(LocalDate apptDate, Doctor apptDoctor);
-
-        @Query("SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.clinicName, A.diagnostic) "
-                        + "FROM Appointment A WHERE A.apptPatient = :patient AND "
-                        + "(A.apptDate < CURRENT_DATE OR (A.apptDate = CURRENT_DATE AND A.apptTime < CURRENT_TIME))")
-        public List<?> getPastAppointments(@Param("patient") Patient patient);
-
-        @Query("SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.clinicName, A.diagnostic) "
-                        + "FROM Appointment A WHERE A.apptPatient = :patient AND "
-                        + "(A.apptDate > CURRENT_DATE OR (A.apptDate = CURRENT_DATE AND A.apptTime > CURRENT_TIME))")
-        public List<?> getUpcomingAppointments(@Param("patient") Patient patient);
 }
