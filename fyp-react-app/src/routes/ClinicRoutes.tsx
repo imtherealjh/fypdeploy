@@ -40,6 +40,7 @@ export default function ClincRoutes() {
                   },
                   { name: "Feedback", link: "feedback" },
                 ]}
+                bottom={true}
               />
             </DashboardLayout>
           }

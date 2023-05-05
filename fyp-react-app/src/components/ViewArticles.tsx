@@ -77,21 +77,23 @@ export default function Articles() {
           </div>
         ))}
       </div>
-      <nav>
-        <ul style={{ background: "transparent" }} className="pagination">
-          {pagination.map((el: any) => (
-            <li className="page-item">
-              <a
-                className={el === page ? `page-link active` : "page-link"}
-                href="#"
-                onClick={() => setPage(el)}
-              >
-                {el + 1}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      {articles.length < 1 && (
+        <nav>
+          <ul style={{ background: "transparent" }} className="pagination">
+            {pagination.map((el: any) => (
+              <li className="page-item">
+                <a
+                  className={el === page ? `page-link active` : "page-link"}
+                  href="#"
+                  onClick={() => setPage(el)}
+                >
+                  {el + 1}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
     </>
   );
 }

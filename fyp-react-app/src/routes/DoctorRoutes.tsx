@@ -24,6 +24,7 @@ export default function DoctorRoutes() {
                   { name: "Patient List", link: "patients", end: false },
                   { name: "Feed Back", link: "feedbacks" },
                 ]}
+                bottom={true}
               />
             </DashboardLayout>
           }

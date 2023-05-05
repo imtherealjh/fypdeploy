@@ -24,6 +24,7 @@ export default function NurseRoutes() {
                   { name: "Patient List", link: "patients", end: false },
                   { name: "Feedback", link: "feedbacks" },
                 ]}
+                bottom={true}
               />
             </DashboardLayout>
           }

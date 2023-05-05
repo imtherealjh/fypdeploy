@@ -33,6 +33,7 @@ export default function ClerkRoutes() {
                   { name: "Payment", link: "payment" },
                   { name: "Feedbacks", link: "feedbacks" },
                 ]}
+                bottom={true}
               />
             </DashboardLayout>
           }

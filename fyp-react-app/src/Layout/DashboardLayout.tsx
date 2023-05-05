@@ -51,7 +51,7 @@ export default function DashboardLayout({ children }: Props) {
         <div className="divider-wrapper">
           <div className="horizontal-divider"></div>
         </div>
-        {auth.role !== "system_admin" && (
+        {auth.role.toLowerCase() !== "system_admin" && (
           <button
             className="btn btn-warning"
             onClick={() => navigate("profile")}
@@ -83,7 +83,7 @@ export default function DashboardLayout({ children }: Props) {
 
   return (
     <>
-      <NavBar homePagePath="/doctor">
+      <NavBar homePagePath="">
         <Dropdown buttonContent={<CgBell />} menuContent={null} />
         <Dropdown buttonContent={<CgProfile />} menuContent={profileContent} />
       </NavBar>

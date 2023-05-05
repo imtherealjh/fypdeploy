@@ -45,8 +45,8 @@ function Dashboard() {
     <>
       <h1>Dashboard</h1>
       <div className="dashboard-container">
+        <ViewArticles />
         <div className="d-flex flex-wrap gap-2">
-          <ViewArticles />
           <div
             style={{
               background: "#737373",

@@ -35,6 +35,7 @@ export default function PatientRoutes() {
                   { name: "Payments", link: "payment" },
                   { name: "Feedbacks", link: "feedback" },
                 ]}
+                bottom={true}
               />
             </DashboardLayout>
           }

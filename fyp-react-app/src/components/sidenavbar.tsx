@@ -3,10 +3,11 @@ import "../css/sidenavbar.css";
 import { NavigationItems } from "../hooks/types";
 
 export type Props = {
+  bottom: true | false;
   navList: Array<Partial<NavigationItems>>;
 };
 
-export default function SideBar({ navList }: Props) {
+export default function SideBar({ navList, bottom }: Props) {
   return (
     <>
       <div id="side-navbar" className="side-navbar">
@@ -26,27 +27,29 @@ export default function SideBar({ navList }: Props) {
               )}
             </NavLink>
           ))}
-          <div className="bottom">
-            <NavLink key="side-navbar-last-item-1" to="faq" end>
-              {({ isActive }) => (
-                <li className={isActive ? "active" : ""}>
-                  <button style={{ display: "inline-block" }} type="button">
-                    <span>FAQ</span>
-                  </button>
-                </li>
-              )}
-            </NavLink>
+          {bottom && (
+            <div className="bottom">
+              <NavLink key="side-navbar-last-item-1" to="faq" end>
+                {({ isActive }) => (
+                  <li className={isActive ? "active" : ""}>
+                    <button style={{ display: "inline-block" }} type="button">
+                      <span>FAQ</span>
+                    </button>
+                  </li>
+                )}
+              </NavLink>
 
-            <NavLink key="side-navbar-last-item-2" to="contact-us" end>
-              {({ isActive }) => (
-                <li className={isActive ? "active" : ""}>
-                  <button style={{ display: "inline-block" }} type="button">
-                    <span>Contact Us</span>
-                  </button>
-                </li>
-              )}
-            </NavLink>
-          </div>
+              <NavLink key="side-navbar-last-item-2" to="contact-us" end>
+                {({ isActive }) => (
+                  <li className={isActive ? "active" : ""}>
+                    <button style={{ display: "inline-block" }} type="button">
+                      <span>Contact Us</span>
+                    </button>
+                  </li>
+                )}
+              </NavLink>
+            </div>
+          )}
         </ul>
       </div>
     </>
