@@ -1,5 +1,7 @@
 package com.uow.FYP_23_S1_11.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.FrontDesk;
@@ -92,14 +95,34 @@ public class ClerkServiceImpl implements ClerkService {
     }
 
     @Override
-    public Boolean updateQueueNumber(Integer queueId,
+    public Boolean insertQueueNumber(QueueRequest request) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+            mapper.registerModule(new JavaTimeModule());
+            Queue queue = (Queue) mapper.convertValue(request,
+                    Queue.class);
+            queue.setDate(LocalDate.now());
+            LocalTime localTime = request.getTime().toLocalTime();
+            queue.setTime(localTime);
+            queue.setStatus("WAITING_IN_QUEUE");
+            queue.setPriority("WALK_IN_CUSTOMER");
+            queueRepo.save(queue);
+            return true;
+        } catch (Exception e) {
+            System.out.print(e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean updateQueueNumber(Integer queueNumber,
             QueueRequest updateQueueRequest) {
         Optional<Queue> originalQueue = queueRepo
-                .findById(queueId);
+                .findById(queueNumber);
 
         if (originalQueue.isEmpty() == false) {
             Queue queue = originalQueue.get();
-            queue.setQueueNumber(updateQueueRequest.getQueueNumber());
             queue.setStatus(updateQueueRequest.getStatus());
             queueRepo.save(queue);
             return true;
@@ -120,4 +143,5 @@ public class ClerkServiceImpl implements ClerkService {
         queueRepo.delete(queue);
         return true;
     }
+
 }
