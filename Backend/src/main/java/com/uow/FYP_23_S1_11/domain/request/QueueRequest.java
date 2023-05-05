@@ -18,9 +18,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class QueueRequest {
-    @JsonProperty("queueId")
-    private Integer queueId;
-
     @JsonProperty("date")
     // @NotNull(message = "Date field is mandatory")
     private LocalDate date;
@@ -32,10 +29,6 @@ public class QueueRequest {
     @JsonProperty("status")
     @NotBlank(message = "Status field is mandatory")
     private String status;
-
-    @JsonProperty("queueNumber")
-    @NotBlank(message = "Queue Number field is mandatory")
-    private String queueNumber;
 
     @JsonProperty("checkAppointmentId")
     @NotNull(message = "Appointment id field is mandatory")
