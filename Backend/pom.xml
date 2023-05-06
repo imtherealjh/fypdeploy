@@ -16,8 +16,27 @@
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+
+	<!-- Add Spring Cloud GCP Dependency BOM -->
+    <dependencyManagement>
+        <dependencies>
+          <dependency>
+          <groupId>com.google.cloud</groupId>
+          <artifactId>spring-cloud-gcp-dependencies</artifactId>
+          <version>4.1.4</version>
+          <type>pom</type>
+          <scope>import</scope>
+          </dependency>
+      </dependencies>
+    </dependencyManagement>
 	
 	<dependencies>
+		<!--ClouldSQL Starter for MySQL-->
+		<dependency>
+    		<groupId>com.google.cloud</groupId>
+    		<artifactId>spring-cloud-gcp-starter-sql-mysql</artifactId>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -44,11 +63,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
 		<!-- MIMETYPE -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -108,6 +129,9 @@
     		<groupId>org.springframework.boot</groupId>
     		<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
+
+		 
+
 	</dependencies>
 
 	<build>
