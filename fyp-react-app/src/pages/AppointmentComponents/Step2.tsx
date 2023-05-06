@@ -1,5 +1,6 @@
 import { useState, ChangeEvent } from "react";
-import useAxiosPrivate from "../../../../lib/useAxiosPrivate";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
+import useAuth from "../../lib/useAuth";
 
 interface Props {
   formData: any;
@@ -8,13 +9,15 @@ interface Props {
 
 export default function Step2({ formData, setFormData }: Props) {
   const [timeslots, setTimeslots] = useState<any>([]);
+  const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
 
   let isMounted = false;
   const handleDateChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!isMounted) {
       isMounted = true;
-      let response = await axiosPrivate.post("/patient/getDoctorAvailability", {
+      const path = auth.role === "PATIENT" ? "patient" : "staff";
+      let response = await axiosPrivate.post(`/${path}/getDoctorAvailability`, {
         doctorId: formData.doctorId,
         date: event.target.value,
       });

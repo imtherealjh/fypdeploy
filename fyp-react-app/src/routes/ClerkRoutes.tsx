@@ -2,9 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
 import DashboardLayout from "../layout/DashboardLayout";
 import ClerkHome from "../pages/clerk/Home";
-import Appointments from "../pages/clerk/Appointments/Appointments";
-import ViewAllAppointments from "../pages/clerk/Appointments/ViewAllAppointments";
-import UpdateAppointments from "../pages/clerk/Appointments/UpdateAppointments";
+import Appointments from "../pages/nurseAndClerk/Appointments";
 import Queue from "../pages/clerk/Queue";
 import Articles from "../pages/clerk/Articles";
 import Payment from "../pages/clerk/Payment";
@@ -40,10 +38,7 @@ export default function ClerkRoutes() {
         >
           <Route index path="" element={<ClerkHome />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="appointments" element={<Appointments />}>
-            <Route path="view-all" element={<ViewAllAppointments />} />
-            <Route path="update" element={<UpdateAppointments />} />
-          </Route>
+          <Route path="appointments" element={<Appointments />} />
           <Route path="queue" element={<Queue />} />
           <Route path="articles">
             <Route index path="" element={<Articles />} />

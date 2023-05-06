@@ -59,4 +59,5 @@ public class UtilService {
 
         return query.getResultList();
     }
+
 }

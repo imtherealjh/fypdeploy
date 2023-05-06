@@ -13,6 +13,8 @@ public interface StaffService {
 
     public Map<?, ?> getAppointmentDetails(Integer patientId);
 
+    public List<?> getAppointmentByDate(LocalDate date);
+
     public Boolean updateMedicalRecords(PatientMedicalRecordsRequest updateMedicalRecordsRequest);
 
 }

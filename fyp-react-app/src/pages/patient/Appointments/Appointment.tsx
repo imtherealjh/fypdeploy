@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useAxiosPrivate from "../../../lib/useAxiosPrivate";
-import UpdateAppointmentComponent from "./UpdateAppointment";
-import DeleteAppointmentComponent from "./DeleteAppointment";
+import UpdateAppointmentComponent from "../../AppointmentComponents/UpdateAppointment";
+import DeleteAppointmentComponent from "../../AppointmentComponents/DeleteAppointment";
 import FeedbackComponent from "./FeedbackAppointment,";
 
 export default function Appointment() {

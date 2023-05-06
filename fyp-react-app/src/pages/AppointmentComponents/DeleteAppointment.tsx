@@ -1,4 +1,5 @@
-import useAxiosPrivate from "../../../lib/useAxiosPrivate";
+import useAuth from "../../lib/useAuth";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
@@ -7,12 +8,14 @@ interface Props {
 
 export default function DeleteAppointmentComponent({ data }: Props) {
   const navigate = useNavigate();
+  const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
 
   const handleClick = async () => {
     try {
+      const path = auth.role === "PATIENT" ? "patient" : "staff";
       await axiosPrivate.delete(
-        `/patient/deleteAppointment?apptId=${data.appointmentId}`
+        `/${path}/deleteAppointment?apptId=${data.appointmentId}`
       );
 
       alert("Appointment successfully removed...");
