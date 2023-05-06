@@ -24,11 +24,13 @@ import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
+import com.uow.FYP_23_S1_11.service.AppointmentService;
 import com.uow.FYP_23_S1_11.service.PatientService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping(value = "/api/patient", produces = { MediaType.APPLICATION_JSON_VALUE })
@@ -36,6 +38,8 @@ import jakarta.validation.constraints.NotEmpty;
 @PreAuthorize("hasAuthority('PATIENT')")
 @SecurityRequirement(name = "bearerAuth")
 public class PatientController {
+    @Autowired
+    private AppointmentService apptService;
     @Autowired
     private PatientService patientService;
 
@@ -55,37 +59,37 @@ public class PatientController {
     }
 
     @PostMapping("/getDoctorAvailability")
-    public ResponseEntity<List<Appointment>> getAvailableAppointment(@RequestBody DoctorAvailableRequest req) {
+    public ResponseEntity<List<Appointment>> getAvailableAppointment(@RequestBody @Valid DoctorAvailableRequest req) {
         return ResponseEntity.ok(patientService.getDoctorAvailableAppointment(req));
     }
 
     @GetMapping("/getAppointmentById")
     public ResponseEntity<Appointment> getAppointmentById(@RequestParam Integer id) {
-        return ResponseEntity.ok(patientService.getAppointmentById(id));
+        return ResponseEntity.ok(apptService.getAppointmentById(id));
     }
 
     @Validated(OnCreate.class)
     @PostMapping("/bookAppointment")
     public ResponseEntity<Boolean> bookAppointment(@Valid @RequestBody BookUpdateAppointmentRequest bookApptReq) {
-        return ResponseEntity.ok(patientService.bookAvailableAppointment(bookApptReq));
+        return ResponseEntity.ok(apptService.bookAvailableAppointment(bookApptReq));
     }
 
     @Validated(OnUpdate.class)
     @PutMapping("/updateAppointment")
     public ResponseEntity<Boolean> updateAppointment(
             @Valid @RequestBody BookUpdateAppointmentRequest updateApptReq) {
-        return ResponseEntity.ok(patientService.updateAppointment(updateApptReq));
+        return ResponseEntity.ok(apptService.updateAppointment(updateApptReq));
+    }
+
+    @DeleteMapping("/deleteAppointment")
+    public ResponseEntity<Boolean> deleteAppointment(@RequestParam @NotNull Integer apptId) {
+        return ResponseEntity.ok(apptService.deleteAppointment(apptId));
     }
 
     @Validated(OnUpdate.class)
     @PutMapping("/updateProfile")
     public ResponseEntity<?> updateProfile(@Valid @RequestBody RegisterPatientRequest patientReq) {
         return ResponseEntity.ok(patientService.updateProfile(patientReq));
-    }
-
-    @DeleteMapping("/deleteAppointment")
-    public ResponseEntity<Boolean> deleteAppointment(@RequestParam Integer apptId) {
-        return ResponseEntity.ok(patientService.deleteAppointment(apptId));
     }
 
     @PostMapping("/insertFeedback")

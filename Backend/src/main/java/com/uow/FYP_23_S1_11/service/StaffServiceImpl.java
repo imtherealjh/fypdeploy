@@ -135,7 +135,8 @@ public class StaffServiceImpl implements StaffService {
         @Override
         public Map<?, ?> getAppointmentDetails(Integer patientId) {
                 TypedQuery<AppointmentResponse> query = entityManager.createQuery(
-                                "SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.clinicName, A.diagnostic) "
+                                "SELECT new com.uow.FYP_23_S1_11.domain.response.AppointmentResponse(A.appointmentId, A.apptDate, A.apptTime, "
+                                                + "A.apptDoctor.doctorId, A.apptDoctor.name, A.apptClinic.clinicName, A.diagnostic) "
                                                 + "FROM Appointment A "
                                                 + "WHERE A.apptPatient.patientId = :patientId "
                                                 + "AND A.apptDate < CURRENT_DATE "
@@ -152,6 +153,52 @@ public class StaffServiceImpl implements StaffService {
                 response.put("todayAppt", currentAppt);
 
                 return response;
+        }
+
+        @Override
+        public List<?> getAppointmentByDate(LocalDate date) {
+                UserAccount user = Constants.getAuthenticatedUser();
+
+                Clinic clinic = Optional.ofNullable(user.getClinic())
+                                .orElseGet(() -> Optional.ofNullable(user.getDoctor())
+                                                .map(elem -> elem.getDoctorClinic())
+                                                .orElseGet(() -> Optional.ofNullable(user.getNurse())
+                                                                .map(elem -> elem.getNurseClinic())
+                                                                .orElseGet(() -> Optional
+                                                                                .ofNullable(user.getFrontDesk())
+                                                                                .map(elem -> elem.getFrontDeskClinic())
+                                                                                .orElse(null))));
+
+                if (clinic == null) {
+                        throw new IllegalArgumentException("Clinic not able to be found");
+                }
+
+                Session session = entityManager.unwrap(Session.class);
+
+                Clinic eagerClinic = session.get(Clinic.class, clinic.getClinicId());
+                Hibernate.initialize(eagerClinic.getClinicAccount());
+
+                session.close();
+
+                UserAccount userAccount = eagerClinic.getClinicAccount();
+                if (!userAccount.getIsEnabled()) {
+                        throw new IllegalArgumentException("Clinic not able to be found");
+                }
+
+                TypedQuery<AppointmentResponse> query = entityManager.createQuery(
+                                "SELECT new map(A.appointmentId as appointmentId, A.apptDate as apptDate, A.apptTime as apptTime, A.apptDoctor.doctorId as doctorId, "
+                                                + "A.apptDoctor.name as doctorName, A.apptPatient.patientId as patientId, "
+                                                + "A.apptPatient.name as patientName, A.status as status) "
+                                                + "FROM Appointment A "
+                                                + "WHERE A.apptPatient IS NOT NULL "
+                                                + "AND A.apptClinic = :clinic "
+                                                + "AND A.apptDate = :date "
+                                                + "ORDER BY A.apptDate DESC, A.apptTime DESC ",
+                                AppointmentResponse.class);
+                query.setParameter("clinic", clinic);
+                query.setParameter("date", date);
+
+                return query.getResultList();
         }
 
         @Override
@@ -188,7 +235,6 @@ public class StaffServiceImpl implements StaffService {
                         origAppt.setStatus(EAppointmentStatus.COMPLETED);
 
                         apptRepo.save(origAppt);
-
                         return true;
                 } catch (IllegalArgumentException e) {
                         throw e;

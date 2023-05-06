@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import Step2 from "./AppointmentStep/Step2";
-import useAxiosPrivate from "../../../lib/useAxiosPrivate";
+import Step2 from "./Step2";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../lib/useAuth";
 
 interface Props {
   data: any;
@@ -9,6 +10,7 @@ interface Props {
 
 export default function UpdateAppointmentComponent({ data }: Props) {
   const [formData, setFormData] = useState<any>({});
+  const { auth } = useAuth();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
 
@@ -23,7 +25,10 @@ export default function UpdateAppointmentComponent({ data }: Props) {
 
   const handleClick = async () => {
     try {
-      await axiosPrivate.put("/patient/updateAppointment", {
+      const path = auth.role === "PATIENT" ? "patient" : "staff";
+
+      await axiosPrivate.put(`/${path}/updateAppointment`, {
+        patientId: data?.patientId ?? null,
         originalApptId: data.appointmentId,
         apptId: formData.apptId,
       });

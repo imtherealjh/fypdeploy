@@ -2,13 +2,13 @@ import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
 import DashboardLayout from "../layout/DashboardLayout";
 import NurseHome from "../pages/nurse/Home";
-import Appointment from "../pages/nurse/Appointment";
 import Feedback from "../pages/nurse/Feedback";
 import Profile from "../pages/nurse/Profile";
 import PatientList from "../pages/nurseAndDoctor/PatientList";
 
 import NotFound from "../pages/NotFound";
 import ViewMedicalDetails from "../pages/nurseAndDoctor/ViewMedicalDetails";
+import Appointments from "../pages/nurseAndClerk/Appointments";
 
 export default function NurseRoutes() {
   return (
@@ -31,7 +31,7 @@ export default function NurseRoutes() {
         >
           <Route index path="" element={<NurseHome />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="appointments" element={<Appointment />} />
+          <Route path="appointments" element={<Appointments />} />
           <Route path="patients">
             <Route index path="" element={<PatientList />} />
             <Route path="details" element={<ViewMedicalDetails />} />

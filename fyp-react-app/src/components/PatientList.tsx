@@ -5,7 +5,6 @@ interface PatientListProps {
 }
 
 function PatientList({ apptDetails }: PatientListProps) {
-  console.log(apptDetails);
   return (
     <div className="patients-list">
       <h3>List of patients for selected date:</h3>

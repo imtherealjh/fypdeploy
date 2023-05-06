@@ -1,11 +1,11 @@
 package com.uow.FYP_23_S1_11.domain.request;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DoctorAvailableRequest {
-    @NotEmpty
+    @NotNull
     private Integer doctorId;
 
     @NotEmpty
@@ -24,9 +24,8 @@ public class DoctorAvailableRequest {
 
     @AssertTrue
     private boolean isValid() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
         try {
-            LocalDate.parse(date, formatter);
+            LocalDate.parse(date);
             return true;
         } catch (DateTimeParseException e) {
             return false;

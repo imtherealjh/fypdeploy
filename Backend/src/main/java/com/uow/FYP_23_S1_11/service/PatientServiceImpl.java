@@ -20,7 +20,6 @@ import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
 import com.uow.FYP_23_S1_11.domain.Queue;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
-import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
@@ -43,6 +42,9 @@ import jakarta.transaction.Transactional;
 public class PatientServiceImpl implements PatientService {
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Autowired
+    private AppointmentService apptService;
 
     @Autowired
     private ClinicRepository clinicRepo;
@@ -82,85 +84,6 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Appointment getAppointmentById(Integer apptId) {
-        try {
-            Optional<Appointment> apptOptional = apptRepo.findById(apptId);
-            if (apptOptional.isEmpty()) {
-                throw new IllegalArgumentException("Appointment does not exist");
-            }
-            return apptOptional.get();
-        } catch (Exception e) {
-            System.out.println(e);
-            return null;
-        }
-    }
-
-    @Override
-    public Boolean bookAvailableAppointment(BookUpdateAppointmentRequest bookApptReq) {
-        try {
-            UserAccount currentUser = Constants.getAuthenticatedUser();
-            Patient patient = currentUser.getPatient();
-            Appointment appt = getAppointmentById(bookApptReq.getApptId());
-            // Ensure that the appointment is available and ensure that the
-            // appointment date is not after today
-            // ensure that the doctor is not suspended
-            if (appt == null ||
-                    !appt.getApptDoctor().getDoctorAccount().getIsEnabled() ||
-                    !appt.getApptClinic().getClinicAccount().getIsEnabled() ||
-                    appt.getStatus() != EAppointmentStatus.AVAILABLE ||
-                    appt.getApptDate().isBefore(LocalDate.now())) {
-                throw new IllegalArgumentException("Appointment cannot be booked...");
-            }
-
-            appt.setStatus(EAppointmentStatus.BOOKED);
-            appt.setApptPatient(patient);
-            apptRepo.save(appt);
-            return true;
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-    }
-
-    private void removeAppointment(Appointment appointment) {
-        appointment.setStatus(EAppointmentStatus.AVAILABLE);
-        appointment.setApptPatient(null);
-        apptRepo.save(appointment);
-    }
-
-    @Override
-    public Boolean updateAppointment(BookUpdateAppointmentRequest updateApptReq) {
-        try {
-            UserAccount currentUser = Constants.getAuthenticatedUser();
-            Patient patient = currentUser.getPatient();
-
-            Appointment origAppt = getAppointmentById(updateApptReq.getOriginalApptId());
-
-            // validate if is the actual person updating the appointment
-            // and ensure that older appointments cannot be updated
-            if (origAppt == null ||
-                    patient.getPatientId() != origAppt.getApptPatient().getPatientId() ||
-                    !origAppt.getApptDoctor().getDoctorAccount().getIsEnabled() ||
-                    !origAppt.getApptClinic().getClinicAccount().getIsEnabled() ||
-                    origAppt.getStatus() != EAppointmentStatus.BOOKED ||
-                    origAppt.getApptDate().isBefore(LocalDate.now())) {
-                throw new IllegalArgumentException("Appointment cannot be updated...");
-            }
-
-            if (origAppt.getAppointmentId() == updateApptReq.getApptId()) {
-                apptRepo.save(origAppt);
-            } else {
-                bookAvailableAppointment(updateApptReq);
-                removeAppointment(origAppt);
-            }
-
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    @Override
     public Boolean updateProfile(RegisterPatientRequest updateProfileReq) {
         try {
             UserAccount currentUser = Constants.getAuthenticatedUser();
@@ -181,28 +104,9 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Boolean deleteAppointment(Integer apptId) {
-        try {
-            UserAccount currentUser = Constants.getAuthenticatedUser();
-            Patient patient = currentUser.getPatient();
-
-            Appointment origAppt = getAppointmentById(apptId);
-            if (origAppt == null || patient.getPatientId() != origAppt.getApptPatient().getPatientId()) {
-                throw new IllegalArgumentException("Appointment cannot be removed...");
-            }
-
-            removeAppointment(origAppt);
-            return true;
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-    }
-
-    @Override
     public Boolean insertClinicAndDoctorFeedback(ClinicAndDoctorFeedbackRequest request) {
         try {
-            Appointment origAppt = getAppointmentById(request.getAppointmentId());
+            Appointment origAppt = apptService.getAppointmentById(request.getAppointmentId());
             Map<?, ?> params = apptRepo.findByApptId(request.getAppointmentId());
             if (origAppt.getStatus() != EAppointmentStatus.COMPLETED) {
                 throw new IllegalArgumentException("Appointment feedback cannot be inserted/updated");

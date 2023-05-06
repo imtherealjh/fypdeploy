@@ -2,6 +2,7 @@ package com.uow.FYP_23_S1_11.domain.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.uow.FYP_23_S1_11.constraints.OnCreate;
+import com.uow.FYP_23_S1_11.constraints.OnStaffUpdate;
 import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 
 import jakarta.validation.constraints.NotNull;
@@ -16,11 +17,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BookUpdateAppointmentRequest {
+    @JsonProperty("patientId")
+    @Null(groups = { OnCreate.class, OnUpdate.class })
+    @NotNull(groups = OnStaffUpdate.class)
+    private Integer patientId;
+
     @JsonProperty("originalApptId")
     @Null(groups = OnCreate.class)
-    @NotNull(groups = OnUpdate.class)
+    @NotNull(groups = { OnUpdate.class, OnStaffUpdate.class })
     private Integer originalApptId;
+
     @JsonProperty("apptId")
-    @NotNull(groups = { OnCreate.class, OnUpdate.class })
+    @NotNull(groups = { OnCreate.class, OnUpdate.class, OnStaffUpdate.class  })
     private Integer apptId;
 }
