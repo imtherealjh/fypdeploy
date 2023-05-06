@@ -43,8 +43,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Boolean bookAvailableAppointment(BookUpdateAppointmentRequest bookApptReq) {
         try {
             Appointment appt = getAppointmentById(bookApptReq.getApptId());
-
-            if (appt == null || !verifiedAppointment(appt, EAppointmentStatus.AVAILABLE)) {
+            if (appt == null) {
                 throw new IllegalArgumentException("Appointment cannot be booked...");
             }
 
@@ -53,9 +52,15 @@ public class AppointmentServiceImpl implements AppointmentService {
                     .orElseGet(() -> patientRepo.findById(bookApptReq.getPatientId()).orElse(null));
 
             appt.setApptPatient(patient);
+            if (!verifiedAppointment(appt, EAppointmentStatus.AVAILABLE)) {
+                throw new IllegalArgumentException("Appointment cannot be booked...");
+            }
+
             appt.setStatus(EAppointmentStatus.BOOKED);
             apptRepo.save(appt);
             return true;
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             System.out.println(e);
             return false;

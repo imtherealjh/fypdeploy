@@ -13,8 +13,11 @@ public interface ClerkService {
 
     public Boolean updateEduMaterial(Integer materialId, EducationalMaterialRequest request);
 
-    public Boolean updateQueueNumber(Integer queueId,
+    public Boolean updateQueueNumber(Integer queueNumber,
             QueueRequest updateQueueRequest);
 
     public Boolean deleteQueueNumber(Integer queueId);
+
+    public Boolean insertQueueNumber(QueueRequest request);
+
 }

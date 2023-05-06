@@ -23,7 +23,6 @@ import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.domain.request.PatientMedicalRecordsRequest;
-import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.service.AppointmentService;
 import com.uow.FYP_23_S1_11.service.PatientService;
 import com.uow.FYP_23_S1_11.service.StaffService;
@@ -70,12 +69,14 @@ public class StaffController {
         return ResponseEntity.ok(patientService.getDoctorAvailableAppointment(req));
     }
 
+    @PreAuthorize("hasAnyAuthority('FRONT_DESK', 'NURSE')")
     @Validated(OnStaffUpdate.class)
     @PutMapping("/updateAppointment")
     public ResponseEntity<?> updateAppointment(@RequestBody @Valid BookUpdateAppointmentRequest apptReq) {
         return ResponseEntity.ok(apptService.updateAppointment(apptReq));
     }
 
+    @PreAuthorize("hasAnyAuthority('FRONT_DESK', 'NURSE')")
     @DeleteMapping("/deleteAppointment")
     public ResponseEntity<?> deleteAppointment(@RequestParam @NotNull Integer apptId) {
         return ResponseEntity.ok(apptService.deleteAppointment(apptId));

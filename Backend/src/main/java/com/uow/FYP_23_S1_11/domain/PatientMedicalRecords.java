@@ -34,6 +34,8 @@ public class PatientMedicalRecords implements Serializable {
     private String drugAllergies = "NIL";
     private String bloodType = "NIL";
     private String medicalConditions = "NIL";
+    private String emergencyContact = "NIL";
+    private Integer emergencyContactNumber = 0;
 
     @JsonIgnore
     @OneToOne

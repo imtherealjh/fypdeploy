@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -19,6 +20,7 @@ import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
 import com.uow.FYP_23_S1_11.domain.Queue;
+import com.uow.FYP_23_S1_11.domain.SystemFeedback;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
@@ -26,12 +28,15 @@ import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
 import com.uow.FYP_23_S1_11.repository.QueueRepository;
+import com.uow.FYP_23_S1_11.repository.SystemFeedbackRepository;
+import com.uow.FYP_23_S1_11.repository.UserAccountRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackDoctorRepository;
 import com.uow.FYP_23_S1_11.repository.PatientRepository;
 
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
+import com.uow.FYP_23_S1_11.domain.request.SystemFeedbackRequest;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -52,6 +57,10 @@ public class PatientServiceImpl implements PatientService {
     private PatientRepository patientRepo;
     @Autowired
     private AppointmentRepository apptRepo;
+    @Autowired
+    private UserAccountRepository userAccRepo;
+    @Autowired
+    private SystemFeedbackRepository systemFeedbackRepo;
 
     @Autowired
     private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
@@ -152,12 +161,11 @@ public class PatientServiceImpl implements PatientService {
                 Integer patientId = request.getPatientId();
                 List<Patient> patient = patientRepo
                         .findByPatientIdAndDate(patientId, LocalDate.now());
-                System.out.println(LocalDate.now());
-                if (patient.isEmpty()) {
+                Optional<Appointment> apptOptional = apptRepo.findById(apptId);
+                Appointment appointment = apptOptional.get();
+                if (patient.isEmpty() || LocalDate.now().equals(appointment.getApptDate()) == false) {
                     throw new IllegalArgumentException("Your appointment is not today...");
                 } else {
-                    Optional<Appointment> apptOptional = apptRepo.findById(apptId);
-                    Appointment appointment = apptOptional.get();
                     ObjectMapper mapper = new ObjectMapper();
                     mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
                     mapper.registerModule(new JavaTimeModule());
@@ -165,8 +173,8 @@ public class PatientServiceImpl implements PatientService {
                             Queue.class);
                     queue.setDate(LocalDate.now());
                     queue.setTime(appointment.getApptTime());
-                    queue.setStatus("Waiting");
-                    queue.setPriority("Appointment Made");
+                    queue.setStatus("WAITING_IN_QUEUE");
+                    queue.setPriority("APPOINTMENT_MADE");
                     queueRepo.save(queue);
                     return true;
                 }
@@ -178,8 +186,8 @@ public class PatientServiceImpl implements PatientService {
                         Queue.class);
                 queue.setDate(LocalDate.now());
                 queue.setTime(LocalTime.now().plusMinutes(45));
-                queue.setStatus("Waiting");
-                queue.setPriority("Walk-in customer");
+                queue.setStatus("WAITING_IN_QUEUE");
+                queue.setPriority("WALK_IN_CUSTOMER");
                 queueRepo.save(queue);
                 return true;
             } else {
@@ -193,14 +201,64 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Queue> getByQueueId(Integer queueId) {
+    public List<Queue> getByQueueNumber(Integer queueNumber) {
         List<Queue> queue = queueRepo
-                .findByQueueId(queueId);
+                .findCountByQueueNumber(queueNumber);
         if (queue.isEmpty() == false) {
             return queue;
         } else {
             throw new IllegalArgumentException("Queue number not found...");
         }
+    }
+
+    @Override
+    public Boolean insertSystemFeedback(SystemFeedbackRequest request) {
+        try {
+
+            SystemFeedback systemFeedback = new SystemFeedback();
+
+            var user = userAccRepo.findByUsername(request.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
+            if (user != null) {
+                systemFeedback.setAccountId(user.getAccountId());
+                systemFeedback.setStatus("UNSOLVED");
+                systemFeedback.setAccountType(user.getRole());
+                systemFeedback.setDate(LocalDate.now());
+                systemFeedback.setFeedback(request.getFeedback());
+                systemFeedbackRepo.save(systemFeedback);
+                return true;
+            }
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean updateSystemFeedback(Integer systemFeedbackId,
+            SystemFeedbackRequest request) {
+        Optional<SystemFeedback> systemFeedbackOptional = systemFeedbackRepo
+                .findById(systemFeedbackId);
+        if (systemFeedbackOptional.isEmpty()) {
+            throw new IllegalArgumentException("System feedback does not exist...");
+        }
+        SystemFeedback systemFeedback = systemFeedbackOptional.get();
+        systemFeedback.setFeedback(request.getFeedback());
+        systemFeedbackRepo.save(systemFeedback);
+        return true;
+    }
+
+    @Override
+    public Boolean deleteSystemFeedback(Integer systemFeedbackId) {
+        Optional<SystemFeedback> systemFeedbackOptional = systemFeedbackRepo
+                .findById(systemFeedbackId);
+        if (systemFeedbackOptional.isEmpty()) {
+            throw new IllegalArgumentException("System feedback does not exist...");
+        }
+        SystemFeedback systemFeedback = systemFeedbackOptional.get();
+        systemFeedbackRepo.delete(systemFeedback);
+        return true;
     }
 
 }

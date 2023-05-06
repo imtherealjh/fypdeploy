@@ -24,6 +24,7 @@ import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
+import com.uow.FYP_23_S1_11.domain.request.SystemFeedbackRequest;
 import com.uow.FYP_23_S1_11.service.AppointmentService;
 import com.uow.FYP_23_S1_11.service.PatientService;
 
@@ -104,8 +105,25 @@ public class PatientController {
         return ResponseEntity.ok(patientService.insertQueueNumber(request));
     }
 
-    @GetMapping("/getByQueueId")
-    public ResponseEntity<?> getByQueueId(@RequestParam Integer queueId) {
-        return ResponseEntity.ok(patientService.getByQueueId(queueId));
+    @GetMapping("/getByQueueNumber")
+    public ResponseEntity<?> getByQueueNumber(@RequestParam Integer queueNumber) {
+        return ResponseEntity.ok(patientService.getByQueueNumber(queueNumber));
+    }
+
+    @PostMapping("/insertSystemFeedback")
+    public ResponseEntity<Boolean> insertQueueNumber(
+            @Valid @RequestBody SystemFeedbackRequest request) {
+        return ResponseEntity.ok(patientService.insertSystemFeedback(request));
+    }
+
+    @PostMapping("/updateSystemFeedback")
+    public ResponseEntity<Boolean> updateSystemFeedback(@RequestParam Integer systemFeedbackId,
+            @Valid @RequestBody SystemFeedbackRequest request) {
+        return ResponseEntity.ok(patientService.updateSystemFeedback(systemFeedbackId, request));
+    }
+
+    @DeleteMapping("/deleteSystemFeedback")
+    public ResponseEntity<Boolean> deleteSystemFeedback(@RequestParam Integer systemFeedbackId) {
+        return ResponseEntity.ok(patientService.deleteSystemFeedback(systemFeedbackId));
     }
 }
