@@ -202,6 +202,17 @@ public class StaffServiceImpl implements StaffService {
         }
 
         @Override
+        public PatientMedicalRecords getByMedicalRecordsId(Integer medicalRecordId) {
+                Optional<PatientMedicalRecords> patientMedicalRecords = patientMedicalRecordsRepo
+                                .findById(medicalRecordId);
+                if (patientMedicalRecords.isEmpty()) {
+                        throw new IllegalArgumentException("Medical records not found...");
+
+                }
+                return patientMedicalRecords.get();
+        }
+
+        @Override
         public Boolean updateMedicalRecords(PatientMedicalRecordsRequest updateMedicalRecordsRequest) {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);

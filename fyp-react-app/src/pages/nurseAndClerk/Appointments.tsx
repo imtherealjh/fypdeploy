@@ -42,7 +42,7 @@ export default function Appointments() {
 
   return (
     <>
-      <h1>Dashboard</h1>
+      <h1>Appointments</h1>
       <div className="dashboard-container">
         <div className="d-flex flex-column justify-content-end gap-2">
           <DatePicker

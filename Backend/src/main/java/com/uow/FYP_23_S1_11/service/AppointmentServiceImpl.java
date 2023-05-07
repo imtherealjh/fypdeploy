@@ -1,6 +1,7 @@
 package com.uow.FYP_23_S1_11.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
+import com.uow.FYP_23_S1_11.domain.request.CalendarRequest;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.repository.PatientRepository;
@@ -23,6 +25,8 @@ import jakarta.transaction.Transactional;
 public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private PatientRepository patientRepo;
+    @Autowired
+    private EmailService emailService;
     @Autowired
     private AppointmentRepository apptRepo;
 
@@ -58,6 +62,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 
             appt.setStatus(EAppointmentStatus.BOOKED);
             apptRepo.save(appt);
+
+            Clinic clinic = appt.getApptClinic();
+            emailService.sendCalendarInvite(new CalendarRequest(clinic.getEmail(),
+                    clinic.getClinicName(), patient.getEmail(), "Appointment Calendar Invite",
+                    "**This is an auto-generated email. Please do not reply directly to this email.**",
+                    LocalDateTime.of(appt.getApptDate(), appt.getApptTime()), LocalDateTime.of(appt.getApptDate(),
+                            appt.getApptTime().plusHours(clinic.getApptDuration().getHour())
+                                    .plusMinutes(clinic.getApptDuration().getMinute()))));
             return true;
         } catch (IllegalArgumentException e) {
             throw e;

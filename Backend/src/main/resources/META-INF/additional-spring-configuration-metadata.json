@@ -20,13 +20,8 @@
     "description": "A description for 'access.jwtsecret'"
   },
   {
-    "name": "frontend.verify",
+    "name": "CLIENT.URL",
     "type": "java.lang.String",
-    "description": "A description for 'frontend.verify'"
-  },
-  {
-    "name": "frontend.verify",
-    "type": "java.lang.String",
-    "description": "A description for 'frontend.verify'"
+    "description": "A description for 'CLIENT.URL'"
   }
 ]}

@@ -25,6 +25,7 @@ import com.uow.FYP_23_S1_11.service.UserAccountService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 
 //import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,12 +67,8 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public String verifyUser(@RequestParam("code") String code) {
-        if (userAccountService.verify(code)) {
-            return "verify_success";
-        } else {
-            return "verify_fail";
-        }
+    public ResponseEntity<Boolean> verifyUser(@RequestParam("code") @NotEmpty String code) {
+        return ResponseEntity.ok(userAccountService.verify(code));
     }
 
     @PostMapping("/logout")

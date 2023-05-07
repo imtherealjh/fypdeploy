@@ -1,4 +1,5 @@
 import { Route, Routes } from "react-router-dom";
+import { lazy } from "react";
 
 // Layouts
 import LandingPageLayout from "./Layout/LandingPageLayout";
@@ -11,15 +12,16 @@ import RequireAuth from "./lib/RequiredAuth";
 import Home from "./pages/Home";
 import RegisterPatient from "./pages/RegisterPatient";
 import RegisterClinic from "./pages/RegisterClinic";
-import PatientRoutes from "./routes/PatientRoutes";
-import ClinicRoutes from "./routes/ClinicRoutes";
-import DoctorRoutes from "./routes/DoctorRoutes";
 import VerifyEmail from "./pages/VerifyEmail";
-import AdminRoutes from "./routes/AdminRoutes";
-import ClerkRoutes from "./routes/ClerkRoutes";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
-import NurseRoutes from "./routes/NurseRoutes";
+
+const ClinicRoutes = lazy(() => import("./routes/ClinicRoutes"));
+const DoctorRoutes = lazy(() => import("./routes/DoctorRoutes"));
+const AdminRoutes = lazy(() => import("./routes/AdminRoutes"));
+const ClerkRoutes = lazy(() => import("./routes/ClerkRoutes"));
+const PatientRoutes = lazy(() => import("./routes/PatientRoutes"));
+const NurseRoutes = lazy(() => import("./routes/NurseRoutes"));
 
 function App() {
   return (
@@ -30,7 +32,7 @@ function App() {
             <Route index path="/" element={<Home />} />
             <Route path="/registerClinic" element={<RegisterClinic />} />
             <Route path="/registerPatient" element={<RegisterPatient />} />
-            <Route path="/verify" element={<VerifyEmail />} />
+            <Route path="/verify/:code" element={<VerifyEmail />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="*" element={<NotFound />} />
           </Route>
@@ -39,9 +41,9 @@ function App() {
             {/* <Route element={<RequireAuth role={"patient"} />}> */}
             <Route path="/patient/*" element={<PatientRoutes />} />
             {/* </Route> */}
-            {/* <Route element={<RequireAuth role={"clinic_owner"} />}> */}
-            <Route path="/clinic/*" element={<ClinicRoutes />} />
-            {/* </Route> */}
+            <Route element={<RequireAuth role={"clinic_owner"} />}>
+              <Route path="/clinic/*" element={<ClinicRoutes />} />
+            </Route>
             {/* <Route element={<RequireAuth role={"doctor"} />}> */}
             <Route path="/doctor/*" element={<DoctorRoutes />} />
             {/* </Route> */}

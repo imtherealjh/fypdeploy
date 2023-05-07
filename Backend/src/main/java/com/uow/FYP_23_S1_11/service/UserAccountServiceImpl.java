@@ -76,7 +76,7 @@ public class UserAccountServiceImpl implements UserAccountService {
     @Value("${spring.mail.username}")
     private String sender;
 
-    @Value("${frontend.verify}")
+    @Value("${CLIENT.URL}")
     private String frontendUrl;
 
     @Override
@@ -258,6 +258,24 @@ public class UserAccountServiceImpl implements UserAccountService {
         }
     }
 
+    private void sendVerificationEmail(UserAccount user, String email)
+            throws MessagingException, UnsupportedEncodingException {
+
+        String senderName = "GoDoctor";
+        String subject = "Please verify your registration";
+        String content = "Dear [[name]],<br/>"
+                + "Please click the link below to verify your registration:"
+                + "<h3 style='margin: 0'><a href=\"[[URL]]\" target=\"_self\">[[URL]]</a></h3><br/>"
+                + "Thank you,<br/>"
+                + "GoDoctor.";
+
+        String verifyURL = frontendUrl + "verify/" + user.getVerificationCode();
+        content = content.replace("[[URL]]", verifyURL);
+        content = content.replace("[[name]]", user.getUsername());
+
+        emailService.sendEmail(sender, senderName, email, subject, content);
+    }
+
     @Override
     public Boolean registerPatientAccount(RegisterPatientRequest patientReq, HttpServletRequest request) {
         ObjectMapper mapper = new ObjectMapper();
@@ -297,29 +315,11 @@ public class UserAccountServiceImpl implements UserAccountService {
         response.addCookie(cookie);
     }
 
-    private void sendVerificationEmail(UserAccount user, String email)
-            throws MessagingException, UnsupportedEncodingException {
-
-        String senderName = "GoDoctor";
-        String subject = "Please verify your registration";
-        String content = "Dear [[name]],<br/>"
-                + "Please click the link below to verify your registration:"
-                + "<h3 style='margin: 0'><a href=\"[[URL]]\" target=\"_self\">[[URL]]</a></h3><br/>"
-                + "Thank you,<br/>"
-                + "GoDoctor.";
-
-        String verifyURL = frontendUrl + "/verify?code=" + user.getVerificationCode();
-        content = content.replace("[[URL]]", verifyURL);
-        content = content.replace("[[name]]", user.getUsername());
-
-        emailService.sendEmail(sender, senderName, email, subject, content);
-    }
-
     @Override
-    public boolean verify(String verificationCode) {
+    public Boolean verify(String verificationCode) {
         UserAccount user = userAccRepo.findByVerificationCode(verificationCode);
         if (user == null || user.getIsEnabled()) {
-            return false;
+            throw new IllegalArgumentException("No verifcation code to be verified");
         }
 
         user.setVerificationCode(null);

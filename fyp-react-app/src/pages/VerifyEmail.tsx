@@ -1,22 +1,33 @@
-import VerifyEmailSVG from "../assets/mail.svg";
+import { useNavigate, useParams } from "react-router-dom";
+import useAxiosPrivate from "../lib/useAxiosPrivate";
+import { useEffect } from "react";
 
 export default function VerifyEmail() {
-  return (
-    <>
-      <div className="d-flex flex-column justify-content-center align-items-center my-5">
-        <img
-          style={{ width: "20rem" }}
-          src={VerifyEmailSVG}
-          alt="Verify Email..."
-        ></img>
-        <h4 className="mt-3" style={{ textAlign: "center" }}>
-          Please check your email for verification code to verify your email...
-        </h4>
-        <p>
-          Thank you for registering your account with us. A verification email
-          has been sent to the the email sample@gmail.com.
-        </p>
-      </div>
-    </>
-  );
+  const { code } = useParams();
+  const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
+
+  useEffect(() => {
+    let isMounted = true;
+    let controller = new AbortController();
+
+    const verifyCode = async () => {
+      try {
+        await axiosPrivate("/auth/verify?code=" + code);
+        alert("Code has been verified!!");
+      } catch (err) {
+        console.log(err);
+      }
+      navigate("/", { replace: true });
+    };
+
+    verifyCode();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
+
+  return <></>;
 }

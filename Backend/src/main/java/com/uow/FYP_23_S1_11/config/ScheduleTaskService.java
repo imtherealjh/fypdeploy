@@ -32,6 +32,7 @@ public class ScheduleTaskService {
     private DoctorRepository doctorRepository;
     @Autowired
     private EmailService emailService;
+
     @Value("${spring.mail.username}")
     private String sender;
 
