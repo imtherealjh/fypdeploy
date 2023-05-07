@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ChangeEvent, useEffect, useState } from "react";
 import PatientDetails from "../../components/PatientDetails";
 import useAxiosPrivate from "../../lib/useAxiosPrivate";
+import axios from "axios";
 
 export default function ViewMedicalDetails() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -10,6 +11,7 @@ export default function ViewMedicalDetails() {
   //edits
   const [edit, setEdit] = useState(false);
   const [currentAppt, setCurrentAppt] = useState<any>([]);
+  const [patientData, setPatientData] = useState<any>({});
   const [formData, setFormData] = useState<any>({});
 
   const navigate = useNavigate();
@@ -17,31 +19,46 @@ export default function ViewMedicalDetails() {
   const axiosPrivate = useAxiosPrivate();
   const obj = useLocation()?.state;
 
-  const patientData = obj?.patientMedicalRecords;
-  patientData.name = obj.name;
-  patientData.contactNo = obj.contactNo;
-  patientData.sex = obj.gender;
-  patientData.dateOfBirth = obj.dob;
-  patientData.patientId = obj.patientId;
-  patientData.emergencyContact = obj.emergencyContact;
-  patientData.emergencyContactNo = obj.emergencyContactNo;
-
   useEffect(() => {
     let isMounted = true;
     let controller = new AbortController();
 
-    const fetchData = async () => {
+    const fetchData = () => {
       try {
-        let response = await axiosPrivate.get(
-          `/staff/getAppointmentDetails?patientId=${obj.patientId}`
-        );
+        axios
+          .all([
+            axiosPrivate.get(
+              `/staff/getMedicalRecordsById?id=${obj?.patientMedicalRecords.medicalRecordId}`,
+              {
+                signal: controller.signal,
+              }
+            ),
+            axiosPrivate.get(
+              `/staff/getAppointmentDetails?patientId=${obj.patientId}`,
+              {
+                signal: controller.signal,
+              }
+            ),
+          ])
+          .then(
+            axios.spread((medicalRecords, apptDetails) => {
+              const { pastAppt, todayAppt } = apptDetails.data;
+              isMounted && setApptData(pastAppt);
+              isMounted && setCurrentAppt(todayAppt);
 
-        const { pastAppt, todayAppt } = response.data;
+              const displayData = medicalRecords.data;
+              displayData.name = obj.name;
+              displayData.contactNo = obj.contactNo;
+              displayData.sex = obj.gender;
+              displayData.dateOfBirth = obj.dob;
+              displayData.emergencyContact = obj.emergencyContact;
+              displayData.emergencyContactNo = obj.emergencyContactNo;
 
-        isMounted && setApptData(pastAppt);
-        isMounted && setCurrentAppt(todayAppt);
-        isMounted && setFormData(patientData);
-        isMounted && setIsLoaded(true);
+              isMounted && setPatientData(displayData);
+              isMounted && setFormData(displayData);
+              isMounted && setIsLoaded(true);
+            })
+          );
       } catch (err) {
         console.error(err);
       }

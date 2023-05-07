@@ -1,7 +1,6 @@
 package com.uow.FYP_23_S1_11.domain.request;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -18,6 +17,8 @@ import lombok.Setter;
 @Setter
 @Builder
 public class CalendarRequest {
+    private String fromEmail;
+    private String clinicName;
     private String toEmail;
     private String subject;
     private String body;

@@ -31,5 +31,5 @@ public interface UserAccountService {
         public void logout(HttpServletRequest request,
                         HttpServletResponse response, String token);
 
-        public boolean verify(String verificationCode);
+        public Boolean verify(String verificationCode);
 }

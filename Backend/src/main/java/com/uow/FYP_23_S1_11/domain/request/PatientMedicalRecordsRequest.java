@@ -22,14 +22,6 @@ public class PatientMedicalRecordsRequest {
     @JsonProperty("appointmentId")
     private Integer appointmentId;
 
-    @NotNull
-    @JsonProperty("patientId")
-    private Integer patientId;
-
-    @NotNull
-    @JsonProperty("doctorId")
-    private Integer doctorId;
-
     @NotBlank
     @JsonProperty("diagnostic")
     private String diagnostic;
@@ -65,12 +57,4 @@ public class PatientMedicalRecordsRequest {
     @NotBlank
     @JsonProperty("medicalConditions")
     private String medicalConditions;
-
-    @NotBlank
-    @JsonProperty("emergencyContact")
-    private String emergencyContact;
-
-    @NotNull
-    @JsonProperty("emergencyContactNumber")
-    private Integer emergencyContactNumber;
 }

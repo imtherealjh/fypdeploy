@@ -64,6 +64,11 @@ public class StaffController {
         return ResponseEntity.ok(staffService.getAppointmentByDate(date));
     }
 
+    @GetMapping("/getMedicalRecordsById")
+    public ResponseEntity<?> getMedicalRecordsById(@RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(staffService.getByMedicalRecordsId(id));
+    }
+
     @PostMapping("/getDoctorAvailability")
     public ResponseEntity<List<Appointment>> getAvailableAppointment(@RequestBody @Valid DoctorAvailableRequest req) {
         return ResponseEntity.ok(patientService.getDoctorAvailableAppointment(req));
