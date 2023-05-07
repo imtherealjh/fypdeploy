@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../layout/DashboardLayout";
+import DashboardLayout from "../Layout/DashboardLayout";
 import RegisterAccount from "../pages/clinic/RegisterAccount";
 import ManageAccount from "../pages/clinic/ManageAccount";
 import Home from "../pages/clinic/Home";
@@ -10,6 +10,8 @@ import Feedback from "../pages/clinic/Feedback";
 import NotFound from "../pages/NotFound";
 import Profile from "../pages/clinic/Profile";
 import EditAccount from "../pages/clinic/EditAccount";
+import Faq from "../pages/patient/Faq";
+import Contact from "../pages/patient/ContactUs";
 
 export default function ClincRoutes() {
   return (
@@ -58,6 +60,8 @@ export default function ClincRoutes() {
           />
           <Route path="subscription" element={<Subscription />} />
           <Route path="feedback" element={<Feedback />} />
+          <Route path="faq" element={<Faq />} />
+          <Route path="contact-us" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

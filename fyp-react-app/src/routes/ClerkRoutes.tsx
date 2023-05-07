@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../layout/DashboardLayout";
+import DashboardLayout from "../Layout/DashboardLayout";
 import ClerkHome from "../pages/clerk/Home";
 import Appointments from "../pages/nurseAndClerk/Appointments";
 import Queue from "../pages/clerk/Queue";
@@ -13,6 +13,8 @@ import PublishArticles from "../pages/clerk/PublishArticles";
 import ViewSingleArticle from "../components/ViewSingleArticle";
 import PatientListPage from "../pages/clerk/PatientList";
 import ViewPersonalDetails from "../pages/clerk/ViewPersonalDetails";
+import Faq from "../pages/patient/Faq";
+import Contact from "../pages/patient/ContactUs";
 
 export default function ClerkRoutes() {
   return (
@@ -51,6 +53,8 @@ export default function ClerkRoutes() {
           </Route>
           <Route path="payment" element={<Payment />} />
           <Route path="feedbacks" element={<Feedback />} />
+          <Route path="faq" element={<Faq />} />
+          <Route path="contact-us" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

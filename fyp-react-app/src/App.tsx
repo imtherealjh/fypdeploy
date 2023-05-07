@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
 // Layouts
-import LandingPageLayout from "./layout/LandingPageLayout";
+import LandingPageLayout from "./Layout/LandingPageLayout";
 
 // Components
 import PersistLogin from "./lib/PersistLogin";
@@ -39,9 +39,9 @@ function App() {
             {/* <Route element={<RequireAuth role={"patient"} />}> */}
             <Route path="/patient/*" element={<PatientRoutes />} />
             {/* </Route> */}
-            <Route element={<RequireAuth role={"clinic_owner"} />}>
-              <Route path="/clinic/*" element={<ClinicRoutes />} />
-            </Route>
+            {/* <Route element={<RequireAuth role={"clinic_owner"} />}> */}
+            <Route path="/clinic/*" element={<ClinicRoutes />} />
+            {/* </Route> */}
             {/* <Route element={<RequireAuth role={"doctor"} />}> */}
             <Route path="/doctor/*" element={<DoctorRoutes />} />
             {/* </Route> */}
