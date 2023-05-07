@@ -1,0 +1,6 @@
+runtime: java17
+instance_class: F1
+entrypoint: java -Dspring.profiles.active=prod -jar target/FYP_23_S1_11-0.0.1-SNAPSHOT.jar
+
+env_variables:
+  SPRING_PROFILES_ACTIVE: "prod"

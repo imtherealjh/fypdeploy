@@ -29,9 +29,5 @@ export default function VerifyEmail() {
     };
   }, []);
 
-  return (
-    <>
-      <h1>Verify</h1>
-    </>
-  );
+  return <></>;
 }
