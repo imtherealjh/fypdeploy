@@ -11,6 +11,8 @@ import com.uow.FYP_23_S1_11.Constants;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
+import com.uow.FYP_23_S1_11.enums.EQueueStatus;
+import com.uow.FYP_23_S1_11.enums.ERole;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -94,26 +96,26 @@ public class ClerkServiceImpl implements ClerkService {
         }
     }
 
-    @Override
-    public Boolean insertQueueNumber(QueueRequest request) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-            mapper.registerModule(new JavaTimeModule());
-            Queue queue = (Queue) mapper.convertValue(request,
-                    Queue.class);
-            queue.setDate(LocalDate.now());
-            LocalTime localTime = request.getTime().toLocalTime();
-            queue.setTime(localTime);
-            queue.setStatus("WAITING_IN_QUEUE");
-            queue.setPriority("WALK_IN_CUSTOMER");
-            queueRepo.save(queue);
-            return true;
-        } catch (Exception e) {
-            System.out.print(e);
-            return false;
-        }
-    }
+    // @Override
+    // public Boolean insertQueueNumber(QueueRequest request) {
+    // try {
+    // ObjectMapper mapper = new ObjectMapper();
+    // mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    // mapper.registerModule(new JavaTimeModule());
+    // Queue queue = (Queue) mapper.convertValue(request,
+    // Queue.class);
+    // queue.setDate(LocalDate.now());
+    // LocalTime localTime = request.getTime().toLocalTime();
+    // queue.setTime(localTime);
+    // queue.setStatus("WAITING_IN_QUEUE");
+    // queue.setPriority("WALK_IN_CUSTOMER");
+    // queueRepo.save(queue);
+    // return true;
+    // } catch (Exception e) {
+    // System.out.print(e);
+    // return false;
+    // }
+    // }
 
     @Override
     public Boolean updateQueueNumber(Integer queueNumber,
@@ -123,7 +125,8 @@ public class ClerkServiceImpl implements ClerkService {
 
         if (originalQueue.isEmpty() == false) {
             Queue queue = originalQueue.get();
-            queue.setStatus(updateQueueRequest.getStatus());
+            EQueueStatus status = Enum.valueOf(EQueueStatus.class, updateQueueRequest.getStatus());
+            queue.setStatus(status);
             queueRepo.save(queue);
             return true;
         } else {

@@ -18,6 +18,6 @@ public interface ClerkService {
 
     public Boolean deleteQueueNumber(Integer queueId);
 
-    public Boolean insertQueueNumber(QueueRequest request);
+    // public Boolean insertQueueNumber(QueueRequest request);
 
 }

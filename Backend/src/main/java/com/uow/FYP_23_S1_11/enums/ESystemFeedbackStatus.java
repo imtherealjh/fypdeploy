@@ -1,11 +1,11 @@
 package com.uow.FYP_23_S1_11.enums;
 
-public enum EQueuePriority {
-    WALK_IN_CUSTOMER("WALK_IN_CUSTOMER"), APPOINTMENT_MADE("APPOINTMENT_MADE");
+public enum ESystemFeedbackStatus {
+    UNSOLVED("UNSOLVED"), COMPLETED("COMPLETED");
 
     private final String name;
 
-    EQueuePriority(String name) {
+    ESystemFeedbackStatus(String name) {
         this.name = name;
     }
 

@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.uow.FYP_23_S1_11.constraints.ValueOfEnum;
+import com.uow.FYP_23_S1_11.enums.EQueueStatus;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -26,6 +29,7 @@ public class QueueRequest {
     // @NotNull(message = "Time field is mandatory")
     private Time time;
 
+    @ValueOfEnum(enumClass = EQueueStatus.class)
     @JsonProperty("status")
     @NotBlank(message = "Status field is mandatory")
     private String status;
@@ -34,15 +38,7 @@ public class QueueRequest {
     @NotNull(message = "Appointment id field is mandatory")
     private Integer checkAppointmentId;
 
-    @JsonProperty("response")
-    @NotNull(message = "Response field is mandatory")
-    private String response;
-
     @JsonProperty("patientId")
     @NotNull(message = "Patient id field is mandatory")
     private Integer patientId;
-
-    @JsonProperty("priority")
-    @NotNull(message = "Priority field is mandatory")
-    private String priority;
 }

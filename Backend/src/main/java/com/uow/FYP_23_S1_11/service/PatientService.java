@@ -25,7 +25,7 @@ public interface PatientService {
 
         public Boolean insertQueueNumber(QueueRequest request);
 
-        public List<Queue> getByQueueNumber(Integer queueNumber);
+        public Integer getByQueueNumber(Integer queueNumber);
 
         public Boolean insertSystemFeedback(SystemFeedbackRequest request);
 

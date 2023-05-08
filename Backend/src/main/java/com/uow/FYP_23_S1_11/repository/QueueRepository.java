@@ -11,8 +11,8 @@ import com.uow.FYP_23_S1_11.domain.Queue;
 public interface QueueRepository extends JpaRepository<Queue, Integer> {
     List<Queue> findByQueueId(Integer queueId);
 
-    @Query(value = "SELECT count(*) FROM queue q WHERE q.queue_number < ?1", nativeQuery = true)
-    List<Queue> findCountByQueueNumber(Integer queueNumber);
+    @Query(value = "SELECT count(q.queue_number) FROM queue q WHERE q.queue_number < ?1 AND q.status = 'WAITING_IN_QUEUE'", nativeQuery = true)
+    Integer findCountByQueueNumber(Integer queueNumber);
 
     // Optional<Queue> findbyQueueNumber(Integer queueNumber);
 }

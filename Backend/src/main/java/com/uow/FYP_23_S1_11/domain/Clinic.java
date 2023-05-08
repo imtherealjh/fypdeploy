@@ -116,4 +116,8 @@ public class Clinic implements Serializable {
     @OneToMany(mappedBy = "clinicFeedback")
     private List<PatientFeedbackClinic> feedbackClinic;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "systemFeedbackClinic")
+    private List<SystemFeedback> systemFeedback;
+
 }

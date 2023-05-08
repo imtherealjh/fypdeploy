@@ -1,7 +1,10 @@
 package com.uow.FYP_23_S1_11.domain.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.uow.FYP_23_S1_11.constraints.ValueOfEnum;
+import com.uow.FYP_23_S1_11.enums.ESystemFeedbackStatus;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,15 +19,14 @@ public class SystemFeedbackRequest {
     @JsonProperty("systemFeedbackId")
     private Integer systemFeedbackId;
 
-    @JsonProperty("ratings")
-    private Integer ratings;
-
     @JsonProperty("feedback")
     private String feedback;
 
     @JsonProperty("username")
     private String username;
 
+    @NotEmpty
+    @ValueOfEnum(enumClass = ESystemFeedbackStatus.class)
     @JsonProperty("status")
     private String status;
 }

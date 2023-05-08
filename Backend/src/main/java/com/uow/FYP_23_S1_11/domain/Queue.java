@@ -6,8 +6,12 @@ import java.time.LocalTime;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
+import com.uow.FYP_23_S1_11.enums.EQueueStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,8 +39,8 @@ public class Queue {
     private int queueNumber;
     private LocalDate date;
     private LocalTime time;
-    private String status;
-    private String priority;
+    @Enumerated(EnumType.STRING)
+    private EQueueStatus status;
 
     @OneToOne
     @JoinColumn(name = "appointmentId", referencedColumnName = "appointmentId")

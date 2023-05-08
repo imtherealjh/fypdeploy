@@ -57,11 +57,11 @@ public class ClerkController {
         return ResponseEntity.ok(clerkService.updateEduMaterial(id, eduMaterialRequest));
     }
 
-    @PostMapping("/insertQueueNumber")
-    public ResponseEntity<Boolean> insertQueueNumber(
-            @Valid @RequestBody QueueRequest request) {
-        return ResponseEntity.ok(clerkService.insertQueueNumber(request));
-    }
+    // @PostMapping("/insertQueueNumber")
+    // public ResponseEntity<Boolean> insertQueueNumber(
+    // @Valid @RequestBody QueueRequest request) {
+    // return ResponseEntity.ok(clerkService.insertQueueNumber(request));
+    // }
 
     @PostMapping("/updateQueueNumber")
     public ResponseEntity<Boolean> updateQueueNumber(@RequestParam Integer queueId,

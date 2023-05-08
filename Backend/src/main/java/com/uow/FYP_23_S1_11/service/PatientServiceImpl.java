@@ -3,6 +3,7 @@ package com.uow.FYP_23_S1_11.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,8 +15,10 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.stripe.model.issuing.Dispute.Treasury;
 import com.uow.FYP_23_S1_11.Constants;
 import com.uow.FYP_23_S1_11.domain.Appointment;
+import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
@@ -25,6 +28,7 @@ import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
+import com.uow.FYP_23_S1_11.enums.EQueueStatus;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
 import com.uow.FYP_23_S1_11.repository.QueueRepository;
@@ -155,43 +159,25 @@ public class PatientServiceImpl implements PatientService {
     @Override
     public Boolean insertQueueNumber(QueueRequest request) {
         try {
-            String response = request.getResponse();
-            if (response.equalsIgnoreCase("yes")) {
-                Integer apptId = request.getCheckAppointmentId();
-                Integer patientId = request.getPatientId();
-                List<Patient> patient = patientRepo
-                        .findByPatientIdAndDate(patientId, LocalDate.now());
-                Optional<Appointment> apptOptional = apptRepo.findById(apptId);
-                Appointment appointment = apptOptional.get();
-                if (patient.isEmpty() || LocalDate.now().equals(appointment.getApptDate()) == false) {
-                    throw new IllegalArgumentException("Your appointment is not today...");
-                } else {
-                    ObjectMapper mapper = new ObjectMapper();
-                    mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-                    mapper.registerModule(new JavaTimeModule());
-                    Queue queue = (Queue) mapper.convertValue(request,
-                            Queue.class);
-                    queue.setDate(LocalDate.now());
-                    queue.setTime(appointment.getApptTime());
-                    queue.setStatus("WAITING_IN_QUEUE");
-                    queue.setPriority("APPOINTMENT_MADE");
-                    queueRepo.save(queue);
-                    return true;
-                }
-            } else if (response.equalsIgnoreCase("no")) {
+            Integer apptId = request.getCheckAppointmentId();
+            Integer patientId = request.getPatientId();
+            List<Patient> patient = patientRepo
+                    .findByPatientIdAndDate(patientId, LocalDate.now());
+            Optional<Appointment> apptOptional = apptRepo.findById(apptId);
+            Appointment appointment = apptOptional.get();
+            if (patient.isEmpty() || LocalDate.now().equals(appointment.getApptDate()) == false) {
+                throw new IllegalArgumentException("Your appointment is not today...");
+            } else {
                 ObjectMapper mapper = new ObjectMapper();
                 mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
                 mapper.registerModule(new JavaTimeModule());
                 Queue queue = (Queue) mapper.convertValue(request,
                         Queue.class);
                 queue.setDate(LocalDate.now());
-                queue.setTime(LocalTime.now().plusMinutes(45));
-                queue.setStatus("WAITING_IN_QUEUE");
-                queue.setPriority("WALK_IN_CUSTOMER");
+                queue.setTime(appointment.getApptTime());
+                queue.setStatus(EQueueStatus.WAITING_IN_QUEUE);
                 queueRepo.save(queue);
                 return true;
-            } else {
-                throw new IllegalArgumentException("Please select yes or no...");
             }
 
         } catch (Exception e) {
@@ -201,10 +187,10 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public List<Queue> getByQueueNumber(Integer queueNumber) {
-        List<Queue> queue = queueRepo
+    public Integer getByQueueNumber(Integer queueNumber) {
+        Integer queue = queueRepo
                 .findCountByQueueNumber(queueNumber);
-        if (queue.isEmpty() == false) {
+        if (queue != null) {
             return queue;
         } else {
             throw new IllegalArgumentException("Queue number not found...");
@@ -216,15 +202,25 @@ public class PatientServiceImpl implements PatientService {
         try {
 
             SystemFeedback systemFeedback = new SystemFeedback();
-
             var user = userAccRepo.findByUsername(request.getUsername())
                     .orElseThrow(() -> new UsernameNotFoundException("User not found!!"));
+            Clinic clinic = Optional.ofNullable(user.getClinic())
+                    .orElseGet(() -> Optional.ofNullable(user.getDoctor())
+                            .map(elem -> elem.getDoctorClinic())
+                            .orElseGet(() -> Optional.ofNullable(user.getNurse())
+                                    .map(elem -> elem.getNurseClinic())
+                                    .orElseGet(() -> Optional
+                                            .ofNullable(user.getFrontDesk())
+                                            .map(elem -> elem.getFrontDeskClinic())
+                                            .orElse(null))));
             if (user != null) {
                 systemFeedback.setAccountId(user.getAccountId());
                 systemFeedback.setStatus("UNSOLVED");
                 systemFeedback.setAccountType(user.getRole());
                 systemFeedback.setDate(LocalDate.now());
+                systemFeedback.setTime(LocalTime.now());
                 systemFeedback.setFeedback(request.getFeedback());
+                systemFeedback.setSystemFeedbackClinic(clinic);
                 systemFeedbackRepo.save(systemFeedback);
                 return true;
             }
@@ -244,9 +240,18 @@ public class PatientServiceImpl implements PatientService {
             throw new IllegalArgumentException("System feedback does not exist...");
         }
         SystemFeedback systemFeedback = systemFeedbackOptional.get();
-        systemFeedback.setFeedback(request.getFeedback());
-        systemFeedbackRepo.save(systemFeedback);
-        return true;
+        LocalTime feedbackTime = systemFeedback.getTime();
+        if (systemFeedback.getDate().equals(LocalDate.now()) == true) {
+            if (feedbackTime.until(LocalTime.now(), ChronoUnit.HOURS) >= 1) {
+                throw new IllegalArgumentException("System feedback has exceeded an hour...");
+            } else {
+                systemFeedback.setFeedback(request.getFeedback());
+                systemFeedbackRepo.save(systemFeedback);
+                return true;
+            }
+        } else {
+            throw new IllegalArgumentException("System feedback has exceeded an hour...");
+        }
     }
 
     @Override
@@ -257,8 +262,17 @@ public class PatientServiceImpl implements PatientService {
             throw new IllegalArgumentException("System feedback does not exist...");
         }
         SystemFeedback systemFeedback = systemFeedbackOptional.get();
-        systemFeedbackRepo.delete(systemFeedback);
-        return true;
+        LocalTime feedbackTime = systemFeedback.getTime();
+        if (systemFeedback.getDate().equals(LocalDate.now()) == true) {
+            if (feedbackTime.until(LocalTime.now(), ChronoUnit.HOURS) >= 1) {
+                throw new IllegalArgumentException("System feedback has exceeded an hour...");
+            } else {
+                systemFeedbackRepo.delete(systemFeedback);
+                return true;
+            }
+        } else {
+            throw new IllegalArgumentException("System feedback has exceeded an hour...");
+        }
     }
 
 }
