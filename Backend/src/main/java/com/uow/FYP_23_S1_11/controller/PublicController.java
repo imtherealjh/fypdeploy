@@ -20,7 +20,10 @@ import com.stripe.model.Token;
 import com.stripe.param.AccountCreateParams;
 import com.stripe.param.AccountLinkCreateParams;
 import com.stripe.param.AccountCreateParams.BusinessProfile;
+import com.stripe.param.AccountCreateParams.BusinessType;
 import com.stripe.param.AccountCreateParams.Capabilities;
+import com.stripe.param.AccountCreateParams.Individual;
+import com.stripe.param.AccountCreateParams.Company.Address;
 import com.stripe.param.AccountLinkCreateParams.Collect;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.service.SpecialtyService;
@@ -52,61 +55,36 @@ public class PublicController {
 
                 Token token = Token.create(cardDetails);
 
-                Map<String, Object> individual = new HashMap<>();
-                individual.put("first_name", "Jane");
-                individual.put("last_name", "Doe");
-
-                Map<String, Object> dob = new HashMap<>();
-                dob.put("day", Integer.valueOf(1).longValue());
-                dob.put("month", Integer.valueOf(1).longValue());
-                dob.put("year", Integer.valueOf(1901).longValue());
-                individual.put("dob", dob);
-
-                individual.put("nationality", "SG");
-                individual.put("id_number", "00000000");
-                individual.put("phone", "+6500000000");
-
-                Map<String, Object> addressDetails = new HashMap<>();
-                addressDetails.put("line1", "abcdef");
-                addressDetails.put("postal_code", "444444");
-
-                individual.put("address", addressDetails);
-                individual.put("email", "email@example.com");
-
-                String[] full_name_alias = new String[] { "Jane Doe" };
-                individual.put("full_name_aliases", full_name_alias);
-
-                Map<String, Object> accountDetails = new HashMap<>();
-                accountDetails.put("business_type", "individual");
-                accountDetails.put("individual", individual);
-                accountDetails.put("tos_shown_and_accepted", true);
-
-                Map<String, Object> accountParam = new HashMap<>();
-                accountParam.put("account", accountDetails);
-
-                Token accToken = Token.create(accountParam);
-
                 AccountCreateParams params = AccountCreateParams.builder()
-                                .setType(AccountCreateParams.Type.CUSTOM)
-                                .setCapabilities(Capabilities
-                                                .builder()
-                                                .setCardPayments(Capabilities.CardPayments
-                                                                .builder()
-                                                                .setRequested(true)
-                                                                .build())
-                                                .setTransfers(Capabilities.Transfers
-                                                                .builder()
-                                                                .setRequested(true)
-                                                                .build())
-                                                .build())
+                                .setType(AccountCreateParams.Type.EXPRESS)
                                 .setCountry("SG")
+                                .setBusinessType(BusinessType.INDIVIDUAL)
                                 .setBusinessProfile(BusinessProfile
                                                 .builder()
                                                 .setMcc("8062")
                                                 .setProductDescription("Help to check on patients")
                                                 .build())
+                                .setIndividual(Individual
+                                                .builder()
+                                                .setFirstName(null)
+                                                .setLastName(null)
+                                                .setEmail(null)
+                                                .setPhone(null)
+                                                .setDob(Individual.Dob
+                                                                .builder()
+                                                                .setDay(Integer.valueOf(1).longValue())
+                                                                .setMonth(Integer.valueOf(1).longValue())
+                                                                .setYear(Integer.valueOf(1901).longValue())
+                                                                .build())
+                                                .setAddress(Individual.Address
+                                                                .builder()
+                                                                .setLine1(null)
+                                                                .setLine2(null)
+                                                                .setPostalCode(null)
+                                                                .build())
+                                                .setIdNumber("00000000")
+                                                .build())
                                 .setExternalAccount(token.getId())
-                                .setAccountToken(accToken.getId())
                                 .build();
 
                 Account account = Account.create(params);

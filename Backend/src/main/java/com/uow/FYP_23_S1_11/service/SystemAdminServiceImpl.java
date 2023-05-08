@@ -35,13 +35,13 @@ public class SystemAdminServiceImpl implements SystemAdminService {
     private SystemFeedbackRepository systemFeedbackRepo;
 
     @Override
-    public Object getClinicById(Integer id) {
-        return clinicRepo.findByCustomObject(id);
+    public List<?> getAllClinics() {
+        return clinicRepo.findAll();
     }
 
     @Override
-    public List<?> getAllClinics() {
-        return clinicRepo.findAll();
+    public Object getClinicById(Integer id) {
+        return clinicRepo.findByCustomObject(id);
     }
 
     @Override
@@ -49,7 +49,10 @@ public class SystemAdminServiceImpl implements SystemAdminService {
         try {
             Clinic clinic = findClinicById(clinicId);
             byte[] imageData = clinic.getLicenseProof();
-            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageData);
+            return ResponseEntity
+                    .ok()
+                    .contentType(MediaType.IMAGE_JPEG)
+                    .body(imageData);
         } catch (IllegalArgumentException e) {
             throw e;
         } catch (Exception e) {
@@ -69,6 +72,24 @@ public class SystemAdminServiceImpl implements SystemAdminService {
             log.error("Error occured in findClinicById In SystemAdminServiceImpl: {}", e);
             return null;
         }
+    }
+
+    @Override
+    public Boolean createNewSpecialty(String specialty) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createNewSpecialty'");
+    }
+
+    @Override
+    public Boolean updateSpecialty(Integer id, String specialty) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateSpecialty'");
+    }
+
+    @Override
+    public Boolean deleteSpecialty(Integer id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteSpecialty'");
     }
 
     @Override

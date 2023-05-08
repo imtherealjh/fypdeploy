@@ -16,6 +16,12 @@ public interface SystemAdminService {
 
     public ResponseEntity<byte[]> getClinicLicense(Integer clinicId);
 
+    public Boolean createNewSpecialty(String specialty);
+
+    public Boolean updateSpecialty(Integer id, String specialty);
+
+    public Boolean deleteSpecialty(Integer id);
+
     public Boolean approveClinic(Integer clinicId);
 
     public Boolean rejectClinic(Integer clinicId);
