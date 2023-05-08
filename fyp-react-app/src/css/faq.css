@@ -1,0 +1,19 @@
+.faq-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .faq-item {
+    margin-bottom: 1rem;
+  }
+  
+  .faq-question {
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .faq-answer {
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+  }
+  

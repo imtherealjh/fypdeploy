@@ -40,12 +40,11 @@ export default function Home() {
         <div className="video-container w-100">
           <video src="video.mp4" controls></video>
           <div>
-            <p>Your Best Value Proposition</p>
+            {/* <p>Your Best Value Proposition</p> */}
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
+              GoDoctor is a platform to transform your medical appointment
+              experience. Join us today and discover a seamless, secure, and
+              efficient healthcare journey!
             </p>
           </div>
         </div>
@@ -77,10 +76,12 @@ export default function Home() {
               <>
                 <div>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Say goodbye to long waiting times and complex appointment
+                    booking. With GoDoctor, easily schedule, manage, and update
+                    your appointments at your preferred clinics, all in one
+                    user-friendly platform. Empower yourself with health
+                    educational materials and personalized health promotion
+                    messages to improve your well-being.
                   </p>
                   <div>
                     <Link to="/registerPatient">
@@ -103,11 +104,11 @@ export default function Home() {
               <>
                 <div>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna
-                    aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                    ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    CLINIC
+                    Enhance your patients' experience by simplifying appointment
+                    management, streamlining patient records, and optimizing
+                    billing information. Leverage real-time queue monitoring and
+                    customer feedback to continuously refine your services and
+                    elevate patient satisfaction.
                   </p>
                   <div>
                     <Link to="/registerClinic">

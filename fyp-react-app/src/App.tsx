@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { lazy } from "react";
 
 // Layouts
-import LandingPageLayout from "./layout/LandingPageLayout";
+import LandingPageLayout from "./Layout/LandingPageLayout";
 
 // Components
 import PersistLogin from "./lib/PersistLogin";
@@ -38,24 +38,24 @@ function App() {
           </Route>
 
           <Route element={<PersistLogin />}>
-            <Route element={<RequireAuth role={"patient"} />}>
-              <Route path="/patient/*" element={<PatientRoutes />} />
-            </Route>
+            {/* <Route element={<RequireAuth role={"patient"} />}> */}
+            <Route path="/patient/*" element={<PatientRoutes />} />
+            {/* </Route> */}
             <Route element={<RequireAuth role={"clinic_owner"} />}>
               <Route path="/clinic/*" element={<ClinicRoutes />} />
             </Route>
-            <Route element={<RequireAuth role={"doctor"} />}>
-              <Route path="/doctor/*" element={<DoctorRoutes />} />
-            </Route>
-            <Route element={<RequireAuth role={"system_admin"} />}>
-              <Route path="/admin/*" element={<AdminRoutes />} />
-            </Route>
-            <Route element={<RequireAuth role={"front_desk"} />}>
-              <Route path="/clerk/*" element={<ClerkRoutes />} />
-            </Route>
-            <Route element={<RequireAuth role={"nurse"} />}>
-              <Route path="/nurse/*" element={<NurseRoutes />} />
-            </Route>
+            {/* <Route element={<RequireAuth role={"doctor"} />}> */}
+            <Route path="/doctor/*" element={<DoctorRoutes />} />
+            {/* </Route> */}
+            {/* <Route element={<RequireAuth role={"system_admin"} />}> */}
+            <Route path="/admin/*" element={<AdminRoutes />} />
+            {/* </Route> */}
+            {/* <Route element={<RequireAuth role={"clerk"} />}> */}
+            <Route path="/clerk/*" element={<ClerkRoutes />} />
+            {/* </Route> */}
+            {/* <Route element={<RequireAuth role={"nurse"} />}> */}
+            <Route path="/nurse/*" element={<NurseRoutes />} />
+            {/* </Route> */}
           </Route>
         </Routes>
       </div>

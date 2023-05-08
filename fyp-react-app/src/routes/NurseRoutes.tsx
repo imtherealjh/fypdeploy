@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../layout/DashboardLayout";
+import DashboardLayout from "../Layout/DashboardLayout";
 import NurseHome from "../pages/nurse/Home";
 import Feedback from "../pages/nurse/Feedback";
 import Profile from "../pages/nurse/Profile";
@@ -9,6 +9,8 @@ import PatientList from "../pages/nurseAndDoctor/PatientList";
 import NotFound from "../pages/NotFound";
 import ViewMedicalDetails from "../pages/nurseAndDoctor/ViewMedicalDetails";
 import Appointments from "../pages/nurseAndClerk/Appointments";
+import Faq from "../pages/patient/Faq";
+import Contact from "../pages/patient/ContactUs";
 
 export default function NurseRoutes() {
   return (
@@ -37,6 +39,8 @@ export default function NurseRoutes() {
             <Route path="details" element={<ViewMedicalDetails />} />
           </Route>
           <Route path="feedbacks" element={<Feedback />} />
+          <Route path="faq" element={<Faq />} />
+          <Route path="contact-us" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

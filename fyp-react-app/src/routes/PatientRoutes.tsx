@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../layout/DashboardLayout";
+import DashboardLayout from "../Layout/DashboardLayout";
 import Appointment from "../pages/patient/Appointments/Appointment";
 import BookAppointment from "../pages/patient/Appointments/BookAppointment";
 import Home from "../pages/patient/Home";
@@ -11,6 +11,8 @@ import Feedback from "../pages/patient/Feedback";
 import Payment from "../pages/patient/Payment";
 import NotFound from "../pages/NotFound";
 import Profile from "../pages/patient/Profile";
+import Faq from "../pages/patient/Faq";
+import Contact from "../pages/patient/ContactUs";
 
 export default function PatientRoutes() {
   return (
@@ -51,6 +53,8 @@ export default function PatientRoutes() {
           <Route path="medical-records" element={<MedicalRecords />} />
           <Route path="payment" element={<Payment />} />
           <Route path="feedback" element={<Feedback />} />
+          <Route path="faq" element={<Faq />} />
+          <Route path="contact-us" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
