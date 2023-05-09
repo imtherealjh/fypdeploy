@@ -20,6 +20,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -76,6 +77,10 @@ public class UserAccount implements UserDetails {
     @JsonIgnore
     @OneToOne(mappedBy = "frontDeskAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private FrontDesk frontDesk;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "accountFeedback")
+    private List<SystemFeedback> accountFeedback;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

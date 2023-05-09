@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../Layout/DashboardLayout";
+import DashboardLayout from "../layout/DashboardLayout";
 import NurseHome from "../pages/nurse/Home";
-import Feedback from "../pages/nurse/Feedback";
+import Feedback from "../pages/all/Feedback";
 import Profile from "../pages/nurse/Profile";
 import PatientList from "../pages/nurseAndDoctor/PatientList";
 
@@ -11,6 +11,7 @@ import ViewMedicalDetails from "../pages/nurseAndDoctor/ViewMedicalDetails";
 import Appointments from "../pages/nurseAndClerk/Appointments";
 import Faq from "../pages/patient/Faq";
 import Contact from "../pages/patient/ContactUs";
+import SystemFeedback from "../pages/all/SystemFeedback";
 
 export default function NurseRoutes() {
   return (
@@ -24,7 +25,7 @@ export default function NurseRoutes() {
                   { name: "Dashboard", link: "" },
                   { name: "Appointments", link: "appointments" },
                   { name: "Patient List", link: "patients", end: false },
-                  { name: "Feedback", link: "feedbacks" },
+                  { name: "System Feedback", link: "system-feedback" },
                 ]}
                 bottom={true}
               />
@@ -38,7 +39,10 @@ export default function NurseRoutes() {
             <Route index path="" element={<PatientList />} />
             <Route path="details" element={<ViewMedicalDetails />} />
           </Route>
-          <Route path="feedbacks" element={<Feedback />} />
+          <Route path="system-feedback">
+            <Route index path="" element={<SystemFeedback />} />
+            <Route path="submit" element={<Feedback />} />
+          </Route>
           <Route path="faq" element={<Faq />} />
           <Route path="contact-us" element={<Contact />} />
           <Route path="*" element={<NotFound />} />

@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../Layout/DashboardLayout";
+import DashboardLayout from "../layout/DashboardLayout";
 import DoctorHome from "../pages/doctor/Home";
 
 import Feedback from "../pages/doctor/Feedback";
@@ -12,6 +12,8 @@ import ViewMedicalDetails from "../pages/nurseAndDoctor/ViewMedicalDetails";
 import ViewSingleArticle from "../components/ViewSingleArticle";
 import Faq from "../pages/patient/Faq";
 import Contact from "../pages/patient/ContactUs";
+import SystemFeedback from "../pages/all/SystemFeedback";
+import CreateSystemFeedback from "../pages/all/Feedback";
 
 export default function DoctorRoutes() {
   return (
@@ -24,7 +26,8 @@ export default function DoctorRoutes() {
                 navList={[
                   { name: "Dashboard", link: "" },
                   { name: "Patient List", link: "patients", end: false },
-                  { name: "Feed Back", link: "feedbacks" },
+                  { name: "Patient Feedback", link: "patient-feedback" },
+                  { name: "System Feedback", link: "system-feedback" },
                 ]}
                 bottom={true}
               />
@@ -38,7 +41,11 @@ export default function DoctorRoutes() {
             <Route index path="" element={<PatientList />} />
             <Route path="details" element={<ViewMedicalDetails />} />
           </Route>
-          <Route path="feedbacks" element={<Feedback />} />
+          <Route path="patient-feedback" element={<Feedback />} />
+          <Route path="system-feedback">
+            <Route index path="" element={<SystemFeedback />} />
+            <Route path="submit" element={<CreateSystemFeedback />} />
+          </Route>
           <Route path="faq" element={<Faq />} />
           <Route path="contact-us" element={<Contact />} />
           <Route path="*" element={<NotFound />} />

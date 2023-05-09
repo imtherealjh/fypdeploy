@@ -4,6 +4,7 @@ import DashboardLayout from "../layout/DashboardLayout";
 import Home from "../pages/admin/Home";
 import ViewClinic from "../pages/admin/ViewClinic";
 import NotFound from "../pages/NotFound";
+import SystemFeedback from "../pages/all/SystemFeedback";
 
 export default function AdminRoutes() {
   return (
@@ -13,14 +14,20 @@ export default function AdminRoutes() {
           element={
             <DashboardLayout>
               <SideBar
-                navList={[{ name: "Dashboard", link: "" }]}
+                navList={[
+                  { name: "Dashboard", link: "" },
+                  { name: "System Feedback", link: "system-feedback" },
+                ]}
                 bottom={false}
               />
             </DashboardLayout>
           }
         >
           <Route index path="" element={<Home />} />
-          <Route path="/view" element={<ViewClinic />} />
+          <Route path="view" element={<ViewClinic />} />
+          <Route path="system-feedback">
+            <Route index path="" element={<SystemFeedback />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

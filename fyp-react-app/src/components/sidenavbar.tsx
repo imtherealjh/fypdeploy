@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
-import "../css/sidenavbar.css";
 import { NavigationItems } from "../hooks/types";
+
+import "../css/sidenavbar.css";
 
 export type Props = {
   bottom: true | false;
@@ -10,8 +11,8 @@ export type Props = {
 export default function SideBar({ navList, bottom }: Props) {
   return (
     <>
-      <div id="side-navbar" className="side-navbar">
-        <ul>
+      <div id="side-navbar" className="side-navbar d-flex">
+        <ul className="w-100">
           {navList.map((navItem, index) => (
             <NavLink
               key={"side-navbar" + index}

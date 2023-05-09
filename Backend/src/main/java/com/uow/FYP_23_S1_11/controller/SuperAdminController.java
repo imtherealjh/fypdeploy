@@ -1,6 +1,5 @@
 package com.uow.FYP_23_S1_11.controller;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.uow.FYP_23_S1_11.domain.request.SystemFeedbackRequest;
 import com.uow.FYP_23_S1_11.service.SystemAdminService;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -84,36 +81,8 @@ public class SuperAdminController {
         return ResponseEntity.ok(sysAdminService.enableClinic(clinicId));
     }
 
-    @GetMapping("/findFeedbackByRole")
-    public ResponseEntity<?> findFeedbackByRole(@RequestParam String role) {
-        return ResponseEntity.ok(sysAdminService.findFeedbackByRole(role));
-    }
-
-    @GetMapping("/findFeedbackByDate")
-    public ResponseEntity<?> findFeedbackByDate(@RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        return ResponseEntity.ok(sysAdminService.findFeedbackByDate(startDate, endDate));
-    }
-
-    @GetMapping("/findFeedbackByDateAndRole")
-    public ResponseEntity<?> findFeedbackByDateAndRole(@RequestParam String role, @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        return ResponseEntity.ok(sysAdminService.findFeedbackByDateAndRole(startDate, endDate, role));
-    }
-
-    @GetMapping("/getAllFeedbackPendingStatus")
-    public ResponseEntity<List<?>> getAllFeedbackPendingStatus() {
-        return ResponseEntity.ok(sysAdminService.getAllFeedbackPendingStatus());
-    }
-
-    @GetMapping("/getAllFeedbackCompleteStatus")
-    public ResponseEntity<List<?>> getAllFeedbackCompleteStatus() {
-        return ResponseEntity.ok(sysAdminService.getAllFeedbackCompleteStatus());
-    }
-
-    @PostMapping("/updateSystemFeedback")
-    public ResponseEntity<Boolean> updateSystemFeedback(@RequestParam Integer systemFeedbackId,
-            @Valid @RequestBody SystemFeedbackRequest request) {
-        return ResponseEntity.ok(sysAdminService.updateSystemFeedback(systemFeedbackId, request));
+    @PutMapping("/resolveTicket")
+    public ResponseEntity<?> resolveTicket(@NotNull @RequestParam Integer ticketId) {
+        return ResponseEntity.ok(sysAdminService.resolveTechnicalTicket(ticketId));
     }
 }

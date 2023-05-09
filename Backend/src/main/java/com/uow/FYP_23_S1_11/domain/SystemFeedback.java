@@ -1,15 +1,11 @@
 package com.uow.FYP_23_S1_11.domain;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.uow.FYP_23_S1_11.enums.ERole;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,21 +23,21 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-
 public class SystemFeedback implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer systemFeedbackId;
     private String feedback;
-    @Enumerated(EnumType.STRING)
-    private ERole accountType;
-    private Integer accountId;
     private String status;
-    private LocalDate Date;
-    private LocalTime Time;
+    private LocalDateTime localDateTime = LocalDateTime.now();
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "clinicName", referencedColumnName = "clinicName")
+    @JoinColumn(name = "accountId", referencedColumnName = "accountId")
+    private UserAccount accountFeedback;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "clinic", referencedColumnName = "clinicId")
     private Clinic systemFeedbackClinic;
 }

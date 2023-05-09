@@ -1,6 +1,5 @@
 package com.uow.FYP_23_S1_11.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,8 +11,8 @@ import org.springframework.stereotype.Service;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.SystemFeedback;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
-import com.uow.FYP_23_S1_11.domain.request.SystemFeedbackRequest;
 import com.uow.FYP_23_S1_11.enums.EClinicStatus;
+import com.uow.FYP_23_S1_11.enums.ESystemFeedbackStatus;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
 import com.uow.FYP_23_S1_11.repository.SystemFeedbackRepository;
 import com.uow.FYP_23_S1_11.repository.UserAccountRepository;
@@ -184,58 +183,15 @@ public class SystemAdminServiceImpl implements SystemAdminService {
     }
 
     @Override
-    public List<?> getAllFeedbackPendingStatus() {
-        return systemFeedbackRepo.findByPendingStatus();
-    }
-
-    @Override
-    public List<?> getAllFeedbackCompleteStatus() {
-        return systemFeedbackRepo.findByCompleteStatus();
-    }
-
-    public List<SystemFeedback> findFeedbackByRole(String role) {
-
-        List<SystemFeedback> systemFeedback = systemFeedbackRepo.findByRole(role);
-        if (systemFeedback.isEmpty() == true) {
-            throw new IllegalArgumentException("No feedbacks found...");
-        } else {
-            return systemFeedback;
-        }
-
-    }
-
-    public List<SystemFeedback> findFeedbackByDate(LocalDate startDate, LocalDate endDate) {
-
-        List<SystemFeedback> systemFeedback = systemFeedbackRepo.findByDate(startDate, endDate);
-        if (systemFeedback.isEmpty() == true) {
-            throw new IllegalArgumentException("No feedbacks found...");
-        } else {
-            return systemFeedback;
-        }
-
-    }
-
-    public List<SystemFeedback> findFeedbackByDateAndRole(LocalDate startDate, LocalDate endDate, String role) {
-
-        List<SystemFeedback> systemFeedback = systemFeedbackRepo.findByDateAndRole(startDate, endDate, role);
-        if (systemFeedback.isEmpty() == true) {
-            throw new IllegalArgumentException("No feedbacks found...");
-        } else {
-            return systemFeedback;
-        }
-
-    }
-
-    @Override
-    public Boolean updateSystemFeedback(Integer systemFeedbackId,
-            SystemFeedbackRequest request) {
+    public Boolean resolveTechnicalTicket(Integer ticketId) {
         Optional<SystemFeedback> systemFeedbackOptional = systemFeedbackRepo
-                .findById(systemFeedbackId);
+                .findById(ticketId);
         if (systemFeedbackOptional.isEmpty()) {
             throw new IllegalArgumentException("System feedback does not exist...");
         }
+
         SystemFeedback systemFeedback = systemFeedbackOptional.get();
-        systemFeedback.setStatus(request.getStatus());
+        systemFeedback.setStatus(ESystemFeedbackStatus.COMPLETED.name());
         systemFeedbackRepo.save(systemFeedback);
         return true;
     }

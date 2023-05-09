@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../Layout/DashboardLayout";
+import DashboardLayout from "../layout/DashboardLayout";
 import RegisterAccount from "../pages/clinic/RegisterAccount";
 import ManageAccount from "../pages/clinic/ManageAccount";
 import Home from "../pages/clinic/Home";
@@ -12,6 +12,8 @@ import Profile from "../pages/clinic/Profile";
 import EditAccount from "../pages/clinic/EditAccount";
 import Faq from "../pages/patient/Faq";
 import Contact from "../pages/patient/ContactUs";
+import SystemFeedback from "../pages/all/SystemFeedback";
+import CreateSystemFeedback from "../pages/all/Feedback";
 
 export default function ClincRoutes() {
   return (
@@ -40,7 +42,8 @@ export default function ClincRoutes() {
                     name: "Subscription Plans",
                     link: "subscription",
                   },
-                  { name: "Feedback", link: "feedback" },
+                  { name: "Patient Feedback", link: "patient-feedback" },
+                  { name: "System Feedback", link: "system-feedback" },
                 ]}
                 bottom={true}
               />
@@ -59,7 +62,11 @@ export default function ClincRoutes() {
             element={<CreateAppointmentSlots />}
           />
           <Route path="subscription" element={<Subscription />} />
-          <Route path="feedback" element={<Feedback />} />
+          <Route path="patient-feedback" element={<Feedback />} />
+          <Route path="system-feedback">
+            <Route index path="" element={<SystemFeedback />} />
+            <Route path="submit" element={<CreateSystemFeedback />} />
+          </Route>
           <Route path="faq" element={<Faq />} />
           <Route path="contact-us" element={<Contact />} />
           <Route path="*" element={<NotFound />} />

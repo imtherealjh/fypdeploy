@@ -31,11 +31,7 @@ export default function FeedbackComponent({ data }: Props) {
 
   const handleClick = async () => {
     try {
-      //   if (data.fPC == null && data.fPD == null) {
       await axiosPrivate.post("/patient/insertFeedback", formData);
-      //   } else {
-      //     await axiosPrivate.put("/patient/updateFeedback", formData);
-      //   }
 
       alert("Feedback successfully submitted...");
       document.getElementById("closeModalBtn")?.click();

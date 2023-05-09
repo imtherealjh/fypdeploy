@@ -1,18 +1,19 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../Layout/DashboardLayout";
+import DashboardLayout from "../layout/DashboardLayout";
 import Appointment from "../pages/patient/Appointments/Appointment";
 import BookAppointment from "../pages/patient/Appointments/BookAppointment";
 import Home from "../pages/patient/Home";
 import SearchClinic from "../pages/patient/SearchClinic";
 import Queue from "../pages/patient/Queue";
 import MedicalRecords from "../pages/patient/MedicalRecords";
-import Feedback from "../pages/patient/Feedback";
+import Feedback from "../pages/all/Feedback";
 import Payment from "../pages/patient/Payment";
 import NotFound from "../pages/NotFound";
 import Profile from "../pages/patient/Profile";
 import Faq from "../pages/patient/Faq";
 import Contact from "../pages/patient/ContactUs";
+import SystemFeedback from "../pages/all/SystemFeedback";
 
 export default function PatientRoutes() {
   return (
@@ -35,7 +36,7 @@ export default function PatientRoutes() {
                     link: "medical-records",
                   },
                   { name: "Payments", link: "payment" },
-                  { name: "Feedbacks", link: "feedback" },
+                  { name: "System Feedback", link: "system-feedback" },
                 ]}
                 bottom={true}
               />
@@ -52,7 +53,10 @@ export default function PatientRoutes() {
           <Route path="queue" element={<Queue />} />
           <Route path="medical-records" element={<MedicalRecords />} />
           <Route path="payment" element={<Payment />} />
-          <Route path="feedback" element={<Feedback />} />
+          <Route path="system-feedback">
+            <Route index path="" element={<SystemFeedback />} />
+            <Route path="submit" element={<Feedback />} />
+          </Route>
           <Route path="faq" element={<Faq />} />
           <Route path="contact-us" element={<Contact />} />
           <Route path="*" element={<NotFound />} />

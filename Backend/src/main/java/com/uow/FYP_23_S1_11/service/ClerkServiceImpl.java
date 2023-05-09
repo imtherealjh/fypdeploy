@@ -1,7 +1,5 @@
 package com.uow.FYP_23_S1_11.service;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +10,8 @@ import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.enums.EQueueStatus;
-import com.uow.FYP_23_S1_11.enums.ERole;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.FrontDesk;
