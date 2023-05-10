@@ -25,6 +25,8 @@ export default function LoginForm() {
 
   const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const loader = window.document.getElementById("loader-container")!;
+    loader.style.display = "flex";
 
     try {
       const response = await axiosPrivate.post("/auth/login", inputs);
@@ -60,6 +62,8 @@ export default function LoginForm() {
       }
       errRef.current?.focus();
     }
+
+    loader.style.display = "none";
   };
 
   useEffect(() => {

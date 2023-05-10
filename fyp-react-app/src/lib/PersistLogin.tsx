@@ -26,7 +26,7 @@ const PersistLogin = () => {
     console.log(`isLoading : ${isLoading}`);
   }, [isLoading]);
 
-  return <>{isLoading ? <p>Loading...</p> : <Outlet />}</>;
+  return <>{isLoading ? null : <Outlet />}</>;
 };
 
 export default PersistLogin;

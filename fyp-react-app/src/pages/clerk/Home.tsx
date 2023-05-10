@@ -25,8 +25,6 @@ export default function ClerkHome() {
         }
       );
 
-      console.log(value);
-
       isMounted && setData(response.data);
     };
 
