@@ -8,12 +8,15 @@ const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
   const { auth } = useAuth();
 
+  let firstReq = true;
   useEffect(() => {
     const inc = (mod: any) => setCounter((c) => c + mod);
+    let origConfig: any = {};
 
     const requestInterceptor = axiosPrivate.interceptors.request.use(
       (config) => {
-        inc(1);
+        // inc(1);
+
         if (!config.headers["Authorization"]) {
           config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
         }
@@ -23,18 +26,26 @@ const useAxiosPrivate = () => {
     );
 
     const responseInterceptor = axiosPrivate.interceptors.response.use(
-      (response) => (inc(-1), response),
+      (response) => response,
       async (error) => {
-        const prevReq = error?.config;
-        if (error?.response?.status === 403 && !prevReq?.sent) {
-          //ensures that the request is sent once
-          prevReq.sent = true;
-          //call the refresh token endpoint
-          const newAccessToken = await refresh();
-          prevReq.headers["Authorization"] = `Bearer ${newAccessToken}`;
-          return axiosPrivate(prevReq);
+        if (firstReq) {
+          firstReq = false;
+          origConfig = error?.config;
+
+          if (!origConfig?.sent) {
+            origConfig.sent = true;
+            try {
+              const accessToken = await refresh();
+              origConfig.headers["Authorization"] = `Bearer ${accessToken}`;
+              return axiosPrivate(origConfig);
+            } catch (err) {
+              return Promise.reject(err);
+            }
+          }
         }
-        inc(-1);
+
+        console.log(origConfig);
+
         return Promise.reject(error);
       }
     );
@@ -43,7 +54,7 @@ const useAxiosPrivate = () => {
       axiosPrivate.interceptors.request.eject(requestInterceptor);
       axiosPrivate.interceptors.response.eject(responseInterceptor);
     };
-  }, [auth, refresh]);
+  }, [auth]);
 
   const loader = window.document.getElementById("loader-container")!;
   useEffect(() => {

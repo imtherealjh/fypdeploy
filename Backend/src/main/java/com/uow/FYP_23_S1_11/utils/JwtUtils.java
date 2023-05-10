@@ -50,6 +50,8 @@ public class JwtUtils {
             expiry = refreshTokenExpiry;
         }
 
+        System.out.println("Generating token...");
+
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -100,6 +102,8 @@ public class JwtUtils {
         } else if (type == ETokenType.REFRESH_TOKEN) {
             secret = refreshTokenSecret;
         }
+
+        System.out.println(type);
 
         if (secret != null && !secret.trim().isEmpty()) {
             byte[] keyBytes = Decoders.BASE64.decode(secret);

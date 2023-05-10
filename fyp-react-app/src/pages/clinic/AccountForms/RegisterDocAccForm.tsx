@@ -3,7 +3,6 @@ import { useState, ChangeEvent, useEffect, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { CgMathMinus, CgMathPlus } from "react-icons/cg";
 
-import axios from "../../../api/axios";
 import { IObjectKeys } from "../../../hooks/types";
 import useAxiosPrivate from "../../../lib/useAxiosPrivate";
 
@@ -43,7 +42,7 @@ export default function DoctorAccount() {
     let isMounted = true;
     const controller = new AbortController();
     const fetchData = async () => {
-      const response = await axios.get("/public/getAllSpecialty", {
+      const response = await axiosPrivate.get("/public/getAllSpecialty", {
         signal: controller.signal,
       });
 
