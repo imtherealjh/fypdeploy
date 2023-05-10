@@ -23,6 +23,6 @@ public interface PatientService {
 
         public Boolean insertQueueNumber(QueueRequest request);
 
-        public Integer getByQueueNumber(Integer queueNumber);
+        public Integer getByQueueNumber(Integer queueNumber, String clinicName);
 
 }

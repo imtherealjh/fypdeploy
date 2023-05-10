@@ -105,8 +105,8 @@ public class PatientController {
     }
 
     @GetMapping("/getByQueueNumber")
-    public ResponseEntity<?> getByQueueNumber(@RequestParam Integer queueNumber) {
-        return ResponseEntity.ok(patientService.getByQueueNumber(queueNumber));
+    public ResponseEntity<?> getByQueueNumber(@RequestParam Integer queueNumber, @RequestParam String clinicName) {
+        return ResponseEntity.ok(patientService.getByQueueNumber(queueNumber, clinicName));
     }
 
 }

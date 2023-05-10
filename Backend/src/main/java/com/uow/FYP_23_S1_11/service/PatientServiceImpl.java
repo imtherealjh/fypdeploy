@@ -175,11 +175,12 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Integer getByQueueNumber(Integer queueNumber) {
-        Integer queue = queueRepo
-                .findCountByQueueNumber(queueNumber);
-        if (queue != null) {
-            return queue;
+    public Integer getByQueueNumber(Integer queueNumber, String clinicName) {
+        Optional<Queue> queueOptional = queueRepo.findbyQueueNumber(queueNumber);
+        Integer countBeforeQueueNumber = queueRepo
+                .findCountByQueueNumber(queueNumber, clinicName);
+        if (queueOptional.isEmpty() == false) {
+            return countBeforeQueueNumber;
         } else {
             throw new IllegalArgumentException("Queue number not found...");
         }
