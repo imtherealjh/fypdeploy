@@ -1,15 +1,19 @@
 import { axiosPrivate } from "../api/axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useRefreshToken from "./useRefreshToken";
 import useAuth from "./useAuth";
 
 const useAxiosPrivate = () => {
+  const [counter, setCounter] = useState(0);
   const refresh = useRefreshToken();
   const { auth } = useAuth();
 
   useEffect(() => {
+    const inc = (mod: any) => setCounter((c) => c + mod);
+
     const requestInterceptor = axiosPrivate.interceptors.request.use(
       (config) => {
+        inc(1);
         if (!config.headers["Authorization"]) {
           config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
         }
@@ -19,7 +23,7 @@ const useAxiosPrivate = () => {
     );
 
     const responseInterceptor = axiosPrivate.interceptors.response.use(
-      (response) => response,
+      (response) => (inc(-1), response),
       async (error) => {
         const prevReq = error?.config;
         if (error?.response?.status === 403 && !prevReq?.sent) {
@@ -30,6 +34,7 @@ const useAxiosPrivate = () => {
           prevReq.headers["Authorization"] = `Bearer ${newAccessToken}`;
           return axiosPrivate(prevReq);
         }
+        inc(-1);
         return Promise.reject(error);
       }
     );
@@ -39,6 +44,15 @@ const useAxiosPrivate = () => {
       axiosPrivate.interceptors.response.eject(responseInterceptor);
     };
   }, [auth, refresh]);
+
+  const loader = window.document.getElementById("loader-container")!;
+  useEffect(() => {
+    if (counter > 0) {
+      loader.style.display = "flex";
+    } else {
+      loader.style.display = "none";
+    }
+  }, [counter]);
 
   return axiosPrivate;
 };

@@ -92,54 +92,8 @@ public class ClerkServiceImpl implements ClerkService {
         }
     }
 
-    // @Override
-    // public Boolean insertQueueNumber(QueueRequest request) {
-    // try {
-    // ObjectMapper mapper = new ObjectMapper();
-    // mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    // mapper.registerModule(new JavaTimeModule());
-    // Queue queue = (Queue) mapper.convertValue(request,
-    // Queue.class);
-    // queue.setDate(LocalDate.now());
-    // LocalTime localTime = request.getTime().toLocalTime();
-    // queue.setTime(localTime);
-    // queue.setStatus("WAITING_IN_QUEUE");
-    // queue.setPriority("WALK_IN_CUSTOMER");
-    // queueRepo.save(queue);
-    // return true;
-    // } catch (Exception e) {
-    // System.out.print(e);
-    // return false;
-    // }
-    // }
-
     @Override
-    public Boolean updateQueueNumber(Integer queueNumber,
-            QueueRequest updateQueueRequest) {
-        Optional<Queue> originalQueue = queueRepo
-                .findById(queueNumber);
-
-        if (originalQueue.isEmpty() == false) {
-            Queue queue = originalQueue.get();
-            EQueueStatus status = Enum.valueOf(EQueueStatus.class, updateQueueRequest.getStatus());
-            queue.setStatus(status);
-            queueRepo.save(queue);
-            return true;
-        } else {
-            throw new IllegalArgumentException("Queue not found...");
-        }
-
-    }
-
-    @Override
-    public Boolean deleteQueueNumber(Integer queueId) {
-        Optional<Queue> queueOptional = queueRepo
-                .findById(queueId);
-        if (queueOptional.isEmpty()) {
-            throw new IllegalArgumentException("Queue number does not exist...");
-        }
-        Queue queue = queueOptional.get();
-        queueRepo.delete(queue);
+    public Boolean checkInUser(Integer apptId) {
         return true;
     }
 

@@ -57,3 +57,72 @@ body {
   font-weight: 900;
   color: red;
 }
+
+.loader-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background: #000000cc;
+  height: 100vh;
+  width: 100vw;
+  z-index: 2000;
+}
+
+.dot-typing {
+  --dot-spacing: 4rem;
+  --out-of-page: 200rem;
+  --dot-size: 3rem;
+
+  position: relative;
+  left: calc(var(--out-of-page) * -1);
+  width: var(--dot-size);
+  height: var(--dot-size);
+  border-radius: 50%;
+  background-color: #9880ff;
+  color: #9880ff;
+  box-shadow: calc(var(--out-of-page) - var(--dot-spacing)) 0 0 0 #9880ff,
+    var(--out-of-page) 0 0 0 #9880ff,
+    calc(var(--out-of-page) + var(--dot-spacing)) 0 0 0 #9880ff;
+  animation: dot-typing 1.5s infinite linear;
+}
+
+@keyframes dot-typing {
+  0% {
+    box-shadow: calc(var(--out-of-page) - var(--dot-spacing)) 0 0 0 #9880ff,
+      var(--out-of-page) 0 0 0 #9880ff,
+      calc(var(--out-of-page) + var(--dot-spacing)) 0 0 0 #9880ff;
+  }
+  16.667% {
+    box-shadow: calc(var(--out-of-page) - var(--dot-spacing)) -25px 0 0 #9880ff,
+      var(--out-of-page) 0 0 0 #9880ff,
+      calc(var(--out-of-page) + var(--dot-spacing)) 0 0 0 #9880ff;
+  }
+  33.333% {
+    box-shadow: calc(var(--out-of-page) - var(--dot-spacing)) 0 0 0 #9880ff,
+      var(--out-of-page) 0 0 0 #9880ff,
+      calc(var(--out-of-page) + var(--dot-spacing)) 0 0 0 #9880ff;
+  }
+  50% {
+    box-shadow: calc(var(--out-of-page) - var(--dot-spacing)) 0 0 0 #9880ff,
+      var(--out-of-page) -25px 0 0 #9880ff,
+      calc(var(--out-of-page) + var(--dot-spacing)) 0 0 0 #9880ff;
+  }
+  66.667% {
+    box-shadow: calc(var(--out-of-page) - var(--dot-spacing)) 0 0 0 #9880ff,
+      var(--out-of-page) 0 0 0 #9880ff,
+      calc(var(--out-of-page) + var(--dot-spacing)) 0 0 0 #9880ff;
+  }
+  83.333% {
+    box-shadow: calc(var(--out-of-page) - var(--dot-spacing)) 0 0 0 #9880ff,
+      var(--out-of-page) 0 0 0 #9880ff,
+      calc(var(--out-of-page) + var(--dot-spacing)) -25px 0 0 #9880ff;
+  }
+  100% {
+    box-shadow: calc(var(--out-of-page) - var(--dot-spacing)) 0 0 0 #9880ff,
+      var(--out-of-page) 0 0 0 #9880ff,
+      calc(var(--out-of-page) + var(--dot-spacing)) 0 0 0 #9880ff;
+  }
+}
