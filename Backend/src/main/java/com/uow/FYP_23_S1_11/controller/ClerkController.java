@@ -62,15 +62,4 @@ public class ClerkController {
     // @Valid @RequestBody QueueRequest request) {
     // return ResponseEntity.ok(clerkService.insertQueueNumber(request));
     // }
-
-    @PostMapping("/updateQueueNumber")
-    public ResponseEntity<Boolean> updateQueueNumber(@RequestParam Integer queueId,
-            @Valid @RequestBody QueueRequest updateQueueRequest) {
-        return ResponseEntity.ok(clerkService.updateQueueNumber(queueId, updateQueueRequest));
-    }
-
-    @DeleteMapping("/deleteQueueNumber")
-    public ResponseEntity<Boolean> deleteQueueNumber(@RequestParam Integer queueId) {
-        return ResponseEntity.ok(clerkService.deleteQueueNumber(queueId));
-    }
 }

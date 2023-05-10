@@ -9,11 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.uow.FYP_23_S1_11.domain.Clinic;
+import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.SystemFeedback;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
+import com.uow.FYP_23_S1_11.domain.request.SpecialtyRequest;
 import com.uow.FYP_23_S1_11.enums.EClinicStatus;
 import com.uow.FYP_23_S1_11.enums.ESystemFeedbackStatus;
 import com.uow.FYP_23_S1_11.repository.ClinicRepository;
+import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
 import com.uow.FYP_23_S1_11.repository.SystemFeedbackRepository;
 import com.uow.FYP_23_S1_11.repository.UserAccountRepository;
 
@@ -29,6 +32,9 @@ public class SystemAdminServiceImpl implements SystemAdminService {
 
     @Autowired
     private ClinicRepository clinicRepo;
+
+    @Autowired
+    private SpecialtyRepository specialtyRepo;
 
     @Autowired
     private SystemFeedbackRepository systemFeedbackRepo;
@@ -74,9 +80,15 @@ public class SystemAdminServiceImpl implements SystemAdminService {
     }
 
     @Override
-    public Boolean createNewSpecialty(String specialty) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createNewSpecialty'");
+    public Boolean createNewSpecialty(SpecialtyRequest specialtyReq) {
+        Optional<Specialty> specialty = specialtyRepo.findByType(specialtyReq.getSpecialty());
+        if (specialty.isPresent()) {
+            throw new IllegalArgumentException("Cannot create this specialty type cause it existed");
+        }
+        Specialty newSpecialty = new Specialty();
+        newSpecialty.setType(specialtyReq.getSpecialty());
+        specialtyRepo.save(newSpecialty);
+        return true;
     }
 
     @Override

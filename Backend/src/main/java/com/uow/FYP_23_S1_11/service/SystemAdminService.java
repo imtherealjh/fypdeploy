@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
+import com.uow.FYP_23_S1_11.domain.request.SpecialtyRequest;
+
 public interface SystemAdminService {
 
     public List<?> getAllClinics();
@@ -12,7 +14,7 @@ public interface SystemAdminService {
 
     public ResponseEntity<byte[]> getClinicLicense(Integer clinicId);
 
-    public Boolean createNewSpecialty(String specialty);
+    public Boolean createNewSpecialty(SpecialtyRequest specialty);
 
     public Boolean updateSpecialty(Integer id, String specialty);
 

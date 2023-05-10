@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://extreme-flux-382703.as.r.appspot.com/api";
+const BASE_URL = "http://localhost:8080/api";
 
 export default axios.create({
   baseURL: BASE_URL,
