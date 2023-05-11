@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
-import { lazy } from "react";
+import { lazy, useEffect, useRef } from "react";
 
 // Layouts
-import LandingPageLayout from "./layout/LandingPageLayout";
+import LandingPageLayout from "./layoutComponent/LandingPageLayout";
 
 // Components
 import PersistLogin from "./lib/PersistLogin";
@@ -15,6 +15,7 @@ import RegisterClinic from "./pages/RegisterClinic";
 import VerifyEmail from "./pages/VerifyEmail";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
+import RequireVerifyPage from "./pages/RequireVerify";
 
 const ClinicRoutes = lazy(() => import("./routes/ClinicRoutes"));
 const DoctorRoutes = lazy(() => import("./routes/DoctorRoutes"));
@@ -24,6 +25,11 @@ const PatientRoutes = lazy(() => import("./routes/PatientRoutes"));
 const NurseRoutes = lazy(() => import("./routes/NurseRoutes"));
 
 function App() {
+  const ref = useRef<any>(null);
+  useEffect(() => {
+    ref.current.style.display = "none !important";
+  }, []);
+
   return (
     <>
       <div className="container">
@@ -32,6 +38,7 @@ function App() {
             <Route index path="/" element={<Home />} />
             <Route path="/registerClinic" element={<RegisterClinic />} />
             <Route path="/registerPatient" element={<RegisterPatient />} />
+            <Route path="/requireVerify" element={<RequireVerifyPage />} />
             <Route path="/verify/:code" element={<VerifyEmail />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             <Route path="*" element={<NotFound />} />
@@ -59,7 +66,7 @@ function App() {
           </Route>
         </Routes>
       </div>
-      <div id="loader-container" className="loader-container">
+      <div ref={ref} id="loader-container" className="loader-container">
         <div className="dot-typing"></div>
       </div>
     </>

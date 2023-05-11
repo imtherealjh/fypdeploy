@@ -59,6 +59,7 @@ const useAxiosPrivate = () => {
 
   const loader = window.document.getElementById("loader-container")!;
   useEffect(() => {
+    console.log(counter);
     if (counter > 0) {
       loader.style.display = "flex";
     } else {

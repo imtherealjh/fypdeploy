@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import SideBar from "../components/sidenavbar";
-import DashboardLayout from "../layout/DashboardLayout";
+import DashboardLayout from "../layoutComponent/DashboardLayout";
 import NurseHome from "../pages/nurse/Home";
 import Feedback from "../pages/all/Feedback";
 import Profile from "../pages/nurse/Profile";

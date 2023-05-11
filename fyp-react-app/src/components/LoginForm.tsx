@@ -56,7 +56,7 @@ export default function LoginForm() {
         setErrMsg("Missing Username or Password");
       } else if (err.response?.status === 409) {
         document.getElementById("closeModalBtn")?.click();
-        navigate("/aaa", { replace: true });
+        navigate("/requireVerify", { replace: true });
       } else {
         setErrMsg("Login failed");
       }

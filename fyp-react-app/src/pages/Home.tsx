@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import Carousel from "../components/carousel";
-import "../css/home.css";
 import { useState } from "react";
+
+import "../css/home.css";
 
 export default function Home() {
   const [current, setCurrent] = useState("patient");
