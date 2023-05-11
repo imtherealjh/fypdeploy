@@ -1,8 +1,13 @@
 package com.uow.FYP_23_S1_11.config;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,9 +17,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import com.uow.FYP_23_S1_11.domain.Appointment;
+import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Doctor;
+import com.uow.FYP_23_S1_11.domain.DoctorSchedule;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
-import com.uow.FYP_23_S1_11.repository.DoctorRepository;
+import com.uow.FYP_23_S1_11.enums.EWeekdays;
+import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
+import com.uow.FYP_23_S1_11.repository.ClinicRepository;
+import com.uow.FYP_23_S1_11.repository.DoctorScheduleRepository;
 import com.uow.FYP_23_S1_11.service.EmailService;
 
 import jakarta.persistence.EntityManager;
@@ -29,17 +39,59 @@ public class ScheduleTaskService {
     @PersistenceContext
     private EntityManager entityManager;
     @Autowired
-    private DoctorRepository doctorRepository;
+    private ClinicRepository clinicRepo;
+    @Autowired
+    private DoctorScheduleRepository doctorScheduleRepo;
+    @Autowired
+    private AppointmentRepository apptRepo;
     @Autowired
     private EmailService emailService;
 
     @Value("${spring.mail.username}")
     private String sender;
 
-    @Scheduled(cron = "30 * * * * *")
+    @Scheduled(cron = "10 0 0 * * *")
     @Async
     public void execute() {
+        List<LocalDate> dateRanges = LocalDate.now().datesUntil(LocalDate.now().plusDays(14))
+                .collect(Collectors.toList());
+        for (LocalDate date : dateRanges) {
+            DayOfWeek dow = date.getDayOfWeek();
+            String output = dow.getDisplayName(TextStyle.FULL, Locale.US);
+            EWeekdays day = EWeekdays.valueOf(output.toUpperCase());
 
+            System.out.println(date);
+            List<Clinic> clinics = clinicRepo.findByClinicsWithSchedule(date, day);
+            if (clinics.size() > 0) {
+                List<Appointment> appointmentList = new ArrayList<Appointment>();
+                for (Clinic clinic : clinics) {
+                    List<Doctor> clinicDoctor = clinic.getDoctor();
+                    LocalTime duration = clinic.getApptDuration();
+                    for (Doctor doctor : clinicDoctor) {
+                        List<DoctorSchedule> schedule = doctorScheduleRepo.findByDoctorAndDay(doctor, day);
+                        List<Appointment> timeslots = new ArrayList<>();
+                        for (DoctorSchedule doctorSchedule : schedule) {
+                            LocalTime newTime = doctorSchedule.getStartTime();
+                            while (newTime.compareTo(doctorSchedule.getEndTime()) < 0) {
+                                timeslots.add(Appointment
+                                        .builder()
+                                        .status(EAppointmentStatus.AVAILABLE)
+                                        .apptDoctor(doctor)
+                                        .apptClinic(doctor.getDoctorClinic())
+                                        .apptDate(date)
+                                        .apptTime(newTime)
+                                        .build());
+                                newTime = newTime.plusHours(duration.getHour())
+                                        .plusMinutes(duration.getMinute());
+                            }
+                        }
+                        appointmentList.addAll(timeslots);
+                    }
+                    apptRepo.saveAll(appointmentList);
+                    log.info("Added appointments for " + clinic.getClinicName() + " at " + LocalDate.now());
+                }
+            }
+        }
     }
 
     @Scheduled(cron = "59 59 23 * * *")

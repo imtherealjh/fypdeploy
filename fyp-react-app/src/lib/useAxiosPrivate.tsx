@@ -8,15 +8,12 @@ const useAxiosPrivate = () => {
   const refresh = useRefreshToken();
   const { auth } = useAuth();
 
-  let firstReq = true;
   useEffect(() => {
     const inc = (mod: any) => setCounter((c) => c + mod);
-    let origConfig: any = {};
 
     const requestInterceptor = axiosPrivate.interceptors.request.use(
       (config) => {
         inc(1);
-
         if (!config.headers["Authorization"]) {
           config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
         }
@@ -28,21 +25,19 @@ const useAxiosPrivate = () => {
     const responseInterceptor = axiosPrivate.interceptors.response.use(
       (response) => (inc(-1), response),
       async (error) => {
-        if (firstReq) {
-          firstReq = false;
-          origConfig = error?.config;
+        const origConfig = error?.config;
 
-          if (!origConfig?.sent) {
-            origConfig.sent = true;
-            try {
-              const accessToken = await refresh();
-              origConfig.headers["Authorization"] = `Bearer ${accessToken}`;
-              inc(-1);
-              return axiosPrivate(origConfig);
-            } catch (err) {
-              inc(-1);
-              return Promise.reject(err);
-            }
+        if (error?.response?.status === 406 && !origConfig?.sent) {
+          origConfig.sent = true;
+
+          try {
+            const accessToken = await refresh();
+            origConfig.headers["Authorization"] = `Bearer ${accessToken}`;
+            inc(-1);
+            return axiosPrivate(origConfig);
+          } catch (err) {
+            inc(-1);
+            return Promise.reject(err);
           }
         }
 

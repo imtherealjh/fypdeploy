@@ -34,7 +34,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
                         + "JOIN A.apptPatient aP "
                         + "LEFT JOIN aP.feedbackPatientClinic fPC "
                         + "LEFT JOIN aP.feedbackPatientDoctor fPD "
-                        + "WHERE A.appointmentId=:appointmentId GROUP BY A.appointmentId")
+                        + "WHERE A.appointmentId=:appointmentId "
+                        + "GROUP BY A.appointmentId")
         public Map<?, ?> findByApptId(@Param("appointmentId") Integer appointmentId);
 
         public List<Appointment> findByApptDateAndApptDoctor(LocalDate apptDate, Doctor apptDoctor);
