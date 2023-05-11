@@ -119,7 +119,6 @@ public class UserAccountServiceImpl implements UserAccountService {
             }
 
             String newAccessToken = jwtUtils.generateToken(ETokenType.ACCESS_TOKEN, user);
-            System.out.println(newAccessToken);
             String name = "admin";
             if (user.getRole() != ERole.SYSTEM_ADMIN) {
                 TypedQuery<String> query = entityManager.createNamedQuery("findNameInTables", String.class);
