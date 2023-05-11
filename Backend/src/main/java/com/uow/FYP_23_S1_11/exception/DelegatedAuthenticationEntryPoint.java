@@ -31,8 +31,8 @@ public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoi
         ApiError apiError;
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         if (throwable != null && throwable.getCause().getClass() == ExpiredJwtException.class) {
-            response.setStatus(403);
-            apiError = new ApiError(HttpStatus.FORBIDDEN, throwable);
+            response.setStatus(406);
+            apiError = new ApiError(HttpStatus.NOT_ACCEPTABLE, throwable);
         } else if (authException instanceof DisabledException) {
             response.setStatus(409);
             apiError = new ApiError(HttpStatus.CONFLICT, authException);
