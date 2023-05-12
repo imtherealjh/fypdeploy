@@ -37,10 +37,6 @@ export default function ClincRoutes() {
                     name: "Create Appointment Slots",
                     link: "create-appointment-slots",
                   },
-                  {
-                    name: "Subscription Plans",
-                    link: "subscription",
-                  },
                   { name: "Patient Feedback", link: "patient-feedback" },
                   { name: "System Feedback", link: "system-feedback" },
                 ]}

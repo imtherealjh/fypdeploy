@@ -1,11 +1,10 @@
 import { useNavigate, useParams } from "react-router-dom";
-import useAxiosPrivate from "../lib/useAxiosPrivate";
 import { useEffect } from "react";
+import axios from "../api/axios";
 
 export default function VerifyEmail() {
   const { code } = useParams();
   const navigate = useNavigate();
-  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => {
     let isMounted = true;
@@ -13,7 +12,7 @@ export default function VerifyEmail() {
 
     const verifyCode = async () => {
       try {
-        await axiosPrivate("/auth/verify?code=" + code);
+        await axios.get("/auth/verify?code=" + code);
         alert("Code has been verified!!");
       } catch (err) {
         console.log(err);

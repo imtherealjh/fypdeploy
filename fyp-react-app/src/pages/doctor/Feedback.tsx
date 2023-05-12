@@ -1,42 +1,35 @@
-import React, { useEffect, useState } from "react";
-import "../../css/feedback.css";
+import { useEffect, useState } from "react";
 import useAxiosPrivate from "../../lib/useAxiosPrivate";
 
 function Feedback() {
   const axiosPrivate = useAxiosPrivate();
   const [feedback, setFeedback] = useState({});
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log("Submitted feedback:", feedback);
-    // You can send the feedback to the backend here
-    setFeedback("");
-  };
+  useEffect(() => {
+    let isMounted = true;
+    let controller = new AbortController();
 
-  const handleFeedbackChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setFeedback(event.target.value);
-  };
+    const fetchData = async () => {
+      try {
+        const response = await axiosPrivate.get("/doctor/getFeedback");
+        isMounted && setFeedback(response.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
 
   return (
     <>
       <h1>Feedback</h1>
-      <div className="feedback-container">
-        <h2>Feedback</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="feedback">Your feedback:</label>
-            <textarea
-              id="feedback"
-              name="feedback"
-              rows={4}
-              onChange={handleFeedbackChange}
-            />
-          </div>
-          <button type="submit">Submit Feedback</button>
-        </form>
-      </div>
+      <div className="feedback-container"></div>
     </>
   );
 }

@@ -3,6 +3,7 @@ package com.uow.FYP_23_S1_11.config;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -29,6 +30,9 @@ public class SecurityConfig {
     private AuthenticationEntryPoint authEntryPoint;
     @Autowired
     private AccessDeniedHandler accessDeniedHandler;
+
+    @Value("CLIENT.URL")
+    private String clientURL;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -59,7 +63,7 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(
                 Arrays.asList("http://localhost:5173", "http://127.0.0.1:5173",
-                        "https://fyp-react-app.vercel.app/", "https://fypdeploy.vercel.app/"));
+                        "https://fyp-react-app.vercel.app/", "https://fypdeploy.vercel.app/", clientURL));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT",
                 "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);

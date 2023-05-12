@@ -23,7 +23,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-
 public class PatientFeedbackDoctor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

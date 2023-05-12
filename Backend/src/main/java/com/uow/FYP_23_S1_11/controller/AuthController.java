@@ -68,6 +68,7 @@ public class AuthController {
 
     @GetMapping("/verify")
     public ResponseEntity<Boolean> verifyUser(@RequestParam("code") @NotEmpty String code) {
+        System.out.println(code);
         return ResponseEntity.ok(userAccountService.verify(code));
     }
 
