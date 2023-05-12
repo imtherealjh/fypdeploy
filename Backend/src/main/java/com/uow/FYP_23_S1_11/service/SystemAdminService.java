@@ -16,10 +16,6 @@ public interface SystemAdminService {
 
     public Boolean createNewSpecialty(SpecialtyRequest specialty);
 
-    public Boolean updateSpecialty(Integer id, String specialty);
-
-    public Boolean deleteSpecialty(Integer id);
-
     public Boolean approveClinic(Integer clinicId);
 
     public Boolean rejectClinic(Integer clinicId);

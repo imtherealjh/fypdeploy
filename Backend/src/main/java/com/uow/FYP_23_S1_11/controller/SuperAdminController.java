@@ -20,7 +20,6 @@ import com.uow.FYP_23_S1_11.service.SystemAdminService;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 @RestController
@@ -50,17 +49,6 @@ public class SuperAdminController {
     @PostMapping("/createNewSpecialty")
     public ResponseEntity<?> createNewSpecialty(@RequestBody @Valid SpecialtyRequest specialty) {
         return ResponseEntity.ok(sysAdminService.createNewSpecialty(specialty));
-    }
-
-    @PostMapping("/updateSpecialty")
-    public ResponseEntity<?> updateSpecialty(@RequestParam @NotNull Integer id,
-            @RequestBody @NotEmpty String specialty) {
-        return ResponseEntity.ok(sysAdminService.updateSpecialty(id, specialty));
-    }
-
-    @PostMapping("/deleteSpecialty")
-    public ResponseEntity<?> deleteSpecialty(@RequestParam @NotNull Integer id) {
-        return ResponseEntity.ok(sysAdminService.deleteSpecialty(id));
     }
 
     @PutMapping("/approveClinic")

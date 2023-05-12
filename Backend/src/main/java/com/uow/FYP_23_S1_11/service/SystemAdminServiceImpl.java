@@ -92,18 +92,6 @@ public class SystemAdminServiceImpl implements SystemAdminService {
     }
 
     @Override
-    public Boolean updateSpecialty(Integer id, String specialty) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateSpecialty'");
-    }
-
-    @Override
-    public Boolean deleteSpecialty(Integer id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteSpecialty'");
-    }
-
-    @Override
     public Boolean approveClinic(Integer clinicId) {
         try {
             Clinic clinic = findClinicById(clinicId);

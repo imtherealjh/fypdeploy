@@ -121,7 +121,8 @@ public class AllServiceImpl implements AllService {
         Optional<SystemFeedback> systemFeedbackOptional = systemFeedbackRepo
                 .findById(systemFeedbackId);
         if (systemFeedbackOptional.isEmpty()
-                || user.getAccountId() != systemFeedbackOptional.get().getAccountFeedback().getAccountId()) {
+                || !user.getAccountId().equals(systemFeedbackOptional.get()
+                        .getAccountFeedback().getAccountId())) {
             throw new IllegalArgumentException("System feedback does not exist...");
         }
 
