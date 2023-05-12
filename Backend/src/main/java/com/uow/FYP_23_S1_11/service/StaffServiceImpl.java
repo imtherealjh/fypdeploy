@@ -115,8 +115,7 @@ public class StaffServiceImpl implements StaffService {
                 hsql += user.getRole() == ERole.DOCTOR ? "a.apptDoctor = :doctor AND " : "";
 
                 hsql += "a.apptClinic = :clinic AND "
-                                + "a.apptDate = :date "
-                                + "GROUP BY a.apptPatient, a.apptTime";
+                                + "a.apptDate = :date ";
 
                 TypedQuery<Object> query = entityManager.createQuery(
                                 hsql,
