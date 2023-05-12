@@ -95,8 +95,8 @@ public class AppointmentServiceImpl implements AppointmentService {
         // if patient is editing, check if it is the correct patient
         // if frontdesk/nurse that is updating, check if the correct clinic
         return !((patient == null && clinic == null) ||
-                (patient != null && patient.getPatientId() != verify.getApptPatient().getPatientId()) ||
-                (clinic != null && clinic.getClinicId() != verify.getApptClinic().getClinicId() ||
+                (patient != null && !patient.getPatientId().equals(verify.getApptPatient().getPatientId())) ||
+                (clinic != null && !clinic.getClinicId().equals(verify.getApptClinic().getClinicId()) ||
                         !verify.getApptDoctor().getDoctorAccount().getIsEnabled() ||
                         !verify.getApptClinic().getClinicAccount().getIsEnabled() ||
                         verify.getStatus() != status ||

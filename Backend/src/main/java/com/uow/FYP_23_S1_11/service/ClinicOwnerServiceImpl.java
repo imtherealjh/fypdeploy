@@ -435,38 +435,39 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
 
             TreeSet<DoctorScheduleRequest> ts = registerDoctorReq.getSchedule();
             List<DoctorScheduleRequest> dsl = new ArrayList<DoctorScheduleRequest>(ts);
-            List<DoctorSchedule> origDoctorSchedules = doctor.getDoctorSchedule();
+            if (dsl.size() > 0) {
+                List<DoctorSchedule> origDoctorSchedules = doctor.getDoctorSchedule();
+                List<DoctorSchedule> _schedules = new ArrayList<DoctorSchedule>();
+                for (int i = 0; i < dsl.size(); i++) {
+                    var elem1 = dsl.get(i);
 
-            List<DoctorSchedule> _schedules = new ArrayList<DoctorSchedule>();
-            for (int i = 0; i < dsl.size(); i++) {
-                var elem1 = dsl.get(i);
-
-                if (i != dsl.size() - 1) {
-                    var elem2 = dsl.get(i + 1);
-                    if (conflictSchedule(elem1, elem2)) {
-                        throw new IllegalArgumentException("Conflicting schedules");
+                    if (i != dsl.size() - 1) {
+                        var elem2 = dsl.get(i + 1);
+                        if (conflictSchedule(elem1, elem2)) {
+                            throw new IllegalArgumentException("Conflicting schedules");
+                        }
+                    } else if (LocalTime.parse(elem1.getStartTime()).isBefore(clinic.getOpeningHrs())) {
+                        throw new IllegalArgumentException(
+                                "Doctor's work start time should not be before the opening hours of the clinic...");
+                    } else if (LocalTime.parse(elem1.getEndTime()).isAfter(clinic.getClosingHrs())) {
+                        throw new IllegalArgumentException(
+                                "Doctor's end start time should not be after the closing hours of the clinic...");
                     }
-                } else if (LocalTime.parse(elem1.getStartTime()).isBefore(clinic.getOpeningHrs())) {
-                    throw new IllegalArgumentException(
-                            "Doctor's work start time should not be before the opening hours of the clinic...");
-                } else if (LocalTime.parse(elem1.getEndTime()).isAfter(clinic.getClosingHrs())) {
-                    throw new IllegalArgumentException(
-                            "Doctor's end start time should not be after the closing hours of the clinic...");
+
+                    DoctorSchedule newSchedule = (DoctorSchedule) mapper.convertValue(elem1,
+                            DoctorSchedule.class);
+                    newSchedule.setDoctor(doctor);
+                    _schedules.add(newSchedule);
                 }
 
-                DoctorSchedule newSchedule = (DoctorSchedule) mapper.convertValue(elem1,
-                        DoctorSchedule.class);
-                newSchedule.setDoctor(doctor);
-                _schedules.add(newSchedule);
+                var _newSchedules = _schedules.stream().filter(obj -> !origDoctorSchedules.contains(obj))
+                        .collect(Collectors.toList());
+                var _removable = origDoctorSchedules.stream().filter(obj -> !_schedules.contains(obj))
+                        .collect(Collectors.toList());
+
+                doctorScheduleRepo.saveAll(_newSchedules);
+                doctorScheduleRepo.deleteAll(_removable);
             }
-
-            var _newSchedules = _schedules.stream().filter(obj -> !origDoctorSchedules.contains(obj))
-                    .collect(Collectors.toList());
-            var _removable = origDoctorSchedules.stream().filter(obj -> !_schedules.contains(obj))
-                    .collect(Collectors.toList());
-
-            doctorScheduleRepo.saveAll(_newSchedules);
-            doctorScheduleRepo.deleteAll(_removable);
 
             doctorRepo.save(doctor);
             return true;
