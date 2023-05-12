@@ -10,5 +10,5 @@ public interface DoctorService {
 
         public Boolean updateProfile(RegisterDoctorRequest registerDoctorRequest);
 
-        public List<PatientFeedbackDoctor> getByDoctorFeedbackId(Integer doctorFeedbackId);
+        public List<PatientFeedbackDoctor> getDoctorFeedback();
 }

@@ -5,7 +5,6 @@ import RegisterAccount from "../pages/clinic/RegisterAccount";
 import ManageAccount from "../pages/clinic/ManageAccount";
 import Home from "../pages/clinic/Home";
 import CreateAppointmentSlots from "../pages/clinic/CreateAppointmentSlots";
-import Subscription from "../pages/clinic/Subscription";
 import Feedback from "../pages/clinic/Feedback";
 import NotFound from "../pages/NotFound";
 import Profile from "../pages/clinic/Profile";
@@ -61,7 +60,6 @@ export default function ClincRoutes() {
             path="create-appointment-slots"
             element={<CreateAppointmentSlots />}
           />
-          <Route path="subscription" element={<Subscription />} />
           <Route path="patient-feedback" element={<Feedback />} />
           <Route path="system-feedback">
             <Route index path="" element={<SystemFeedback />} />

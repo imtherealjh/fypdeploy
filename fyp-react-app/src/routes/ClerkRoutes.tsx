@@ -5,7 +5,6 @@ import ClerkHome from "../pages/clerk/Home";
 import Appointments from "../pages/nurseAndClerk/Appointments";
 import Queue from "../pages/clerk/Queue";
 import Articles from "../pages/clerk/Articles";
-import Payment from "../pages/clerk/Payment";
 import Feedback from "../pages/all/Feedback";
 import NotFound from "../pages/NotFound";
 import Profile from "../pages/clerk/Profile";
@@ -31,7 +30,6 @@ export default function ClerkRoutes() {
                   { name: "Queue", link: "queue" },
                   { name: "Patient List", link: "patients", end: false },
                   { name: "Articles", link: "articles", end: false },
-                  { name: "Payment", link: "payment" },
                   { name: "System Feedback", link: "system-feedback" },
                 ]}
                 bottom={true}
@@ -52,7 +50,6 @@ export default function ClerkRoutes() {
             <Route index path="" element={<PatientListPage />} />
             <Route path="details" element={<ViewPersonalDetails />} />
           </Route>
-          <Route path="payment" element={<Payment />} />
           <Route path="system-feedback">
             <Route index path="" element={<SystemFeedback />} />
             <Route path="submit" element={<Feedback />} />

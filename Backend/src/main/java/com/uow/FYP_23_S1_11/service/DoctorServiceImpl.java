@@ -48,13 +48,12 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public List<PatientFeedbackDoctor> getByDoctorFeedbackId(Integer doctorFeedbackId) {
-        List<PatientFeedbackDoctor> patientFeedbackDoctor = patientFeedbackDoctorRepo
-                .findByDoctorFeedbackId(doctorFeedbackId);
-        if (patientFeedbackDoctor.isEmpty() == false) {
-            return patientFeedbackDoctor;
-        } else {
+    public List<PatientFeedbackDoctor> getDoctorFeedback() {
+        UserAccount user = Constants.getAuthenticatedUser();
+        Doctor doctor = user.getDoctor();
+        if (doctor == null) {
             throw new IllegalArgumentException("Feedback not found...");
         }
+        return patientFeedbackDoctorRepo.findByDoctorFeedback(doctor);
     }
 }

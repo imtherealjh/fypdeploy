@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../css/feedback.css";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 
 function Feedback() {
-  const [feedback, setFeedback] = useState("");
+  const axiosPrivate = useAxiosPrivate();
+  const [feedback, setFeedback] = useState({});
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -29,7 +31,6 @@ function Feedback() {
               id="feedback"
               name="feedback"
               rows={4}
-              value={feedback}
               onChange={handleFeedbackChange}
             />
           </div>

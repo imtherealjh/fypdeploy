@@ -32,10 +32,9 @@ public class DoctorController {
     @Autowired
     private DoctorService doctorService;
 
-    @GetMapping("/getByDoctorFeedbackId")
-    public ResponseEntity<List<PatientFeedbackDoctor>> getByDoctorFeedbackId(
-            @NotNull @RequestParam Integer doctorFeedbackId) {
-        return ResponseEntity.ok(doctorService.getByDoctorFeedbackId(doctorFeedbackId));
+    @GetMapping("/getDoctorFeedback")
+    public ResponseEntity<List<PatientFeedbackDoctor>> getDoctorFeedback() {
+        return ResponseEntity.ok(doctorService.getDoctorFeedback());
     }
 
     @GetMapping("/getProfile")
