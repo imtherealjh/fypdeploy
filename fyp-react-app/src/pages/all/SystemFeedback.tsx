@@ -62,6 +62,7 @@ export default function SystemFeedback() {
     endPage = page + 1;
     startPage = page - 1;
   }
+  console.log(startPage, endPage);
 
   if (page + 1 == totalPage) {
     startPage = page - 2;
