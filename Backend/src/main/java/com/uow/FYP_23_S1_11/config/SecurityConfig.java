@@ -63,7 +63,7 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(
                 Arrays.asList("http://localhost:5173", "http://127.0.0.1:5173",
-                        "https://fyp-react-app.vercel.app/", "https://fypdeploy.vercel.app/", clientURL));
+                        "https://fypdeploy.vercel.app/", clientURL));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT",
                 "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
