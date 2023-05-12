@@ -34,7 +34,6 @@ export default function PatientRoutes() {
                     name: "Medical Records",
                     link: "medical-records",
                   },
-                  { name: "Payments", link: "payment" },
                   { name: "System Feedback", link: "system-feedback" },
                 ]}
                 bottom={true}
