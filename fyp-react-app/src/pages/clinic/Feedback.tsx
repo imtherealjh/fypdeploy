@@ -36,25 +36,25 @@ function Feedback() {
   }, [page]);
 
   const pagination: any = [];
-  if (totalPage > 1) {
-    let startPage, endPage;
-    startPage = endPage = page;
 
-    if (page == 0) {
-      endPage = startPage + 2;
-    } else {
-      endPage = page + 1;
-      startPage = page - 1;
-    }
+  let startPage, endPage;
+  startPage = endPage = page;
 
-    if (page + 1 == totalPage) {
-      startPage = page - 2;
-      endPage = totalPage - 1;
-    }
+  if (page == 0) {
+    endPage = startPage + 2;
+  } else {
+    endPage = page + 1;
+    startPage = page - 1;
+  }
 
-    while (startPage <= endPage) {
-      pagination.push(startPage++);
-    }
+  if (page + 1 == totalPage) {
+    startPage = page - 2;
+    startPage = startPage > 0 ? startPage : 0;
+    endPage = totalPage - 1;
+  }
+
+  while (startPage <= endPage) {
+    pagination.push(startPage++);
   }
 
   return (

@@ -23,9 +23,12 @@ export default function SystemFeedback() {
 
     const fetchData = async () => {
       try {
-        let response = await axiosPrivate.get("/all/getSystemFeedback", {
-          signal: controller.signal,
-        });
+        let response = await axiosPrivate.get(
+          `/all/getSystemFeedback?page=${page}`,
+          {
+            signal: controller.signal,
+          }
+        );
 
         console.log(response);
 
@@ -61,6 +64,7 @@ export default function SystemFeedback() {
 
   if (page + 1 == totalPage) {
     startPage = page - 2;
+    startPage = startPage > 0 ? startPage : 0;
     endPage = totalPage - 1;
   }
 
@@ -171,21 +175,23 @@ export default function SystemFeedback() {
             ))}
           </tbody>
         </table>
-        <nav>
-          <ul style={{ background: "transparent" }} className="pagination">
-            {pagination.map((el: any) => (
-              <li className="page-item">
-                <a
-                  className={el === page ? `page-link active` : "page-link"}
-                  href="#"
-                  onClick={() => setPage(el)}
-                >
-                  {el + 1}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {feedback.length > 1 && (
+          <nav>
+            <ul style={{ background: "transparent" }} className="pagination">
+              {pagination.map((el: any) => (
+                <li className="page-item">
+                  <a
+                    className={el === page ? `page-link active` : "page-link"}
+                    href="#"
+                    onClick={() => setPage(el)}
+                  >
+                    {el + 1}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
         {auth.role.toLowerCase() !== "system_admin" && (
           <Link to="submit">
             <button type="button" className="btn btn-primary w-100">
