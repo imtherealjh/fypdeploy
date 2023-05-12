@@ -8,7 +8,6 @@ import SearchClinic from "../pages/patient/SearchClinic";
 import Queue from "../pages/patient/Queue";
 import MedicalRecords from "../pages/patient/MedicalRecords";
 import Feedback from "../pages/all/Feedback";
-import Payment from "../pages/patient/Payment";
 import NotFound from "../pages/NotFound";
 import Profile from "../pages/patient/Profile";
 import Faq from "../pages/patient/Faq";
@@ -52,7 +51,6 @@ export default function PatientRoutes() {
           </Route>
           <Route path="queue" element={<Queue />} />
           <Route path="medical-records" element={<MedicalRecords />} />
-          <Route path="payment" element={<Payment />} />
           <Route path="system-feedback">
             <Route index path="" element={<SystemFeedback />} />
             <Route path="submit" element={<Feedback />} />
