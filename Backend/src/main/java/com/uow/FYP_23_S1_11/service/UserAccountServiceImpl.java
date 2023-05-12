@@ -270,7 +270,6 @@ public class UserAccountServiceImpl implements UserAccountService {
                 + "GoDoctor.";
 
         String verifyURL = frontendUrl + "verify/" + user.getVerificationCode();
-        System.out.println(verifyURL);
         content = content.replace("[[URL]]", verifyURL);
         content = content.replace("[[name]]", user.getUsername());
 

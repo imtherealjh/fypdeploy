@@ -68,6 +68,9 @@ export default function DashboardLayout({ children }: Props) {
               try {
                 await axiosPrivate.post("/auth/logout");
                 alert("Logout successful!");
+                window.document.getElementById(
+                  "loader-container"
+                )!.style.display = "none";
                 navigate("/");
               } catch (error) {
                 alert("There is an error while logging out...");

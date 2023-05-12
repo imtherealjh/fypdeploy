@@ -15,6 +15,7 @@ export default function RegisterClinic() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    window.document.getElementById("loader-container")!.style.display = "flex";
     try {
       await axios.post("/auth/registerClinic", inputs, {
         headers: {
@@ -22,6 +23,8 @@ export default function RegisterClinic() {
         },
       });
       alert("Clinic successfully registered successfully");
+      window.document.getElementById("loader-container")!.style.display =
+        "none";
       navigate("/", { replace: true });
     } catch (err: any) {
       if (!err?.response) {
@@ -33,6 +36,8 @@ export default function RegisterClinic() {
         console.log(err);
         alert("Unknown error");
       }
+      window.document.getElementById("loader-container")!.style.display =
+        "none";
     }
   };
 

@@ -5,13 +5,18 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -43,7 +48,6 @@ import com.uow.FYP_23_S1_11.repository.DoctorRepository;
 import com.uow.FYP_23_S1_11.repository.DoctorScheduleRepository;
 import com.uow.FYP_23_S1_11.repository.FrontDeskRepository;
 import com.uow.FYP_23_S1_11.repository.NurseRepository;
-import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
 import com.uow.FYP_23_S1_11.repository.SpecialtyRepository;
 import com.uow.FYP_23_S1_11.repository.UserAccountRepository;
 
@@ -80,9 +84,6 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
 
     @Autowired
     private AppointmentRepository apptRepo;
-
-    @Autowired
-    private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
 
     @Override
     public Object getProfile() {
@@ -407,14 +408,35 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     }
 
     @Override
-    public List<PatientFeedbackClinic> getByClinicFeedbackId(Integer clinicFeedbackId) {
-        List<PatientFeedbackClinic> patientFeedbackClinic = patientFeedbackClinicRepo
-                .findByClinicFeedbackId(clinicFeedbackId);
-        if (patientFeedbackClinic.isEmpty() == false) {
-            return patientFeedbackClinic;
-        } else {
+    public Map<?, ?> getClinicFeedback(Pageable pageable) {
+        UserAccount user = Constants.getAuthenticatedUser();
+        Clinic clinic = user.getClinic();
+        if (clinic == null) {
             throw new IllegalArgumentException("Feedback not found...");
         }
+
+        TypedQuery<PatientFeedbackClinic> query = entityManager.createQuery(
+                "SELECT pfc FROM PatientFeedbackClinic pfc WHERE pfc.clinicFeedback = :clinic",
+                PatientFeedbackClinic.class);
+        query.setParameter("clinic", clinic);
+
+        List<Map<String, Object>> data = query
+                .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultStream()
+                .map(obj -> {
+                    Map<String, Object> object = new HashMap<>();
+                    object.put("patient", obj.getPatientClinicFeedback().getName());
+                    object.put("date", obj.getLocalDateTime().toLocalDate());
+                    object.put("rating", obj.getRatings());
+                    object.put("feedback", obj.getFeedback());
+                    return object;
+                })
+                .collect(Collectors.toList());
+
+        Page<?> page = PageableExecutionUtils.getPage(data, pageable,
+                () -> query.getResultList().size());
+        return Constants.convertToResponse(page);
     }
 
     @Override
@@ -435,39 +457,42 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
 
             TreeSet<DoctorScheduleRequest> ts = registerDoctorReq.getSchedule();
             List<DoctorScheduleRequest> dsl = new ArrayList<DoctorScheduleRequest>(ts);
-            if (dsl.size() > 0) {
-                List<DoctorSchedule> origDoctorSchedules = doctor.getDoctorSchedule();
-                List<DoctorSchedule> _schedules = new ArrayList<DoctorSchedule>();
-                for (int i = 0; i < dsl.size(); i++) {
-                    var elem1 = dsl.get(i);
+            List<DoctorSchedule> origDoctorSchedules = doctor.getDoctorSchedule();
 
-                    if (i != dsl.size() - 1) {
-                        var elem2 = dsl.get(i + 1);
-                        if (conflictSchedule(elem1, elem2)) {
-                            throw new IllegalArgumentException("Conflicting schedules");
-                        }
-                    } else if (LocalTime.parse(elem1.getStartTime()).isBefore(clinic.getOpeningHrs())) {
-                        throw new IllegalArgumentException(
-                                "Doctor's work start time should not be before the opening hours of the clinic...");
-                    } else if (LocalTime.parse(elem1.getEndTime()).isAfter(clinic.getClosingHrs())) {
-                        throw new IllegalArgumentException(
-                                "Doctor's end start time should not be after the closing hours of the clinic...");
+            List<DoctorSchedule> _schedules = new ArrayList<DoctorSchedule>();
+            for (int i = 0; i < dsl.size(); i++) {
+                var elem1 = dsl.get(i);
+
+                if (i != dsl.size() - 1) {
+                    var elem2 = dsl.get(i + 1);
+                    if (conflictSchedule(elem1, elem2)) {
+                        throw new IllegalArgumentException("Conflicting schedules");
                     }
-
-                    DoctorSchedule newSchedule = (DoctorSchedule) mapper.convertValue(elem1,
-                            DoctorSchedule.class);
-                    newSchedule.setDoctor(doctor);
-                    _schedules.add(newSchedule);
+                } else if (LocalTime.parse(elem1.getStartTime()).isBefore(clinic.getOpeningHrs())) {
+                    throw new IllegalArgumentException(
+                            "Doctor's work start time should not be before the opening hours of the clinic...");
+                } else if (LocalTime.parse(elem1.getEndTime()).isAfter(clinic.getClosingHrs())) {
+                    throw new IllegalArgumentException(
+                            "Doctor's end start time should not be after the closing hours of the clinic...");
                 }
 
-                var _newSchedules = _schedules.stream().filter(obj -> !origDoctorSchedules.contains(obj))
-                        .collect(Collectors.toList());
-                var _removable = origDoctorSchedules.stream().filter(obj -> !_schedules.contains(obj))
-                        .collect(Collectors.toList());
-
-                doctorScheduleRepo.saveAll(_newSchedules);
-                doctorScheduleRepo.deleteAll(_removable);
+                DoctorSchedule newSchedule = (DoctorSchedule) mapper.convertValue(elem1,
+                        DoctorSchedule.class);
+                newSchedule.setDoctor(doctor);
+                _schedules.add(newSchedule);
             }
+
+            var _newSchedules = _schedules.stream().filter(obj -> !origDoctorSchedules.contains(obj))
+                    .collect(Collectors.toList());
+            var _removable = origDoctorSchedules.stream().filter(obj -> !_schedules.contains(obj))
+                    .collect(Collectors.toList());
+
+            doctorScheduleRepo.saveAll(_newSchedules);
+            doctorScheduleRepo.deleteAll(_removable);
+
+            doctor.setName(registerDoctorReq.getName());
+            doctor.setEmail(registerDoctorReq.getEmail());
+            doctor.setProfile(registerDoctorReq.getProfile());
 
             doctorRepo.save(doctor);
             return true;

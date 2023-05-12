@@ -2,8 +2,10 @@ package com.uow.FYP_23_S1_11.controller;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,6 +49,12 @@ public class ClinicOwnerController {
     @GetMapping("/getProfile")
     public ResponseEntity<?> getProfile() {
         return ResponseEntity.ok(clincOwnerService.getProfile());
+    }
+
+    @GetMapping("/getFeedback")
+    public ResponseEntity<Map<?, ?>> getClinicFeedback(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(clincOwnerService.getClinicFeedback(PageRequest.of(page, size)));
     }
 
     @GetMapping("/getVisitingPatients")
@@ -173,10 +181,5 @@ public class ClinicOwnerController {
     public ResponseEntity<Boolean> generateDoctorAppointmentSlots(
             @Valid @RequestBody GenerateAppointmentRequest generateAppointmentReq) {
         return ResponseEntity.ok(clincOwnerService.generateDoctorAppointmentSlots(generateAppointmentReq));
-    }
-
-    @GetMapping("/getByClinicFeedbackId")
-    public ResponseEntity<List<PatientFeedbackClinic>> getByClinicFeedbackId(@RequestParam Integer clinicFeedbackId) {
-        return ResponseEntity.ok(clincOwnerService.getByClinicFeedbackId(clinicFeedbackId));
     }
 }

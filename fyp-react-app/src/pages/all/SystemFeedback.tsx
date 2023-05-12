@@ -172,7 +172,7 @@ export default function SystemFeedback() {
             ))}
           </tbody>
         </table>
-        {feedback.length < 1 && (
+        {feedback.length > 1 && (
           <nav>
             <ul style={{ background: "transparent" }} className="pagination">
               {pagination.map((el: any) => (

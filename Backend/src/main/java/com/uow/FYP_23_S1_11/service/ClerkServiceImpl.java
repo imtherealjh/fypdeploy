@@ -7,15 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.uow.FYP_23_S1_11.Constants;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
-import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
-import com.uow.FYP_23_S1_11.enums.EQueueStatus;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.FrontDesk;
-import com.uow.FYP_23_S1_11.domain.Queue;
 import com.uow.FYP_23_S1_11.domain.request.EducationalMaterialRequest;
 import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
 import com.uow.FYP_23_S1_11.repository.FrontDeskRepository;

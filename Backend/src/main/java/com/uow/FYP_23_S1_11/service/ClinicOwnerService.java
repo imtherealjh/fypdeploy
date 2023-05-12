@@ -2,6 +2,9 @@ package com.uow.FYP_23_S1_11.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.domain.Pageable;
 
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
@@ -34,7 +37,7 @@ public interface ClinicOwnerService {
 
     public Boolean generateDoctorAppointmentSlots(GenerateAppointmentRequest generateDoctorApptReq);
 
-    public List<PatientFeedbackClinic> getByClinicFeedbackId(Integer clinicFeedbackId);
+    public Map<?, ?> getClinicFeedback(Pageable pageable);
 
     public Boolean updateProfile(RegisterClinicRequest registerClinicRequest);
 

@@ -54,7 +54,7 @@ export default function SpecialtyPage() {
               </tr>
             )}
             {speciality.map((speciality: any, idx: number) => (
-              <tr>
+              <tr key={idx}>
                 <td scope="row">{idx + 1}</td>
                 <td scope="row">{speciality.type}</td>
               </tr>

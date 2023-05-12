@@ -1,8 +1,11 @@
 package com.uow.FYP_23_S1_11.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,10 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uow.FYP_23_S1_11.constraints.OnUpdate;
-import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 import com.uow.FYP_23_S1_11.service.DoctorService;
 
@@ -30,14 +33,15 @@ public class DoctorController {
     @Autowired
     private DoctorService doctorService;
 
-    @GetMapping("/getFeedback")
-    public ResponseEntity<List<PatientFeedbackDoctor>> getDoctorFeedback() {
-        return ResponseEntity.ok(doctorService.getDoctorFeedback());
-    }
-
     @GetMapping("/getProfile")
     public ResponseEntity<Object> getProfile() {
         return ResponseEntity.ok(doctorService.getProfile());
+    }
+
+    @GetMapping("/getFeedback")
+    public ResponseEntity<Map<?, ?>> getDoctorFeedback(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(doctorService.getDoctorFeedback(PageRequest.of(page, size)));
     }
 
     @Validated(OnUpdate.class)

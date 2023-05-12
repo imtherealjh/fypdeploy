@@ -1,40 +1,108 @@
-import React, { useState } from "react";
-import "../../css/feedback.css";
+import { useEffect, useState } from "react";
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
 
 function Feedback() {
-  const [feedback, setFeedback] = useState("");
+  const axiosPrivate = useAxiosPrivate();
+  const [page, setPage] = useState(0);
+  const [totalPage, setTotalPage] = useState(0);
+  const [feedback, setFeedback] = useState<any>([]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    console.log("Submitted feedback:", feedback);
-    // You can send the feedback to the backend here
-    setFeedback("");
-  };
+  useEffect(() => {
+    let isMounted = true;
+    let controller = new AbortController();
 
-  const handleFeedbackChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    setFeedback(event.target.value);
-  };
+    const fetchData = async () => {
+      try {
+        const response = await axiosPrivate.get(
+          `/clinicOwner/getFeedback?page=${page}`
+        );
+
+        const { content, current_page, total_pages } = response.data;
+
+        isMounted && setFeedback(content);
+        isMounted && setPage(current_page);
+        isMounted && setTotalPage(total_pages);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, [page]);
+
+  const pagination: any = [];
+  if (totalPage > 1) {
+    let startPage, endPage;
+    startPage = endPage = page;
+
+    if (page == 0) {
+      endPage = startPage + 2;
+    } else {
+      endPage = page + 1;
+      startPage = page - 1;
+    }
+
+    if (page + 1 == totalPage) {
+      startPage = page - 2;
+      endPage = totalPage - 1;
+    }
+
+    while (startPage <= endPage) {
+      pagination.push(startPage++);
+    }
+  }
 
   return (
     <>
       <h1>Feedback</h1>
-      <div className="feedback-container">
-        <h2>Feedback</h2>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="feedback">Your feedback:</label>
-            <textarea
-              id="feedback"
-              name="feedback"
-              rows={4}
-              value={feedback}
-              onChange={handleFeedbackChange}
-            />
-          </div>
-          <button type="submit">Submit Feedback</button>
-        </form>
+      <div>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Date</th>
+              <th>Feedback</th>
+              <th>Ratings</th>
+            </tr>
+          </thead>
+          <tbody>
+            {feedback.length < 1 && (
+              <tr>
+                <td colSpan={4}>No data available to read...</td>
+              </tr>
+            )}
+            {feedback.map((feedback: any, idx: number) => (
+              <tr key={idx}>
+                <td>{feedback.patient}</td>
+                <td>{feedback.date}</td>
+                <td>{feedback.feedback}</td>
+                <td>{feedback.rating}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {feedback.length > 1 && (
+          <nav>
+            <ul style={{ background: "transparent" }} className="pagination">
+              {pagination.map((el: any) => (
+                <li className="page-item">
+                  <a
+                    className={el === page ? `page-link active` : "page-link"}
+                    href="#"
+                    onClick={() => setPage(el)}
+                  >
+                    {el + 1}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
       </div>
     </>
   );

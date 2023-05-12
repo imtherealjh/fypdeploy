@@ -7,8 +7,6 @@ export default function SpecialtyPage() {
   const axiosPrivate = useAxiosPrivate();
   const [formData, setFormData] = useState<any>({});
 
-  console.log(formData);
-
   const handleSubmit = async () => {
     try {
       await axiosPrivate.post(`/sysAdmin/createNewSpecialty`, formData);

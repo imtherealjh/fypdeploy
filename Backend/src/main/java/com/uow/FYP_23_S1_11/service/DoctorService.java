@@ -1,8 +1,9 @@
 package com.uow.FYP_23_S1_11.service;
 
-import java.util.List;
+import java.util.Map;
 
-import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
+import org.springframework.data.domain.Pageable;
+
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;
 
 public interface DoctorService {
@@ -10,5 +11,5 @@ public interface DoctorService {
 
         public Boolean updateProfile(RegisterDoctorRequest registerDoctorRequest);
 
-        public List<PatientFeedbackDoctor> getDoctorFeedback();
+        public Map<?, ?> getDoctorFeedback(Pageable pageable);
 }

@@ -77,7 +77,7 @@ export default function Articles() {
           </div>
         ))}
       </div>
-      {articles.length < 1 && (
+      {articles.length > 1 && (
         <nav>
           <ul style={{ background: "transparent" }} className="pagination">
             {pagination.map((el: any) => (

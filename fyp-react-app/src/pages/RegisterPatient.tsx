@@ -15,11 +15,14 @@ export default function RegisterPatient() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    window.document.getElementById("loader-container")!.style.display = "flex";
     try {
       await axios.post("/auth/registerPatient", inputs);
       alert(
         "Patient successfully registered successfully, please check your email for the verification..."
       );
+      window.document.getElementById("loader-container")!.style.display =
+        "none";
       navigate("/", { replace: true });
     } catch (err: any) {
       if (!err?.response) {
@@ -29,6 +32,8 @@ export default function RegisterPatient() {
       } else {
         alert("Unknown error");
       }
+      window.document.getElementById("loader-container")!.style.display =
+        "none";
     }
   };
 

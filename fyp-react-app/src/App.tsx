@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { lazy, useEffect, useRef } from "react";
+import { lazy } from "react";
 
 // Layouts
 import LandingPageLayout from "./layoutComponent/LandingPageLayout";
@@ -25,11 +25,6 @@ const PatientRoutes = lazy(() => import("./routes/PatientRoutes"));
 const NurseRoutes = lazy(() => import("./routes/NurseRoutes"));
 
 function App() {
-  const ref = useRef<any>(null);
-  useEffect(() => {
-    ref.current.style.display = "none !important";
-  }, []);
-
   return (
     <>
       <div className="container">
@@ -66,7 +61,7 @@ function App() {
           </Route>
         </Routes>
       </div>
-      <div ref={ref} id="loader-container" className="loader-container">
+      <div id="loader-container" className="loader-container">
         <div className="dot-typing"></div>
       </div>
     </>
