@@ -48,25 +48,24 @@ export default function SystemFeedback() {
   }, [page]);
 
   const pagination: any = [];
-  if (totalPage > 1) {
-    let startPage, endPage;
-    startPage = endPage = page;
 
-    if (page == 0) {
-      endPage = startPage + 2;
-    } else {
-      endPage = page + 1;
-      startPage = page - 1;
-    }
+  let startPage, endPage;
+  startPage = endPage = page;
 
-    if (page + 1 == totalPage) {
-      startPage = page - 2;
-      endPage = totalPage - 1;
-    }
+  if (page == 0) {
+    endPage = startPage + 2;
+  } else {
+    endPage = page + 1;
+    startPage = page - 1;
+  }
 
-    while (startPage <= endPage) {
-      pagination.push(startPage++);
-    }
+  if (page + 1 == totalPage) {
+    startPage = page - 2;
+    endPage = totalPage - 1;
+  }
+
+  while (startPage <= endPage) {
+    pagination.push(startPage++);
   }
 
   return (
@@ -172,23 +171,21 @@ export default function SystemFeedback() {
             ))}
           </tbody>
         </table>
-        {feedback.length > 1 && (
-          <nav>
-            <ul style={{ background: "transparent" }} className="pagination">
-              {pagination.map((el: any) => (
-                <li className="page-item">
-                  <a
-                    className={el === page ? `page-link active` : "page-link"}
-                    href="#"
-                    onClick={() => setPage(el)}
-                  >
-                    {el + 1}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )}
+        <nav>
+          <ul style={{ background: "transparent" }} className="pagination">
+            {pagination.map((el: any) => (
+              <li className="page-item">
+                <a
+                  className={el === page ? `page-link active` : "page-link"}
+                  href="#"
+                  onClick={() => setPage(el)}
+                >
+                  {el + 1}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
         {auth.role.toLowerCase() !== "system_admin" && (
           <Link to="submit">
             <button type="button" className="btn btn-primary w-100">
