@@ -52,21 +52,22 @@ export default function SystemFeedback() {
 
   const pagination: any = [];
 
+  console.log(page);
   let startPage, endPage;
   startPage = endPage = page;
 
   if (page == 0) {
     endPage = startPage + 2;
+  } else if (page + 1 == totalPage) {
+    startPage = page - 2;
+    startPage = startPage >= 0 ? startPage : 0;
+    endPage = totalPage - 1;
   } else {
     endPage = page + 1;
     startPage = page - 1;
   }
 
-  if (page + 1 == totalPage) {
-    startPage = page - 2;
-    startPage = startPage >= 0 ? startPage : 0;
-    endPage = totalPage - 1;
-  }
+  console.log(page);
 
   while (startPage <= endPage) {
     pagination.push(startPage++);
