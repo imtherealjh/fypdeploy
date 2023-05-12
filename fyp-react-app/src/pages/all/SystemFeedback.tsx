@@ -27,6 +27,8 @@ export default function SystemFeedback() {
           signal: controller.signal,
         });
 
+        console.log(response);
+
         const { content, current_page, total_pages } = response.data;
 
         isMounted && setFeedbacks(content);
