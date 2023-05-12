@@ -58,16 +58,16 @@ export default function SystemFeedback() {
 
   if (page == 0) {
     endPage = startPage + 2;
-  } else if (page + 1 == totalPage) {
-    startPage = page - 2;
-    startPage = startPage >= 0 ? startPage : 0;
-    endPage = totalPage - 1;
   } else {
     endPage = page + 1;
     startPage = page - 1;
   }
 
-  console.log(page);
+  if (page + 1 == totalPage) {
+    startPage = page - 2;
+    startPage = startPage >= 0 ? startPage : 0;
+    endPage = totalPage - 1;
+  }
 
   while (startPage <= endPage) {
     pagination.push(startPage++);
