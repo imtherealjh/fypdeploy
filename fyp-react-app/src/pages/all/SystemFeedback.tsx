@@ -64,7 +64,7 @@ export default function SystemFeedback() {
 
   if (page + 1 == totalPage) {
     startPage = page - 2;
-    startPage = startPage > 0 ? startPage : 0;
+    startPage = startPage >= 0 ? startPage : 0;
     endPage = totalPage - 1;
   }
 
