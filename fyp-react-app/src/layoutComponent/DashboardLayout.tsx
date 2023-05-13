@@ -84,12 +84,13 @@ export default function DashboardLayout({ children }: Props) {
     </>
   );
 
+  let dropdown = [
+    <Dropdown buttonContent={<CgProfile />} menuContent={profileContent} />,
+  ];
+
   return (
     <>
-      <NavBar homePagePath="">
-        <Dropdown buttonContent={<CgBell />} menuContent={null} />
-        <Dropdown buttonContent={<CgProfile />} menuContent={profileContent} />
-      </NavBar>
+      <NavBar homePagePath="">{dropdown}</NavBar>
       <section className="dashboard d-flex flex-row mt-3">
         {isOpen && (
           <div
