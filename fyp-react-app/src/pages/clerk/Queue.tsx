@@ -1,76 +1,119 @@
-import React, { useState } from "react";
-import "../../css/queue.css";
-import axiosPrivate from "../../api/axios";
+import { useEffect, useState } from "react";
 
-interface QueueItem {
-  id: number;
-  queueNumber: number;
-  status: string;
-}
-
-const initialQueue: QueueItem[] = [
-  { id: 1, queueNumber: 1, status: "Consulting" },
-  { id: 2, queueNumber: 2, status: "In queue" },
-  { id: 3, queueNumber: 3, status: "In queue" },
-];
+import useAxiosPrivate from "../../lib/useAxiosPrivate";
+import { DateObject } from "react-multi-date-picker";
+import { useNavigate } from "react-router-dom";
 
 function Queue() {
-  const [queue, setQueue] = useState(initialQueue);
+  const navigate = useNavigate();
+  const axiosPrivate = useAxiosPrivate();
+  const [data, setData] = useState<any>({
+    patientList: [],
+    noOfPatients: 0,
+  });
 
-  const updateStatus = async (id: number, newStatus: string) => {
-    // Update the status in the backend.
-    // Replace the URL and data format to match API.
+  useEffect(() => {
+    let isMounted = true;
+    let controller = new AbortController();
+
+    const fetchData = async () => {
+      let response = await axiosPrivate.get(
+        `/staff/getPatientsByDate?apptDate=${new DateObject().format(
+          "YYYY-MM-DD"
+        )}`,
+        {
+          signal: controller.signal,
+        }
+      );
+
+      isMounted && setData(response.data);
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
+
+  const handleCheckIn = async (id: number) => {
     try {
-      await axiosPrivate.post("/queue/update", { id, status: newStatus });
-      console.log(`Updated status of queue number ${id} to ${newStatus}`);
-    } catch (error) {
-      console.error("Error updating status:", error);
+      await axiosPrivate.post(`/clerk/checkInPatient?id=${id}`);
+      alert("Successfully check in patient");
+      navigate(0);
+    } catch (err: any) {
+      if (!err?.response) {
+        alert("No Server Response");
+      } else if (err.response?.status === 400) {
+        alert(err.response?.data.errors);
+      } else {
+        alert("Unknown error occured...");
+      }
     }
-
-    // Update the status in the local state.
-    setQueue(
-      queue.map((item) =>
-        item.id === id ? { ...item, status: newStatus } : item
-      )
-    );
   };
 
   return (
-    <div className="queue-container">
+    <>
       <h1>Queue</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Queue Number</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {queue.map((item) => (
-            <tr key={item.id}>
-              <td>{item.queueNumber}</td>
-              <td>{item.status}</td>
-              <td>
-                <button onClick={() => updateStatus(item.id, "Consulting")}>
-                  Set Consulting
-                </button>
-                <button onClick={() => updateStatus(item.id, "In queue")}>
-                  Set In queue
-                </button>
-                <button
-                  onClick={() =>
-                    updateStatus(item.id, "Awaiting medication/Done")
-                  }
-                >
-                  Waiting/Done
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      <div>
+        <div className="d-flex flex-column justify-content-center gap-2">
+          <span style={{ fontSize: "1.1rem", textAlign: "center" }}>
+            <div className="appointment-list">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Patient Name</th>
+                    <th>Doctor</th>
+                    <th>Time</th>
+                    <th>Status</th>
+                    {new Date().toDateString() ===
+                      new Date(data.patientList[0]?.date).toDateString() && (
+                      <>
+                        <th>Action</th>
+                      </>
+                    )}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.patientList.length < 1 && (
+                    <tr>
+                      <td colSpan={6}>No data available...</td>
+                    </tr>
+                  )}
+                  {data.patientList.map((appointment: any, idx: number) => (
+                    <tr key={idx}>
+                      <td>{appointment.patientName}</td>
+                      <td>{appointment.doctorName}</td>
+                      <td>{appointment.apptTime}</td>
+                      <td>{appointment.status}</td>
+                      {new Date().toDateString() ===
+                        new Date(appointment?.date).toDateString() && (
+                        <>
+                          <td>
+                            {appointment.status === "BOOKED" && (
+                              <button
+                                className="btn btn-primary"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCheckIn(appointment.id);
+                                }}
+                              >
+                                Check In
+                              </button>
+                            )}
+                          </td>
+                        </>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </span>
+        </div>
+      </div>
+    </>
   );
 }
 

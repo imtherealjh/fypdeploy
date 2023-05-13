@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
 import "../css/appointmentlist.css";
 
 export interface Appointment {
   id: number;
   patientName: string;
   doctorName: string;
-  date: string;
   time: string;
-  queue: number;
 }
 
 interface AppointmentListProps {
@@ -17,11 +14,6 @@ interface AppointmentListProps {
 export default function AppointmentList({
   appointmentsList,
 }: AppointmentListProps) {
-  const handleCheckIn = (appointmentId: number) => {
-    // Perform check-in logic here
-    console.log("Checked in appointment:", appointmentId);
-  };
-
   return (
     <div className="appointment-list">
       <h3>Today's Appointments:</h3>
@@ -32,13 +24,6 @@ export default function AppointmentList({
             <th>Doctor</th>
             <th>Time</th>
             <th>Status</th>
-            {new Date().toDateString() ===
-              new Date(appointmentsList[0]?.date).toDateString() && (
-              <>
-                <th>Queue</th>
-                <th>Action</th>
-              </>
-            )}
           </tr>
         </thead>
         <tbody>
@@ -53,24 +38,6 @@ export default function AppointmentList({
               <td>{appointment.doctorName}</td>
               <td>{appointment.apptTime}</td>
               <td>{appointment.status}</td>
-              {new Date().toDateString() ===
-                new Date(appointmentsList[0]?.date).toDateString() && (
-                <>
-                  <td>{appointment.queue}</td>
-                  <td>
-                    {appointment.status === "BOOKED" && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCheckIn(appointment.id);
-                        }}
-                      >
-                        Check In
-                      </button>
-                    )}
-                  </td>
-                </>
-              )}
             </tr>
           ))}
         </tbody>

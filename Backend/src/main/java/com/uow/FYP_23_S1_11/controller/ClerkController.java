@@ -43,6 +43,11 @@ public class ClerkController {
         return ResponseEntity.ok(clerkService.updateProfile(registerFrontDeskRequest));
     }
 
+    @PostMapping("/checkInPatient")
+    public ResponseEntity<?> checkInPatient(@RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(clerkService.checkInUser(id));
+    }
+
     @PostMapping("/createEduMaterial")
     public ResponseEntity<Boolean> createEduMaterial(
             @RequestBody @Valid EducationalMaterialRequest eduMaterialRequest) {

@@ -20,7 +20,6 @@ export default function Articles() {
       } else {
         alert("Unknown error occured...");
       }
-      console.error(err);
     }
   };
 
