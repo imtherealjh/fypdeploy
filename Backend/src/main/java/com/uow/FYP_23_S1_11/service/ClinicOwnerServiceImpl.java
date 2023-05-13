@@ -562,6 +562,11 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
         UserAccount user = Constants.getAuthenticatedUser();
         Clinic clinic = user.getClinic();
 
+        if ((emailExist(registerClinicRequest.getEmail())
+                && !clinic.getEmail().equals(registerClinicRequest.getEmail()))) {
+            throw new IllegalArgumentException("Email already exists, please choose another one");
+        }
+
         clinic.setContactName(registerClinicRequest.getContactName());
         clinic.setContactNo(registerClinicRequest.getContactNo());
         clinic.setEmail(registerClinicRequest.getEmail());
