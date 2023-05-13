@@ -30,8 +30,6 @@ export default function SystemFeedback() {
           }
         );
 
-        console.log(response);
-
         const { content, current_page, total_pages } = response.data;
 
         isMounted && setFeedbacks(content);
@@ -52,26 +50,18 @@ export default function SystemFeedback() {
 
   const pagination: any = [];
 
-  console.log(page);
   let startPage, endPage;
   startPage = endPage = page;
 
-  if (page == 0) {
-    endPage = startPage + 2;
-  } else {
-    endPage = page + 1;
-    startPage = page - 1;
-  }
-  console.log(startPage, endPage);
+  if (totalPage > 1) {
+    endPage = page + 1 != totalPage ? endPage + 1 : totalPage - 1;
+    endPage = page == 0 && totalPage > 2 ? endPage + 1 : endPage;
+    startPage = page != 0 ? page - 1 : 0;
+    startPage = page + 1 == totalPage ? startPage - 1 : startPage;
 
-  if (page + 1 == totalPage) {
-    startPage = page - 2;
-    startPage = startPage >= 0 ? startPage : 0;
-    endPage = totalPage - 1;
-  }
-
-  while (startPage <= endPage) {
-    pagination.push(startPage++);
+    while (startPage <= endPage) {
+      pagination.push(startPage++);
+    }
   }
 
   return (
@@ -177,7 +167,7 @@ export default function SystemFeedback() {
             ))}
           </tbody>
         </table>
-        {feedback.length > 1 && (
+        {totalPage > 1 && (
           <nav>
             <ul style={{ background: "transparent" }} className="pagination">
               {pagination.map((el: any) => (

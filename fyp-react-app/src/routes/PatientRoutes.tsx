@@ -13,6 +13,7 @@ import Profile from "../pages/patient/Profile";
 import Faq from "../pages/patient/Faq";
 import Contact from "../pages/patient/ContactUs";
 import SystemFeedback from "../pages/all/SystemFeedback";
+import ViewSingleArticle from "../components/ViewSingleArticle";
 
 export default function PatientRoutes() {
   return (
@@ -44,6 +45,7 @@ export default function PatientRoutes() {
           <Route index path="" element={<Home />} />
           <Route path="profile" element={<Profile />} />
           <Route path="search-clinic" element={<SearchClinic />} />
+          <Route path="view" element={<ViewSingleArticle />} />
           <Route path="appointment">
             <Route index path="" element={<Appointment />} />
             <Route path="book" element={<BookAppointment />} />
