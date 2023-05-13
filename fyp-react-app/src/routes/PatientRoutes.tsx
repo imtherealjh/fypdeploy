@@ -5,7 +5,6 @@ import Appointment from "../pages/patient/Appointments/Appointment";
 import BookAppointment from "../pages/patient/Appointments/BookAppointment";
 import Home from "../pages/patient/Home";
 import SearchClinic from "../pages/patient/SearchClinic";
-import Queue from "../pages/patient/Queue";
 import MedicalRecords from "../pages/patient/MedicalRecords";
 import Feedback from "../pages/all/Feedback";
 import NotFound from "../pages/NotFound";
@@ -30,7 +29,6 @@ export default function PatientRoutes() {
                     link: "search-clinic",
                   },
                   { name: "Appointment", link: "appointment", end: false },
-                  { name: "Queue", link: "queue" },
                   {
                     name: "Medical Records",
                     link: "medical-records",
@@ -50,7 +48,6 @@ export default function PatientRoutes() {
             <Route index path="" element={<Appointment />} />
             <Route path="book" element={<BookAppointment />} />
           </Route>
-          <Route path="queue" element={<Queue />} />
           <Route path="medical-records" element={<MedicalRecords />} />
           <Route path="system-feedback">
             <Route index path="" element={<SystemFeedback />} />

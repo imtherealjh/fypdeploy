@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useAxiosPrivate from "../../lib/useAxiosPrivate";
+import useAxiosPrivate from "../lib/useAxiosPrivate";
 
 interface Appointment {
   clinic: string;

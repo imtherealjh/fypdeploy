@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
 
-import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;

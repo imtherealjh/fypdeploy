@@ -3,6 +3,7 @@ package com.uow.FYP_23_S1_11.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +23,6 @@ import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
-import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
 import com.uow.FYP_23_S1_11.domain.request.SearchLocReq;
 import com.uow.FYP_23_S1_11.service.AppointmentService;
@@ -60,8 +60,9 @@ public class PatientController {
     }
 
     @PostMapping("/getClinicsBySpecLoc")
-    public ResponseEntity<List<?>> getClinicsBySpecLoc(@RequestBody @Valid SearchLocReq searchLocReq) {
-        return ResponseEntity.ok(patientService.getAllClinicSpecLoc(searchLocReq));
+    public ResponseEntity<?> getClinicsBySpecLoc(@RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size, @RequestBody @Valid SearchLocReq searchLocReq) {
+        return ResponseEntity.ok(patientService.getAllClinicSpecLoc(searchLocReq, PageRequest.of(page, size)));
     }
 
     @PostMapping("/getDoctorAvailability")
@@ -83,7 +84,7 @@ public class PatientController {
     @Validated(OnUpdate.class)
     @PutMapping("/updateAppointment")
     public ResponseEntity<Boolean> updateAppointment(
-            @Valid @RequestBody BookUpdateAppointmentRequest updateApptReq) {
+            @RequestBody @Valid BookUpdateAppointmentRequest updateApptReq) {
         return ResponseEntity.ok(apptService.updateAppointment(updateApptReq));
     }
 
@@ -94,7 +95,7 @@ public class PatientController {
 
     @Validated(OnUpdate.class)
     @PutMapping("/updateProfile")
-    public ResponseEntity<?> updateProfile(@Valid @RequestBody RegisterPatientRequest patientReq) {
+    public ResponseEntity<?> updateProfile(@RequestBody @Valid RegisterPatientRequest patientReq) {
         return ResponseEntity.ok(patientService.updateProfile(patientReq));
     }
 
@@ -102,17 +103,6 @@ public class PatientController {
     public ResponseEntity<Boolean> insertClinicAndDoctorFeedback(
             @Valid @RequestBody ClinicAndDoctorFeedbackRequest clinicAndDoctorFeedbackRequest) {
         return ResponseEntity.ok(patientService.insertClinicAndDoctorFeedback(clinicAndDoctorFeedbackRequest));
-    }
-
-    @PostMapping("/insertQueueNumber")
-    public ResponseEntity<Boolean> insertQueueNumber(
-            @Valid @RequestBody QueueRequest request) {
-        return ResponseEntity.ok(patientService.insertQueueNumber(request));
-    }
-
-    @GetMapping("/getByQueueNumber")
-    public ResponseEntity<?> getByQueueNumber(@RequestParam Integer queueNumber, @RequestParam String clinicName) {
-        return ResponseEntity.ok(patientService.getByQueueNumber(queueNumber, clinicName));
     }
 
 }

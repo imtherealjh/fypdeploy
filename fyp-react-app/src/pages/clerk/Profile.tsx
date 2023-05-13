@@ -19,7 +19,13 @@ export default function Profile() {
 
         isMounted && setClerkProfile(response.data);
       } catch (err: any) {
-        console.error(err);
+        if (!err?.response) {
+          alert("No Server Response");
+        } else if (err.response?.status === 400) {
+          alert(err.response?.data.errors);
+        } else {
+          alert("Unknown error");
+        }
       }
     };
 

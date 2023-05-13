@@ -122,7 +122,6 @@ export default function EditAccount() {
       } else {
         alert("Unknown error occured...");
       }
-      console.log(err);
     }
   };
 

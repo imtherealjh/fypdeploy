@@ -434,9 +434,19 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
                 })
                 .collect(Collectors.toList());
 
+        TypedQuery<Long> countQuery = entityManager.createQuery(
+                "SELECT COUNT(pfc) FROM PatientFeedbackClinic pfc WHERE pfc.clinicFeedback = :clinic", Long.class);
+        query.setParameter("clinic", clinic);
+
         Page<?> page = PageableExecutionUtils.getPage(data, pageable,
-                () -> query.getResultList().size());
+                () -> countQuery.getSingleResult());
         return Constants.convertToResponse(page);
+    }
+
+    private boolean emailExist(String email) {
+        TypedQuery<String> query = entityManager.createNamedQuery("findEmailInTables", String.class);
+        query.setParameter("email", email);
+        return !query.getResultList().isEmpty();
     }
 
     @Override
@@ -446,7 +456,8 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
 
         try {
             Doctor doctor = (Doctor) ((StaffAccount) getDoctorById(registerDoctorReq.getStaffId())).getStaffAccount();
-            if (doctor == null) {
+            if (doctor == null || (emailExist(registerDoctorReq.getEmail())
+                    && !doctor.getEmail().equals(registerDoctorReq.getEmail()))) {
                 throw new IllegalArgumentException("Doctor not found");
             }
 
@@ -508,7 +519,9 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
     public Boolean updateNurse(RegisterNurseRequest registerNurseReq) {
         try {
             Nurse nurse = (Nurse) ((StaffAccount) getNurseById(registerNurseReq.getStaffId())).getStaffAccount();
-            if (nurse == null) {
+            if (nurse == null
+                    || (emailExist(registerNurseReq.getEmail())
+                            && !nurse.getEmail().equals(registerNurseReq.getEmail()))) {
                 throw new IllegalArgumentException("Nurse not found");
             }
             nurse.setName(registerNurseReq.getName());
@@ -528,7 +541,8 @@ public class ClinicOwnerServiceImpl implements ClinicOwnerService {
         try {
             FrontDesk clerk = (FrontDesk) ((StaffAccount) getClerkById(registerFrontDeskRequest.getStaffId()))
                     .getStaffAccount();
-            if (clerk == null) {
+            if (clerk == null || (emailExist(registerFrontDeskRequest.getEmail())
+                    && !clerk.getEmail().equals(registerFrontDeskRequest.getEmail()))) {
                 throw new IllegalArgumentException("Clerk not found");
             }
             clerk.setName(registerFrontDeskRequest.getName());

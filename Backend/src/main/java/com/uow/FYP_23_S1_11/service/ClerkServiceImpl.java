@@ -1,5 +1,6 @@
 package com.uow.FYP_23_S1_11.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,19 @@ import com.uow.FYP_23_S1_11.domain.FrontDesk;
 import com.uow.FYP_23_S1_11.domain.request.EducationalMaterialRequest;
 import com.uow.FYP_23_S1_11.repository.EduMaterialRepository;
 import com.uow.FYP_23_S1_11.repository.FrontDeskRepository;
-import com.uow.FYP_23_S1_11.repository.QueueRepository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Service
 @Transactional
 public class ClerkServiceImpl implements ClerkService {
+    @PersistenceContext
+    private EntityManager entityManager;
     @Autowired
     private FrontDeskRepository clerkRepo;
-    @Autowired
-    private QueueRepository queueRepo;
     @Autowired
     private EduMaterialRepository eduMaterialRepo;
 
@@ -39,8 +42,16 @@ public class ClerkServiceImpl implements ClerkService {
     @Override
     public Boolean updateProfile(RegisterFrontDeskRequest registerFrontDeskRequest) {
         UserAccount user = Constants.getAuthenticatedUser();
-
         FrontDesk clerk = user.getFrontDesk();
+
+        TypedQuery<String> query = entityManager.createNamedQuery("findEmailInTables", String.class);
+        query.setParameter("email", registerFrontDeskRequest.getEmail());
+
+        List<String> results = query.getResultList();
+        if (!results.isEmpty() && !clerk.getEmail().equals(registerFrontDeskRequest.getEmail())) {
+            throw new IllegalArgumentException("Username/Email has already been registered...");
+        }
+
         clerk.setName(registerFrontDeskRequest.getName());
         clerk.setEmail(registerFrontDeskRequest.getEmail());
 
