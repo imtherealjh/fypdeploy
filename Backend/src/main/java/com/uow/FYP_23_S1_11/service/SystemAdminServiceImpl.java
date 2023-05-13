@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.uow.FYP_23_S1_11.domain.Clinic;
+import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.Specialty;
 import com.uow.FYP_23_S1_11.domain.SystemFeedback;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
@@ -81,7 +82,8 @@ public class SystemAdminServiceImpl implements SystemAdminService {
 
     @Override
     public Boolean createNewSpecialty(SpecialtyRequest specialtyReq) {
-        Optional<Specialty> specialty = specialtyRepo.findByType(specialtyReq.getSpecialty());
+
+        Optional<Specialty> specialty = specialtyRepo.findByType(specialtyReq.getSpecialty().trim());
         if (specialty.isPresent()) {
             throw new IllegalArgumentException("Cannot create this specialty type cause it existed");
         }
@@ -89,6 +91,21 @@ public class SystemAdminServiceImpl implements SystemAdminService {
         newSpecialty.setType(specialtyReq.getSpecialty());
         specialtyRepo.save(newSpecialty);
         return true;
+    }
+
+    @Override
+    public Boolean deleteSpecialty(Integer id) {
+        Optional<Specialty> specialty = specialtyRepo.findById(id);
+        if (specialty.isEmpty()) {
+            throw new IllegalArgumentException("Cannot find this id...");
+        }
+        Specialty origSpecialty = specialty.get();
+        for (Doctor doctor : origSpecialty.getDoctorList()) {
+            doctor.getDoctorSpecialty().remove(origSpecialty);
+        }
+        specialtyRepo.delete(origSpecialty);
+        return true;
+
     }
 
     @Override
