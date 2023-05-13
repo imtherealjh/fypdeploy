@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.uow.FYP_23_S1_11.Constants;
@@ -36,6 +37,9 @@ public class ClerkServiceImpl implements ClerkService {
     private FrontDeskRepository clerkRepo;
     @Autowired
     private EduMaterialRepository eduMaterialRepo;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @Autowired
     private AppointmentRepository apptRepo;
@@ -122,6 +126,7 @@ public class ClerkServiceImpl implements ClerkService {
         }
         appt.setStatus(EAppointmentStatus.CHECKED_IN);
         apptRepo.save(appt);
+        messagingTemplate.convertAndSend("/queue/" + appt.getApptDoctor().getDoctorId(), "Update On Check-in");
         return true;
     }
 

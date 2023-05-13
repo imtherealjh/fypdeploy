@@ -16,8 +16,6 @@ export default function SpecialtyPage() {
           signal: controller.signal,
         });
 
-        console.log(response);
-
         isMounted && setSpeciality(response.data);
       } catch (err) {
         console.error(err);
