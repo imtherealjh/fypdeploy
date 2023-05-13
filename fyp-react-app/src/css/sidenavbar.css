@@ -7,6 +7,7 @@
 
 .side-navbar ul {
   padding-left: 0 !important;
+  margin: 0;
   list-style: none;
 }
 
@@ -37,8 +38,5 @@
 }
 
 .side-navbar ul .bottom {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
   border-top: 2px solid black;
 }

@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -14,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.uow.FYP_23_S1_11.Constants;
 import com.uow.FYP_23_S1_11.domain.Appointment;
+import com.uow.FYP_23_S1_11.domain.Clinic;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
@@ -33,9 +36,11 @@ import com.uow.FYP_23_S1_11.repository.PatientRepository;
 
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
+import com.uow.FYP_23_S1_11.domain.request.SearchLocReq;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -75,7 +80,38 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<?> getAllClinicBySpecialty(String specialty) {
-        return clinicRepo.findBySpecialty(specialty);
+        TypedQuery<Clinic> query = entityManager.createQuery(
+                "SELECT DISTINCT p FROM Clinic p " +
+                        "JOIN FETCH p.doctor c1 " +
+                        "WHERE NOT c1.doctorAppt IS EMPTY " +
+                        "AND p.status = 'APPROVED'" +
+                        "AND c1.doctorId IN " +
+                        "(SELECT c2.doctorId FROM Doctor c2 " +
+                        "JOIN c2.doctorSpecialty gc " +
+                        "WHERE gc.type = :specialty)",
+                Clinic.class);
+        query.setParameter("specialty", specialty);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public List<?> getAllClinicSpecLoc(SearchLocReq searchLocReq) {
+        TypedQuery<Clinic> query = entityManager.createQuery(
+                "SELECT DISTINCT p FROM Clinic p " +
+                        "JOIN FETCH p.doctor c1 " +
+                        "WHERE NOT c1.doctorAppt IS EMPTY " +
+                        "AND p.status = 'APPROVED' " +
+                        "AND p.location LIKE CONCAT('%',:location ,'%') " +
+                        "AND c1.doctorId IN " +
+                        "(SELECT c2.doctorId FROM Doctor c2 " +
+                        "JOIN c2.doctorSpecialty gc " +
+                        "WHERE gc.type = :specialty)",
+                Clinic.class);
+        query.setParameter("location", searchLocReq.getLocation());
+        query.setParameter("specialty", searchLocReq.getSpecialty());
+
+        return query.getResultList();
     }
 
     @Override

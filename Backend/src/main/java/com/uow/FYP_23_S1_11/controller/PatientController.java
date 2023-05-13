@@ -24,6 +24,7 @@ import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
+import com.uow.FYP_23_S1_11.domain.request.SearchLocReq;
 import com.uow.FYP_23_S1_11.service.AppointmentService;
 import com.uow.FYP_23_S1_11.service.PatientService;
 
@@ -56,6 +57,11 @@ public class PatientController {
     @GetMapping("/getClinicsBySpecialty")
     public ResponseEntity<List<?>> getClinicBySpecialty(@RequestParam @NotEmpty String specialty) {
         return ResponseEntity.ok(patientService.getAllClinicBySpecialty(specialty));
+    }
+
+    @PostMapping("/getClinicsBySpecLoc")
+    public ResponseEntity<List<?>> getClinicsBySpecLoc(@RequestBody @Valid SearchLocReq searchLocReq) {
+        return ResponseEntity.ok(patientService.getAllClinicSpecLoc(searchLocReq));
     }
 
     @PostMapping("/getDoctorAvailability")
