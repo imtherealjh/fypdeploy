@@ -77,7 +77,6 @@ public class AllServiceImpl implements AllService {
 
         String counthsql = "SELECT COUNT(sf) FROM SystemFeedback sf ";
         counthsql += user.getRole() != ERole.SYSTEM_ADMIN ? "WHERE sf.accountFeedback = :account " : "";
-        counthsql += "GROUP BY sf.systemFeedbackId";
 
         TypedQuery<Long> countQuery = entityManager.createQuery(counthsql, Long.class);
         if (user.getRole() != ERole.SYSTEM_ADMIN) {

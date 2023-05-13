@@ -59,7 +59,7 @@ export default function Appointments() {
             <input
               type="text"
               className="form-control"
-              placeholder={`Search Clinic`}
+              placeholder={`Search Appointment`}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setSearchInput(e.target.value)
               }

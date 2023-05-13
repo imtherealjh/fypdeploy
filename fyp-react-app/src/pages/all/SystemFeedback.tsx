@@ -32,6 +32,8 @@ export default function SystemFeedback() {
 
         const { content, current_page, total_pages } = response.data;
 
+        console.log(response);
+
         isMounted && setFeedbacks(content);
         isMounted && setPage(current_page);
         isMounted && setTotalPage(total_pages);
@@ -167,20 +169,31 @@ export default function SystemFeedback() {
             ))}
           </tbody>
         </table>
-        {totalPage > 1 && (
+        {totalPage >= 1 && (
           <nav>
             <ul style={{ background: "transparent" }} className="pagination">
-              {pagination.map((el: any) => (
-                <li className="page-item">
-                  <a
-                    className={el === page ? `page-link active` : "page-link"}
-                    href="#"
-                    onClick={() => setPage(el)}
+              {totalPage >= 1 && (
+                <nav>
+                  <ul
+                    style={{ background: "transparent" }}
+                    className="pagination"
                   >
-                    {el + 1}
-                  </a>
-                </li>
-              ))}
+                    {pagination.map((el: any) => (
+                      <li className="page-item">
+                        <a
+                          className={
+                            el === page ? `page-link active` : "page-link"
+                          }
+                          href="#"
+                          onClick={() => setPage(el)}
+                        >
+                          {el + 1}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              )}
             </ul>
           </nav>
         )}

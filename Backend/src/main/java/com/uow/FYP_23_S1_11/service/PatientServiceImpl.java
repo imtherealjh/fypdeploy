@@ -74,7 +74,9 @@ public class PatientServiceImpl implements PatientService {
         TypedQuery<Clinic> query = entityManager.createQuery(
                 "SELECT DISTINCT p FROM Clinic p " +
                         "JOIN FETCH p.doctor c1 " +
+                        "JOIN c1.doctorAccount da " +
                         "WHERE NOT c1.doctorAppt IS EMPTY " +
+                        "AND da.isEnabled = 1 " +
                         "AND p.status = 'APPROVED'" +
                         "AND c1.doctorId IN " +
                         "(SELECT c2.doctorId FROM Doctor c2 " +
@@ -92,7 +94,9 @@ public class PatientServiceImpl implements PatientService {
                 "SELECT p FROM Doctor p " +
                         "JOIN p.doctorClinic dc " +
                         "JOIN p.doctorSpecialty ds " +
+                        "JOIN c1.doctorAccount da " +
                         "WHERE NOT p.doctorAppt IS EMPTY " +
+                        "AND da.isEnabled = 1 " +
                         "AND dc.status = 'APPROVED' " +
                         "AND dc.location LIKE CONCAT('%',:location ,'%') " +
                         "AND ds.type = :specialty",

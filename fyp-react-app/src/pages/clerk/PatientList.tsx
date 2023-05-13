@@ -42,7 +42,7 @@ function PatientListPage() {
           <input
             type="text"
             className="form-control"
-            placeholder={`Search Clinic`}
+            placeholder={`Search Patient`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setSearchInput(e.target.value)
             }
@@ -79,7 +79,7 @@ function PatientListPage() {
                 return (
                   obj.name.includes(searchInput) ||
                   obj.email.includes(searchInput) ||
-                  obj.contactNo.includes(searchInput)
+                  JSON.stringify(obj.contactNo).includes(searchInput)
                 );
               })
               .map((data: any, idx: number) => (
