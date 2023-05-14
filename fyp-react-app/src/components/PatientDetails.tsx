@@ -64,7 +64,7 @@ function PatientDetails({ patient, handleChange, editable }: Partial<Props>) {
               name="height"
               readOnly={!editable}
               onChange={handleChange}
-              value={`${patient.height || ""}`}
+              value={`${patient.height || 0}`}
             />
           </div>
           <div className="col-md-4">
@@ -78,7 +78,7 @@ function PatientDetails({ patient, handleChange, editable }: Partial<Props>) {
               name="weight"
               readOnly={!editable}
               onChange={handleChange}
-              value={`${patient.weight || ""}`}
+              value={`${patient.weight || 0}`}
             />
           </div>
 

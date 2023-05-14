@@ -35,7 +35,7 @@ export default function ManageAccount() {
           <input
             type="text"
             className="form-control"
-            placeholder={`Search Clinic`}
+            placeholder={`Search Staff`}
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setSearchInput(e.target.value)
             }
