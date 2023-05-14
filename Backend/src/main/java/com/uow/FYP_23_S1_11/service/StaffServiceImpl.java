@@ -101,7 +101,7 @@ public class StaffServiceImpl implements StaffService {
                 }
 
                 String results = user.getRole() == ERole.DOCTOR
-                                ? "new map(a.apptPatient.name as patientName, a.apptTime as apptTime, a.status as status) "
+                                ? "new map(a.apptPatient as patient, a.apptTime as apptTime, a.status as status) "
                                 : user.getRole() == ERole.FRONT_DESK
                                                 ? "new map(a.appointmentId as id, a.apptPatient.name as patientName, a.apptDoctor.name as doctorName, a.apptTime as apptTime, a.apptDate as date, a.status as status)"
                                                 : "new map(a.apptPatient.name as patientName, a.apptDoctor.name as doctorName, a.apptTime as apptTime, a.status as status) ";
