@@ -4,12 +4,15 @@
 }
 
 .wrapper .carousel {
-  white-space: nowrap;
   overflow: hidden;
   cursor: pointer;
   scroll-behavior: smooth;
-  font-size: 0;
+  font-size: 1rem;
   margin: 0 auto;
+}
+
+.wrapper .carousel > figure {
+  flex: 1 0 100%;
 }
 
 .carousel.dragging {
@@ -19,4 +22,10 @@
 
 .carousel.dragging img {
   pointer-events: none;
+}
+
+@media screen and (min-width: 768px) {
+  .wrapper .carousel > figure {
+    flex: 1 0 49%;
+  }
 }

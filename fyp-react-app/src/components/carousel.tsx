@@ -7,10 +7,10 @@ import "../css/carousel.css";
 import { CarouselItems } from "../hooks/types";
 
 export type Props = {
-  images: Array<CarouselItems>;
+  feedback: Array<CarouselItems>;
 };
 
-export default function Carousel({ images }: Props) {
+export default function Carousel({ feedback }: Props) {
   const carouselRef = useRef<HTMLDivElement>(null);
   let scrollWidthRef = useRef(0),
     prevClientXRef = useRef(0),
@@ -67,15 +67,18 @@ export default function Carousel({ images }: Props) {
           ref={carouselRef}
           onTouchStart={onTouchStart}
           onMouseDown={onTouchStart}
-          className="d-flex carousel gap-2"
+          className="d-flex carousel gap-3"
         >
-          {images.map((img, idx) => (
-            <img
-              className="rounded-circle"
-              key={"carousel" + idx}
-              src={img.imageSrc}
-              alt={img.imageAlt}
-            />
+          {feedback.map((feedback, idx) => (
+            <figure key={idx} className="text-end">
+              <blockquote className="blockquote">
+                <h5>{feedback.clinic}</h5>
+                <p>{feedback.content}</p>
+              </blockquote>
+              <figcaption className="blockquote-footer">
+                {feedback.ratings}
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>

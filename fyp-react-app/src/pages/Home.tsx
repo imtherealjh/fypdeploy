@@ -1,39 +1,45 @@
 import { Link } from "react-router-dom";
 import Carousel from "../components/carousel";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import "../css/home.css";
+import axios from "../api/axios";
+import { CarouselItems } from "../hooks/types";
 
 export default function Home() {
   const [current, setCurrent] = useState("patient");
+  const [feedback, setFeedback] = useState<CarouselItems[]>([]);
   const classList = "btn btn-outline-dark btn-lg";
 
   const handleButtonClick = (e: any) => {
     setCurrent(e.target.value);
   };
 
-  const images = [
-    {
-      imageSrc: "https://via.placeholder.com/100",
-      imageAlt: "Placeholder 1",
-    },
-    {
-      imageSrc: "https://via.placeholder.com/100",
-      imageAlt: "Placeholder 2",
-    },
-    {
-      imageSrc: "https://via.placeholder.com/100",
-      imageAlt: "Placeholder 3",
-    },
-    {
-      imageSrc: "https://via.placeholder.com/100",
-      imageAlt: "Placeholder 4",
-    },
-    {
-      imageSrc: "https://via.placeholder.com/100",
-      imageAlt: "Placeholder 5",
-    },
-  ];
+  useEffect(() => {
+    let isMounted = true;
+    let controller = new AbortController();
+
+    const fetchData = async () => {
+      try {
+        let response = await axios.get("/public/getLandingPageData", {
+          signal: controller.signal,
+        });
+
+        console.log(response);
+
+        isMounted && setFeedback(response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+    };
+  }, []);
 
   return (
     <>
@@ -51,7 +57,7 @@ export default function Home() {
         </div>
         <div className="trusted-container d-flex align-items-center flex-column my-4">
           <p>Trusted by Leading Medical Institution</p>
-          <Carousel images={images} />
+          <Carousel feedback={feedback} />
         </div>
         <div className="register-container my-4">
           <div className="btnSet">
@@ -90,13 +96,6 @@ export default function Home() {
                         Sign Up
                       </button>
                     </Link>
-
-                    <button
-                      className="btn btn-outline-dark btn-lg"
-                      type="button"
-                    >
-                      Contact Us
-                    </button>
                   </div>
                 </div>
               </>

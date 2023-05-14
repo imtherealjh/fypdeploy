@@ -39,6 +39,7 @@ public class InitialSetup {
         specialtyList.add(Specialty.builder().type("Pain Medicine").build());
         specialtyList.add(Specialty.builder().type("Psychiatry").build());
         specialtyList.add(Specialty.builder().type("Urology").build());
+        specialtyList.add(Specialty.builder().type("Urology 2").build());
 
         List<Specialty> alreadyExist = specialtyRepo
                 .findByTypeIn(specialtyList.stream().map(x -> x.getType()).collect(Collectors.toList()));

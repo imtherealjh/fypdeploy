@@ -9,8 +9,6 @@ function PatientDetails({ patient, handleChange, editable }: Partial<Props>) {
     return <p>No patient selected</p>;
   }
 
-  console.log(patient);
-
   return (
     <>
       <div className="patient-details">

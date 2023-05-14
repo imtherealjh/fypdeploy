@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.uow.FYP_23_S1_11.domain.Specialty;
+import com.uow.FYP_23_S1_11.service.LandingPageService;
 import com.uow.FYP_23_S1_11.service.SpecialtyService;
 
 @RestController
@@ -17,9 +18,16 @@ import com.uow.FYP_23_S1_11.service.SpecialtyService;
 public class PublicController {
         @Autowired
         private SpecialtyService specialtyService;
+        @Autowired
+        private LandingPageService landingPageService;
 
         @GetMapping("/getAllSpecialty")
         public ResponseEntity<List<Specialty>> getAllSpecialty() {
                 return specialtyService.getAllSpecialty();
+        }
+
+        @GetMapping("/getLandingPageData")
+        public ResponseEntity<?> getLandingPageData() {
+                return ResponseEntity.ok(landingPageService.retrieveClinicFeedback());
         }
 }
