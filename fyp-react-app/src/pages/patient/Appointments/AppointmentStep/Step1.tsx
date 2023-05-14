@@ -37,6 +37,8 @@ export default function Step1({ formData, setFormData }: Props) {
     }
   };
 
+  console.log(doctor);
+
   const handleClinicChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const id: number = +event.target.value;
     setDoctor(clinic.find((x: any) => x.clinicId == id)?.doctor ?? []);
@@ -111,7 +113,11 @@ export default function Step1({ formData, setFormData }: Props) {
           aria-label="Open this to select doctor"
           onChange={(event: ChangeEvent<HTMLSelectElement>) =>
             setFormData((prev: any) => {
-              return { ...prev, doctorId: event.target.value };
+              return {
+                ...prev,
+                doctorId: event.target.value,
+                doctorName: doctor[event.target.selectedIndex - 1].name,
+              };
             })
           }
         >

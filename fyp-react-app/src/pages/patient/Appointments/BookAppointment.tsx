@@ -13,7 +13,17 @@ export default function BookAppointment() {
 
   let isMounted = false;
   const handleSubmit = async () => {
-    if (step != 3) {
+    if (step === 1 && formData?.doctorId === undefined) {
+      alert("Please select a doctor first...");
+      return;
+    }
+
+    if (step === 2 && formData?.apptId === undefined) {
+      alert("Please select a appointment first...");
+      return;
+    }
+
+    if (step !== 3) {
       setStep((prev) => prev + 1);
     } else {
       if (!isMounted) {
