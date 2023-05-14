@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
 import com.uow.FYP_23_S1_11.service.ClerkService;
 import com.uow.FYP_23_S1_11.constraints.OnUpdate;
@@ -45,6 +43,11 @@ public class ClerkController {
         return ResponseEntity.ok(clerkService.updateProfile(registerFrontDeskRequest));
     }
 
+    @PostMapping("/checkInPatient")
+    public ResponseEntity<?> checkInPatient(@RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(clerkService.checkInUser(id));
+    }
+
     @PostMapping("/createEduMaterial")
     public ResponseEntity<Boolean> createEduMaterial(
             @RequestBody @Valid EducationalMaterialRequest eduMaterialRequest) {
@@ -57,9 +60,4 @@ public class ClerkController {
         return ResponseEntity.ok(clerkService.updateEduMaterial(id, eduMaterialRequest));
     }
 
-    // @PostMapping("/insertQueueNumber")
-    // public ResponseEntity<Boolean> insertQueueNumber(
-    // @Valid @RequestBody QueueRequest request) {
-    // return ResponseEntity.ok(clerkService.insertQueueNumber(request));
-    // }
 }

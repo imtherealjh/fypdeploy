@@ -117,7 +117,7 @@ export default function Appointment() {
             {filteredAppt.map((value: any, idx: number) => (
               <tr key={value.appointmentId}>
                 <th className="align-middle" scope="row">
-                  {idx + 1}
+                  {value.appointmentId}
                 </th>
                 <td className="align-middle">{value.clinicName}</td>
                 <td className="align-middle">{value.doctorName}</td>

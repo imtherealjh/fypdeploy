@@ -39,13 +39,18 @@ export default function Profile() {
   };
 
   const handleSubmit = async () => {
-    console.log(patientProfile);
     try {
       await axiosPrivate.put("/patient/updateProfile", patientProfile);
       alert("Patient profile updated!!");
       navigate(0);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      if (!err?.response) {
+        alert("No Server Response");
+      } else if (err.response?.status === 400) {
+        alert(err.response?.data.errors);
+      } else {
+        alert("Unknown error");
+      }
     }
   };
 

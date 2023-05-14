@@ -16,6 +16,7 @@ import VerifyEmail from "./pages/VerifyEmail";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 import RequireVerifyPage from "./pages/RequireVerify";
+import Queue from "./pages/Queue";
 
 const ClinicRoutes = lazy(() => import("./routes/ClinicRoutes"));
 const DoctorRoutes = lazy(() => import("./routes/DoctorRoutes"));
@@ -33,6 +34,7 @@ function App() {
             <Route index path="/" element={<Home />} />
             <Route path="/registerClinic" element={<RegisterClinic />} />
             <Route path="/registerPatient" element={<RegisterPatient />} />
+            <Route path="/queue" element={<Queue />} />
             <Route path="/requireVerify" element={<RequireVerifyPage />} />
             <Route path="/verify/:code" element={<VerifyEmail />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
@@ -49,9 +51,9 @@ function App() {
             <Route element={<RequireAuth role={"doctor"} />}>
               <Route path="/doctor/*" element={<DoctorRoutes />} />
             </Route>
-            {/* <Route element={<RequireAuth role={"system_admin"} />}> */}
-            <Route path="/admin/*" element={<AdminRoutes />} />
-            {/* </Route> */}
+            <Route element={<RequireAuth role={"system_admin"} />}>
+              <Route path="/admin/*" element={<AdminRoutes />} />
+            </Route>
             <Route element={<RequireAuth role={"front_desk"} />}>
               <Route path="/clerk/*" element={<ClerkRoutes />} />
             </Route>

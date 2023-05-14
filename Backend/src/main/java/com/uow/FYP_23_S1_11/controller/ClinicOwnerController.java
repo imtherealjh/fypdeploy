@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.uow.FYP_23_S1_11.constraints.OnCreate;
 import com.uow.FYP_23_S1_11.constraints.OnStaffUpdate;
 import com.uow.FYP_23_S1_11.constraints.OnUpdate;
-import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.request.GenerateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterDoctorRequest;

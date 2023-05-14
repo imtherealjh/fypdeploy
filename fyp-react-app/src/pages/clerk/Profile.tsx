@@ -19,7 +19,7 @@ export default function Profile() {
 
         isMounted && setClerkProfile(response.data);
       } catch (err: any) {
-        console.error(err);
+        console.log(err);
       }
     };
 
@@ -44,8 +44,14 @@ export default function Profile() {
       await axiosPrivate.put("/clerk/updateProfile", clerkProfile);
       alert("Clerk profile updated!!");
       navigate(0);
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      if (!err?.response) {
+        alert("No Server Response");
+      } else if (err.response?.status === 400) {
+        alert(err.response?.data.errors);
+      } else {
+        alert("Unknown error");
+      }
     }
   };
 

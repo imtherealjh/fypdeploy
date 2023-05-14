@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import useAxiosPrivate from "../../lib/useAxiosPrivate";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function SpecialtyPage() {
+  const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
   const [speciality, setSpeciality] = useState<any>([]);
 
@@ -45,6 +46,7 @@ export default function SpecialtyPage() {
             <tr>
               <th scope="col">#</th>
               <th scope="col">Type</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -56,7 +58,33 @@ export default function SpecialtyPage() {
             {speciality.map((speciality: any, idx: number) => (
               <tr key={idx}>
                 <td scope="row">{idx + 1}</td>
-                <td scope="row">{speciality.type}</td>
+                <td scope="col">{speciality.type}</td>
+                <td scope="col">
+                  <button
+                    type="button"
+                    className="btn btn-danger"
+                    onClick={async () => {
+                      try {
+                        await axiosPrivate.delete(
+                          `/sysAdmin/deleteSpecialty?id=${speciality.specialtyId}`
+                        );
+                        alert("Specialty removed successfully");
+                        navigate(0);
+                      } catch (err: any) {
+                        if (!err?.response) {
+                          alert("No Server Response");
+                        } else if (err.response?.status === 400) {
+                          alert(err.response?.data.errors);
+                        } else {
+                          alert("Unknown error occured...");
+                        }
+                        console.error(err);
+                      }
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

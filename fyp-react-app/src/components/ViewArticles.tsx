@@ -37,21 +37,15 @@ export default function Articles() {
   }, [page]);
 
   const pagination: any = [];
+
+  let startPage, endPage;
+  startPage = endPage = page;
+
   if (totalPage > 1) {
-    let startPage, endPage;
-    startPage = endPage = page;
-
-    if (page == 0) {
-      endPage = startPage + 2;
-    } else {
-      endPage = page + 1;
-      startPage = page - 1;
-    }
-
-    if (page + 1 == totalPage) {
-      startPage = page - 2;
-      endPage = totalPage - 1;
-    }
+    endPage = page + 1 != totalPage ? endPage + 1 : totalPage - 1;
+    endPage = page == 0 && totalPage > 2 ? endPage + 1 : endPage;
+    startPage = page != 0 ? page - 1 : 0;
+    startPage = page + 1 == totalPage ? startPage - 1 : startPage;
 
     while (startPage <= endPage) {
       pagination.push(startPage++);
@@ -77,7 +71,7 @@ export default function Articles() {
           </div>
         ))}
       </div>
-      {articles.length > 1 && (
+      {totalPage > 1 && (
         <nav>
           <ul style={{ background: "transparent" }} className="pagination">
             {pagination.map((el: any) => (

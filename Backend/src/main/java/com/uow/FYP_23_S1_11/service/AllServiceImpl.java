@@ -75,7 +75,15 @@ public class AllServiceImpl implements AllService {
                 })
                 .collect(Collectors.toList());
 
-        Page<?> page = PageableExecutionUtils.getPage(retrievedFeedbacks, pageable, () -> query.getResultList().size());
+        String counthsql = "SELECT COUNT(sf) FROM SystemFeedback sf ";
+        counthsql += user.getRole() != ERole.SYSTEM_ADMIN ? "WHERE sf.accountFeedback = :account " : "";
+
+        TypedQuery<Long> countQuery = entityManager.createQuery(counthsql, Long.class);
+        if (user.getRole() != ERole.SYSTEM_ADMIN) {
+            countQuery.setParameter("account", user);
+        }
+
+        Page<?> page = PageableExecutionUtils.getPage(retrievedFeedbacks, pageable, () -> countQuery.getSingleResult());
         return Constants.convertToResponse(page);
     }
 

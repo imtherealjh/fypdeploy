@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,6 +50,11 @@ public class SuperAdminController {
     @PostMapping("/createNewSpecialty")
     public ResponseEntity<?> createNewSpecialty(@RequestBody @Valid SpecialtyRequest specialty) {
         return ResponseEntity.ok(sysAdminService.createNewSpecialty(specialty));
+    }
+
+    @DeleteMapping("/deleteSpecialty")
+    public ResponseEntity<?> deleteSpecialty(@RequestParam @NotNull Integer id) {
+        return ResponseEntity.ok(sysAdminService.deleteSpecialty(id));
     }
 
     @PutMapping("/approveClinic")

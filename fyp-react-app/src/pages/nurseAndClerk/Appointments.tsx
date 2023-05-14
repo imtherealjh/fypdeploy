@@ -59,7 +59,7 @@ export default function Appointments() {
             <input
               type="text"
               className="form-control"
-              placeholder={`Search Clinic`}
+              placeholder={`Search Appointment`}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setSearchInput(e.target.value)
               }
@@ -108,7 +108,7 @@ export default function Appointments() {
                     <td>{appointment.status}</td>
                     <td colSpan={2}>
                       <div className="d-flex justify-content-end gap-2 flex-wrap">
-                        {appointment.status !== "COMPLETED" && (
+                        {appointment.status === "BOOKED" && (
                           <>
                             <button
                               id="updateBtn"

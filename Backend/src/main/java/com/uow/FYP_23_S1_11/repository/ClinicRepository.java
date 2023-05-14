@@ -32,14 +32,4 @@ public interface ClinicRepository extends JpaRepository<Clinic, Integer> {
         public List<Clinic> findByClinicsWithSchedule(@Param("apptDate") LocalDate apptDate,
                         @Param("day") EWeekdays day);
 
-        @Query("SELECT DISTINCT p FROM Clinic p " +
-                        "JOIN FETCH p.doctor c1 " +
-                        "WHERE NOT c1.doctorAppt IS EMPTY " +
-                        "AND p.status = 'APPROVED'" +
-                        "AND c1.doctorId IN " +
-                        "(SELECT c2.doctorId FROM Doctor c2 " +
-                        "JOIN c2.doctorSpecialty gc " +
-                        "WHERE gc.type = :specialty)")
-        public List<Clinic> findBySpecialty(@Param("specialty") String specialty);
-
 }

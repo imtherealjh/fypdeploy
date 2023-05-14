@@ -23,13 +23,16 @@ export default function SystemFeedback() {
 
     const fetchData = async () => {
       try {
-        let response = await axiosPrivate.get("/all/getSystemFeedback", {
-          signal: controller.signal,
-        });
-
-        console.log(response);
+        let response = await axiosPrivate.get(
+          `/all/getSystemFeedback?page=${page}`,
+          {
+            signal: controller.signal,
+          }
+        );
 
         const { content, current_page, total_pages } = response.data;
+
+        console.log(response);
 
         isMounted && setFeedbacks(content);
         isMounted && setPage(current_page);
@@ -48,21 +51,15 @@ export default function SystemFeedback() {
   }, [page]);
 
   const pagination: any = [];
+
+  let startPage, endPage;
+  startPage = endPage = page;
+
   if (totalPage > 1) {
-    let startPage, endPage;
-    startPage = endPage = page;
-
-    if (page == 0) {
-      endPage = startPage + 2;
-    } else {
-      endPage = page + 1;
-      startPage = page - 1;
-    }
-
-    if (page + 1 == totalPage) {
-      startPage = page - 2;
-      endPage = totalPage - 1;
-    }
+    endPage = page + 1 != totalPage ? endPage + 1 : totalPage - 1;
+    endPage = page == 0 && totalPage > 2 ? endPage + 1 : endPage;
+    startPage = page != 0 ? page - 1 : 0;
+    startPage = page + 1 == totalPage ? startPage - 1 : startPage;
 
     while (startPage <= endPage) {
       pagination.push(startPage++);
@@ -172,20 +169,31 @@ export default function SystemFeedback() {
             ))}
           </tbody>
         </table>
-        {feedback.length > 1 && (
+        {totalPage > 1 && (
           <nav>
             <ul style={{ background: "transparent" }} className="pagination">
-              {pagination.map((el: any) => (
-                <li className="page-item">
-                  <a
-                    className={el === page ? `page-link active` : "page-link"}
-                    href="#"
-                    onClick={() => setPage(el)}
+              {totalPage >= 1 && (
+                <nav>
+                  <ul
+                    style={{ background: "transparent" }}
+                    className="pagination"
                   >
-                    {el + 1}
-                  </a>
-                </li>
-              ))}
+                    {pagination.map((el: any) => (
+                      <li className="page-item">
+                        <a
+                          className={
+                            el === page ? `page-link active` : "page-link"
+                          }
+                          href="#"
+                          onClick={() => setPage(el)}
+                        >
+                          {el + 1}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              )}
             </ul>
           </nav>
         )}

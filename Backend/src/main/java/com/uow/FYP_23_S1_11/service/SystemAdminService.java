@@ -16,6 +16,8 @@ public interface SystemAdminService {
 
     public Boolean createNewSpecialty(SpecialtyRequest specialty);
 
+    public Boolean deleteSpecialty(Integer id);
+
     public Boolean approveClinic(Integer clinicId);
 
     public Boolean rejectClinic(Integer clinicId);

@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.0.0",
+    "@types/sockjs-client": "^1.5.1",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "buffer": "^6.0.3",
@@ -21,7 +23,8 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.8.0",
     "react-multi-date-picker": "^4.0.0",
-    "react-router-dom": "^6.10.0"
+    "react-router-dom": "^6.10.0",
+    "sockjs-client": "^1.6.1"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",

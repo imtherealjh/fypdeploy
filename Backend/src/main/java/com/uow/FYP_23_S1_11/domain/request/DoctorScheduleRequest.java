@@ -3,8 +3,9 @@ package com.uow.FYP_23_S1_11.domain.request;
 import java.time.LocalTime;
 import java.util.Comparator;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.uow.FYP_23_S1_11.constraints.OnCreate;
+import com.uow.FYP_23_S1_11.constraints.OnStaffUpdate;
 import com.uow.FYP_23_S1_11.constraints.ValueOfEnum;
 import com.uow.FYP_23_S1_11.enums.EWeekdays;
 
@@ -23,22 +24,21 @@ public class DoctorScheduleRequest implements Comparable<DoctorScheduleRequest> 
     @JsonProperty("doctorId")
     private Integer doctorId;
 
-    @NotEmpty
+    @NotEmpty(groups = { OnCreate.class, OnStaffUpdate.class })
     @ValueOfEnum(enumClass = EWeekdays.class)
     @JsonProperty("day")
     private String day;
 
-    @NotEmpty
-    @JsonFormat(pattern = "HH:mm")
+    @NotEmpty(groups = { OnCreate.class, OnStaffUpdate.class })
     @JsonProperty("startTime")
     private String startTime;
 
-    @NotEmpty
-    @JsonFormat(pattern = "HH:mm")
+    @NotEmpty(groups = { OnCreate.class, OnStaffUpdate.class })
     @JsonProperty("endTime")
     private String endTime;
 
-    @AssertTrue(message = "Start Time and End Time must be valid (HH:mm) and End Time must be later than Start Time")
+    @AssertTrue(groups = { OnCreate.class,
+            OnStaffUpdate.class }, message = "Start Time and End Time must be valid (HH:mm) and End Time must be later than Start Time")
     private boolean isValid() {
         try {
             return LocalTime.parse(endTime).isAfter(LocalTime.parse(startTime));

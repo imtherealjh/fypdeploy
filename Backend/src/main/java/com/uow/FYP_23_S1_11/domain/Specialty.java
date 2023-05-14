@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,9 +30,8 @@ public class Specialty implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int specialtyId;
     private String type;
-    private String description;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "doctorSpecialty")
+    @ManyToMany(mappedBy = "doctorSpecialty", cascade = CascadeType.ALL)
     private List<Doctor> doctorList;
 }

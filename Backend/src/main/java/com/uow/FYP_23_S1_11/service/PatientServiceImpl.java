@@ -2,40 +2,40 @@ package com.uow.FYP_23_S1_11.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.uow.FYP_23_S1_11.Constants;
 import com.uow.FYP_23_S1_11.domain.Appointment;
+import com.uow.FYP_23_S1_11.domain.Clinic;
+import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.Patient;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackClinic;
 import com.uow.FYP_23_S1_11.domain.PatientFeedbackDoctor;
-import com.uow.FYP_23_S1_11.domain.Queue;
 import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.ClinicAndDoctorFeedbackRequest;
 import com.uow.FYP_23_S1_11.domain.request.DoctorAvailableRequest;
 import com.uow.FYP_23_S1_11.enums.EAppointmentStatus;
-import com.uow.FYP_23_S1_11.enums.EQueueStatus;
 import com.uow.FYP_23_S1_11.repository.AppointmentRepository;
-import com.uow.FYP_23_S1_11.repository.ClinicRepository;
-import com.uow.FYP_23_S1_11.repository.QueueRepository;
 
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackClinicRepository;
 import com.uow.FYP_23_S1_11.repository.PatientFeedbackDoctorRepository;
 import com.uow.FYP_23_S1_11.repository.PatientRepository;
 
-import com.uow.FYP_23_S1_11.domain.request.QueueRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
+import com.uow.FYP_23_S1_11.domain.request.SearchLocReq;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -48,8 +48,6 @@ public class PatientServiceImpl implements PatientService {
     private AppointmentService apptService;
 
     @Autowired
-    private ClinicRepository clinicRepo;
-    @Autowired
     private PatientRepository patientRepo;
     @Autowired
     private AppointmentRepository apptRepo;
@@ -58,8 +56,6 @@ public class PatientServiceImpl implements PatientService {
     private PatientFeedbackClinicRepository patientFeedbackClinicRepo;
     @Autowired
     private PatientFeedbackDoctorRepository patientFeedbackDoctorRepo;
-    @Autowired
-    private QueueRepository queueRepo;
 
     @Override
     public Object getPatientProfile() {
@@ -75,7 +71,72 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public List<?> getAllClinicBySpecialty(String specialty) {
-        return clinicRepo.findBySpecialty(specialty);
+        TypedQuery<Clinic> query = entityManager.createQuery(
+                "SELECT DISTINCT p FROM Clinic p " +
+                        "JOIN FETCH p.doctor c1 " +
+                        "JOIN c1.doctorAccount da " +
+                        "WHERE NOT c1.doctorAppt IS EMPTY " +
+                        "AND da.isEnabled = 1 " +
+                        "AND p.status = 'APPROVED'" +
+                        "AND c1.doctorId IN " +
+                        "(SELECT c2.doctorId FROM Doctor c2 " +
+                        "JOIN c2.doctorSpecialty gc " +
+                        "WHERE gc.type = :specialty)",
+                Clinic.class);
+        query.setParameter("specialty", specialty);
+
+        return query.getResultList();
+    }
+
+    @Override
+    public Map<?, ?> getAllClinicSpecLoc(SearchLocReq searchLocReq, Pageable pageable) {
+        TypedQuery<Doctor> query = entityManager.createQuery(
+                "SELECT p FROM Doctor p " +
+                        "JOIN p.doctorClinic dc " +
+                        "JOIN p.doctorSpecialty ds " +
+                        "JOIN p.doctorAccount da " +
+                        "WHERE NOT p.doctorAppt IS EMPTY " +
+                        "AND da.isEnabled = 1 " +
+                        "AND dc.status = 'APPROVED' " +
+                        "AND dc.location LIKE CONCAT('%',:location ,'%') " +
+                        "AND ds.type = :specialty",
+                Doctor.class);
+        query.setParameter("location", searchLocReq.getLocation());
+        query.setParameter("specialty", searchLocReq.getSpecialty());
+
+        List<Map<String, Object>> data = query
+                .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
+                .getResultStream()
+                .map(obj -> {
+                    Map<String, Object> object = new HashMap<>();
+                    object.put("name", obj.getName());
+                    object.put("doctorId", obj.getDoctorId());
+
+                    Clinic clinic = obj.getDoctorClinic();
+                    object.put("clinicName", clinic.getClinicName());
+                    object.put("clinicLocation", clinic.getLocation());
+                    object.put("clinicContact", clinic.getContactNo());
+                    object.put("clinicEmail", clinic.getEmail());
+                    return object;
+                })
+                .collect(Collectors.toList());
+
+        TypedQuery<Long> countQuery = entityManager.createQuery(
+                "SELECT COUNT(p) FROM Doctor p " +
+                        "JOIN p.doctorClinic dc " +
+                        "JOIN p.doctorSpecialty ds " +
+                        "WHERE NOT p.doctorAppt IS EMPTY " +
+                        "AND dc.status = 'APPROVED' " +
+                        "AND dc.location LIKE CONCAT('%',:location ,'%') " +
+                        "AND ds.type = :specialty",
+                Long.class);
+        query.setParameter("location", searchLocReq.getLocation());
+        query.setParameter("specialty", searchLocReq.getSpecialty());
+
+        Page<?> page = PageableExecutionUtils.getPage(data, pageable,
+                () -> countQuery.getSingleResult());
+        return Constants.convertToResponse(page);
     }
 
     @Override
@@ -86,22 +147,26 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Boolean updateProfile(RegisterPatientRequest updateProfileReq) {
-        try {
-            UserAccount currentUser = Constants.getAuthenticatedUser();
-            Patient patient = currentUser.getPatient();
+        UserAccount currentUser = Constants.getAuthenticatedUser();
+        Patient patient = currentUser.getPatient();
 
-            patient.setName(updateProfileReq.getName());
-            patient.setEmail(updateProfileReq.getEmail());
-            patient.setAddress(updateProfileReq.getAddress());
-            patient.setContactNo(updateProfileReq.getContactNo());
-            patient.setEmergencyContact(updateProfileReq.getEmergencyContact());
-            patient.setEmergencyContactNo(updateProfileReq.getEmergencyContactNo());
+        TypedQuery<String> query = entityManager.createNamedQuery("findEmailInTables", String.class);
+        query.setParameter("email", updateProfileReq.getEmail());
 
-            patientRepo.save(patient);
-            return true;
-        } catch (Exception e) {
-            return false;
+        List<String> results = query.getResultList();
+        if (!results.isEmpty() && !patient.getEmail().equals(updateProfileReq.getEmail())) {
+            throw new IllegalArgumentException("Username/Email has already been registered...");
         }
+
+        patient.setName(updateProfileReq.getName());
+        patient.setEmail(updateProfileReq.getEmail());
+        patient.setAddress(updateProfileReq.getAddress());
+        patient.setContactNo(updateProfileReq.getContactNo());
+        patient.setEmergencyContact(updateProfileReq.getEmergencyContact());
+        patient.setEmergencyContactNo(updateProfileReq.getEmergencyContactNo());
+
+        patientRepo.save(patient);
+        return true;
     }
 
     @Override
@@ -144,55 +209,4 @@ public class PatientServiceImpl implements PatientService {
         }
     }
 
-    @Override
-    public Boolean insertQueueNumber(QueueRequest request) {
-        try {
-            Integer apptId = request.getCheckAppointmentId();
-            Integer patientId = request.getPatientId();
-            List<Patient> patient = patientRepo
-                    .findByPatientIdAndDate(patientId, LocalDate.now());
-            Optional<Appointment> apptOptional = apptRepo.findById(apptId);
-            Appointment appointment = apptOptional.get();
-            if (patient.isEmpty() || LocalDate.now().equals(appointment.getApptDate()) == false) {
-                throw new IllegalArgumentException("Your appointment is not today...");
-            } else {
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-                mapper.registerModule(new JavaTimeModule());
-                Queue queue = (Queue) mapper.convertValue(request,
-                        Queue.class);
-                queue.setDate(LocalDate.now());
-                queue.setTime(appointment.getApptTime());
-                queue.setStatus(EQueueStatus.WAITING_IN_QUEUE);
-                queueRepo.save(queue);
-                return true;
-            }
-
-        } catch (Exception e) {
-            System.out.print(e);
-            return false;
-        }
-    }
-
-    @Override
-    public Integer getByQueueNumberCount(Integer queueNumber, String clinicName) {
-        Optional<Queue> queueOptional = queueRepo.findbyQueueNumber(queueNumber);
-        Integer countBeforeQueueNumber = queueRepo
-                .findCountByQueueNumber(queueNumber, clinicName);
-        if (queueOptional.isEmpty() == false) {
-            return countBeforeQueueNumber;
-        } else {
-            throw new IllegalArgumentException("Queue number not found...");
-        }
-    }
-
-    @Override
-    public Integer getByQueueNumber(Integer queueNumber, String clinicName) {
-        Optional<Queue> queueOptional = queueRepo.findbyQueueNumber(queueNumber);
-        if (queueOptional.isEmpty() == false) {
-            return queueNumber;
-        } else {
-            throw new IllegalArgumentException("Queue number not found...");
-        }
-    }
 }
