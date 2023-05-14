@@ -1,6 +1,7 @@
 export type CarouselItems = {
-  imageSrc: string;
-  imageAlt: string;
+  clinic: string;
+  content: string;
+  ratings: string;
 };
 
 export type NavigationItems = {
