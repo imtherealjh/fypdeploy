@@ -40,7 +40,7 @@ function Feedback() {
   let startPage, endPage;
   startPage = endPage = page;
 
-  if (totalPage >= 1) {
+  if (totalPage > 1) {
     endPage = page + 1 != totalPage ? endPage + 1 : totalPage - 1;
     endPage = page == 0 && totalPage > 2 ? endPage + 1 : endPage;
     startPage = page != 0 ? page - 1 : 0;
@@ -80,7 +80,7 @@ function Feedback() {
             ))}
           </tbody>
         </table>
-        {totalPage >= 1 && (
+        {totalPage > 1 && (
           <nav>
             <ul style={{ background: "transparent" }} className="pagination">
               {pagination.map((el: any) => (

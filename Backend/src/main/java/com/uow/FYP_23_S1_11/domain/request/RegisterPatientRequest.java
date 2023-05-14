@@ -1,5 +1,8 @@
 package com.uow.FYP_23_S1_11.domain.request;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,6 +11,7 @@ import com.uow.FYP_23_S1_11.constraints.OnUpdate;
 import com.uow.FYP_23_S1_11.constraints.ValueOfEnum;
 import com.uow.FYP_23_S1_11.enums.EGender;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -62,4 +66,12 @@ public class RegisterPatientRequest {
     @Email(groups = { OnCreate.class, OnUpdate.class })
     @JsonProperty("email")
     private String email;
+
+    @AssertTrue(groups = { OnCreate.class }, message = "You must be 13 years and above to register for an account")
+    private boolean isValidDob() {
+        long age = dob.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate().until(LocalDate.now(), ChronoUnit.YEARS);
+        return age >= 13;
+    }
 }

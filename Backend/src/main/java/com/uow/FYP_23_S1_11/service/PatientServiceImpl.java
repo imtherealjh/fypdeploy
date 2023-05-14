@@ -94,7 +94,7 @@ public class PatientServiceImpl implements PatientService {
                 "SELECT p FROM Doctor p " +
                         "JOIN p.doctorClinic dc " +
                         "JOIN p.doctorSpecialty ds " +
-                        "JOIN c1.doctorAccount da " +
+                        "JOIN p.doctorAccount da " +
                         "WHERE NOT p.doctorAppt IS EMPTY " +
                         "AND da.isEnabled = 1 " +
                         "AND dc.status = 'APPROVED' " +

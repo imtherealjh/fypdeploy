@@ -169,7 +169,7 @@ export default function SystemFeedback() {
             ))}
           </tbody>
         </table>
-        {totalPage >= 1 && (
+        {totalPage > 1 && (
           <nav>
             <ul style={{ background: "transparent" }} className="pagination">
               {totalPage >= 1 && (
