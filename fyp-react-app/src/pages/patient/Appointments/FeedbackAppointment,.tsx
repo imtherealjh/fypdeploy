@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../../../lib/useAxiosPrivate";
 
@@ -8,16 +8,24 @@ interface Props {
 
 export default function FeedbackComponent({ data }: Props) {
   const [formData, setFormData] = useState<any>({
-    appointmentId: data.appointmentId,
-    clinicRatings: data.fPC?.ratings ?? "",
-    clinicFeedback: data.fPC?.feedback ?? "",
-    doctorRatings: data.fPD?.ratings ?? "",
-    doctorFeedback: data.fPD?.feedback ?? "",
+    appointmentId: "",
+    clinicRatings: "",
+    clinicFeedback: "",
+    doctorRatings: "",
+    doctorFeedback: "",
   });
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
 
-  console.log(data);
+  useEffect(() => {
+    setFormData({
+      appointmentId: data.appointmentId,
+      clinicRatings: data.fPC?.ratings ?? "",
+      clinicFeedback: data.fPC?.feedback ?? "",
+      doctorRatings: data.fPD?.ratings ?? "",
+      doctorFeedback: data.fPD?.feedback ?? "",
+    });
+  }, [data]);
 
   const createdDate = new Date(data.fPC?.localDateTime);
   const hrsDiff =

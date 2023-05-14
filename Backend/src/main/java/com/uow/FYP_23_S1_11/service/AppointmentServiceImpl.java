@@ -91,7 +91,6 @@ public class AppointmentServiceImpl implements AppointmentService {
                                 .map(elem -> elem.getFrontDeskClinic())
                                 .orElse(null)));
 
-        System.out.println(patient != null && !patient.getPatientId().equals(verify.getApptPatient().getPatientId()));
         // check is it patient or frontdesk/nurse that is updating, if not throw error
         // if patient is editing, check if it is the correct patient
         // if frontdesk/nurse that is updating, check if the correct clinic

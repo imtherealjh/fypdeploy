@@ -180,6 +180,7 @@ public class PatientServiceImpl implements PatientService {
 
             PatientFeedbackClinic patientFeedbackClinic = params.get("fPC") == null ? new PatientFeedbackClinic()
                     : (PatientFeedbackClinic) params.get("fPC");
+            patientFeedbackClinic.setClinicFeedbackId(origAppt.getAppointmentId());
             patientFeedbackClinic.setClinicFeedback(origAppt.getApptClinic());
             patientFeedbackClinic.setPatientClinicFeedback(origAppt.getApptPatient());
             patientFeedbackClinic.setFeedback(request.getClinicFeedback());
@@ -187,6 +188,7 @@ public class PatientServiceImpl implements PatientService {
 
             PatientFeedbackDoctor patientFeedbackDoctor = params.get("fPD") == null ? new PatientFeedbackDoctor()
                     : (PatientFeedbackDoctor) params.get("fPD");
+            patientFeedbackDoctor.setDoctorFeedbackId(origAppt.getAppointmentId());
             patientFeedbackDoctor.setDoctorFeedback(origAppt.getApptDoctor());
             patientFeedbackDoctor.setPatientDoctorFeedback(origAppt.getApptPatient());
             patientFeedbackDoctor.setFeedback(request.getDoctorFeedback());
@@ -199,7 +201,6 @@ public class PatientServiceImpl implements PatientService {
 
             patientFeedbackClinicRepo.save(patientFeedbackClinic);
             patientFeedbackDoctorRepo.save(patientFeedbackDoctor);
-
             return true;
         } catch (IllegalArgumentException e) {
             throw e;

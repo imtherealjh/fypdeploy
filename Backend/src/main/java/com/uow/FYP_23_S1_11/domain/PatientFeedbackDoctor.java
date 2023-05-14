@@ -25,7 +25,6 @@ import lombok.Setter;
 @Setter
 public class PatientFeedbackDoctor implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer doctorFeedbackId;
     private Integer ratings;
     private String feedback;
