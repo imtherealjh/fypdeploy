@@ -27,9 +27,15 @@ export default function Appointment() {
       isMounted && setAppointments(response.data);
       isMounted &&
         setFilteredAppt(
-          response.data.filter(
-            (obj: any) => new Date(obj.apptDate) < new Date()
-          )
+          response.data.filter((obj: any) => {
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+
+            const apptDate = new Date(obj.apptDate);
+            apptDate.setHours(0, 0, 0, 0);
+
+            return apptDate < currentDate || obj.status === "COMPLETED";
+          })
         );
     };
 
@@ -63,9 +69,15 @@ export default function Appointment() {
               onChange={() => {
                 setPast(true);
                 setFilteredAppt(
-                  appointments.filter(
-                    (obj: any) => new Date(obj.apptDate) < new Date()
-                  )
+                  appointments.filter((obj: any) => {
+                    const currentDate = new Date();
+                    currentDate.setHours(0, 0, 0, 0);
+
+                    const apptDate = new Date(obj.apptDate);
+                    apptDate.setHours(0, 0, 0, 0);
+
+                    return apptDate < currentDate || obj.status === "COMPLETED";
+                  })
                 );
               }}
               checked={past}
@@ -83,9 +95,17 @@ export default function Appointment() {
               onChange={() => {
                 setPast(false);
                 setFilteredAppt(
-                  appointments.filter(
-                    (obj: any) => new Date(obj.apptDate) >= new Date()
-                  )
+                  appointments.filter((obj: any) => {
+                    const currentDate = new Date();
+                    currentDate.setHours(0, 0, 0, 0);
+
+                    const apptDate = new Date(obj.apptDate);
+                    apptDate.setHours(0, 0, 0, 0);
+
+                    return (
+                      apptDate >= currentDate && obj.status !== "COMPLETED"
+                    );
+                  })
                 );
               }}
               checked={!past}
