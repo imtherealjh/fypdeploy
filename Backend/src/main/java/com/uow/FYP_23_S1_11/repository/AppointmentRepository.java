@@ -19,7 +19,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
                         @Param("status") EAppointmentStatus status, @Param("apptDate") LocalDate date);
 
         @Query("SELECT new map(A.appointmentId as appointmentId, A.apptDate as apptDate, A.apptTime as apptTime, A.apptDoctor.doctorId as doctorId, "
-                        + "A.apptDoctor.name as doctorName, A.apptClinic.clinicName as clinicName, A.status as status, fPC as fPC, fPD as fPD) "
+                        + "A.apptDoctor.name as doctorName, A.apptClinic.clinicName as clinicName, A.status as status, A.diagnostic as diagnostic, fPC as fPC, fPD as fPD) "
                         + "FROM Appointment A "
                         + "JOIN A.apptPatient aP "
                         + "LEFT OUTER JOIN aP.feedbackPatientClinic fPC ON fPC.clinicFeedbackId = A.appointmentId "
