@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -26,7 +27,9 @@ public class ArticleController {
     @GetMapping("/getAllEduMaterial")
     public ResponseEntity<Map<?, ?>> getAllEduMaterial(@RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "6") int size) {
-        return ResponseEntity.ok(articleService.getAllEduMaterial(PageRequest.of(page, size)));
+        return ResponseEntity
+                .ok(articleService
+                        .getAllEduMaterial(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "materialId"))));
     }
 
     @GetMapping("/getEduMaterialById")

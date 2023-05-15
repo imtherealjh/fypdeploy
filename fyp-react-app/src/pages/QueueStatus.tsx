@@ -18,7 +18,6 @@ export default function QueueStatus({ appointmentId, room }: Props) {
       const response = await axios.get(
         `/queue/getCurrentQueueStatus?apptId=${appointmentId}`
       );
-      console.log(response);
       setQueueStatus(response.data);
     } catch (error) {
       console.error("Error fetching queue status:", error);
