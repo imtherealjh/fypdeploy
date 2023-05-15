@@ -36,5 +36,8 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
                         + "WHERE A.appointmentId=:appointmentId ")
         public Map<?, ?> findByApptId(@Param("appointmentId") Integer appointmentId);
 
+        @Query("SELECT A FROM Appointment A WHERE A.status = 'AVAILABLE' AND A.apptDate < CURRENT_DATE")
+        public List<Appointment> findByOldAvailableAppt();
+
         public List<Appointment> findByApptDateAndApptDoctor(LocalDate apptDate, Doctor apptDoctor);
 }

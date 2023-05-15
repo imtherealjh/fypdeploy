@@ -50,6 +50,14 @@ public class ScheduleTaskService {
     @Value("${spring.mail.username}")
     private String sender;
 
+    @Scheduled(cron = "0 0 0 * * *")
+    @Async
+    public void removeExistingAppointment() {
+        List<Appointment> oldAppts = apptRepo.findByOldAvailableAppt();
+        apptRepo.deleteAll(oldAppts);
+        log.info("Successfully removed all old appointment");
+    }
+
     @Scheduled(cron = "10 0 0 * * *")
     @Async
     public void execute() {

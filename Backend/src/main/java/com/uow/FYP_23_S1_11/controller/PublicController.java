@@ -30,4 +30,5 @@ public class PublicController {
         public ResponseEntity<?> getLandingPageData() {
                 return ResponseEntity.ok(landingPageService.retrieveClinicFeedback());
         }
+
 }
