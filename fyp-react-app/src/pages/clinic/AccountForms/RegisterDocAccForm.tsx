@@ -124,7 +124,22 @@ export default function DoctorAccount() {
       <form method="POST" onSubmit={handleFormSubmit}>
         {doctorInput.map((customInput, idx) => (
           <div className="mt-2" key={idx}>
-            <h4>Doctor {idx + 1}</h4>
+            <div className="d-flex align-items-center justify-content-between mb-2">
+              <h4 style={{ margin: 0 }}>Doctor {idx + 1}</h4>
+              {doctorInput.length > 1 && (
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() =>
+                    setDoctorInput((prev) =>
+                      prev.filter((el, index) => idx !== index)
+                    )
+                  }
+                >
+                  <CgMathMinus />
+                </button>
+              )}
+            </div>
             <div className="row g-2 align-content-center justify-content-center">
               <div className="col-6">
                 <input

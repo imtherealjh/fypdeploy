@@ -26,9 +26,21 @@ export default function RegisterAccount() {
           <option value="nurse">Nurse</option>
           <option value="clerk">Front Desk</option>
         </select>
-        <div>{formState === "doctor" && <RegisterDocAccForm />}</div>
-        <div>{formState === "nurse" && <RegisterNurAccForm />}</div>
-        <div>{formState === "clerk" && <RegisterClerkAccForm />}</div>
+        {formState === "doctor" && (
+          <div>
+            <RegisterDocAccForm />
+          </div>
+        )}
+        {formState === "nurse" && (
+          <div>
+            <RegisterNurAccForm />
+          </div>
+        )}
+        {formState === "clerk" && (
+          <div>
+            <RegisterClerkAccForm />
+          </div>
+        )}
       </div>
     </>
   );

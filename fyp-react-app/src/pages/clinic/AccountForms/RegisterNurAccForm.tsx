@@ -2,6 +2,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { IObjectKeys } from "../../../hooks/types";
 import useAxiosPrivate from "../../../lib/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
+import { CgMathMinus } from "react-icons/cg";
 
 interface NurseInputs extends IObjectKeys {
   username: string;
@@ -62,7 +63,22 @@ export default function NurseAccount() {
       <form method="POST" onSubmit={handleFormSubmit}>
         {nurseInput.map((customInput, idx) => (
           <div className="mt-2" key={idx}>
-            <h4>Nurse {idx + 1}</h4>
+            <div className="d-flex align-items-center justify-content-between mb-2">
+              <h4 style={{ margin: 0 }}>Nurse {idx + 1}</h4>
+              {nurseInput.length > 1 && (
+                <button
+                  type="button"
+                  className="btn btn-danger"
+                  onClick={() =>
+                    setNurseInput((prev) =>
+                      prev.filter((el, index) => idx !== index)
+                    )
+                  }
+                >
+                  <CgMathMinus />
+                </button>
+              )}
+            </div>
             <div className="row g-2 align-content-center justify-content-center">
               <div className="col-6">
                 <input
