@@ -47,6 +47,8 @@ export default function Appointment() {
     };
   }, []);
 
+  console.log(data);
+
   return (
     <>
       <h1>Appointment</h1>
@@ -135,7 +137,7 @@ export default function Appointment() {
               </tr>
             ) : null}
             {filteredAppt.map((value: any, idx: number) => (
-              <tr key={value.appointmentId}>
+              <tr key={idx}>
                 <th className="align-middle" scope="row">
                   {value.appointmentId}
                 </th>
@@ -152,7 +154,7 @@ export default function Appointment() {
                           type="button"
                           className="btn btn-warning"
                           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                            setData(filteredAppt[idx]);
+                            setData({ ...filteredAppt[idx] });
                             setBtnClicked(e.currentTarget.id);
                           }}
                           data-bs-toggle="modal"
@@ -165,7 +167,7 @@ export default function Appointment() {
                           type="button"
                           className="btn btn-danger"
                           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                            setData(filteredAppt[idx]);
+                            setData({ ...filteredAppt[idx] });
                             setBtnClicked(e.currentTarget.id);
                           }}
                           data-bs-toggle="modal"
@@ -182,7 +184,7 @@ export default function Appointment() {
                           type="button"
                           className="btn btn-primary"
                           onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                            setData(filteredAppt[idx]);
+                            setData({ ...filteredAppt[idx] });
                             setBtnClicked(e.currentTarget.id);
                           }}
                           data-bs-toggle="modal"

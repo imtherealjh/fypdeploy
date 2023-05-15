@@ -18,35 +18,46 @@ import jakarta.transaction.Transactional;
 @Service
 @Transactional
 public class LandingPageService {
-    @PersistenceContext
-    private EntityManager entityManager;
+        @PersistenceContext
+        private EntityManager entityManager;
 
-    public List<?> retrieveClinicFeedback() {
-        TypedQuery<Object[]> clinicQuery = entityManager.createQuery(
-                "SELECT fc, AVG(CAST(fc.ratings AS DOUBLE)) FROM Clinic c " +
-                        "JOIN feedbackClinic fc " +
-                        "WHERE fc.ratings >= 4 " +
-                        "GROUP BY fc " +
-                        "HAVING AVG(fc.ratings) >= 4 " +
-                        "ORDER BY RAND() " +
-                        "LIMIT 5",
-                Object[].class);
+        public List<?> retrieveClinicFeedback() {
+                TypedQuery<Object[]> clinicQuery = entityManager.createQuery(
+                                "SELECT c, AVG(CAST(fc.ratings AS DOUBLE)) FROM Clinic c " +
+                                                "JOIN feedbackClinic fc " +
+                                                "GROUP BY c " +
+                                                "HAVING AVG(fc.ratings) >= 4 " +
+                                                "ORDER BY RAND() " +
+                                                "LIMIT 5",
+                                Object[].class);
 
-        List<Map<String, Object>> allResults = clinicQuery
-                .getResultStream()
-                .map(obj -> {
-                    Map<String, Object> result = new HashMap<>();
-                    PatientFeedbackClinic fd = (PatientFeedbackClinic) obj[0];
-                    Double avgRating = (Double) obj[1];
+                TypedQuery<Object[]> feedbackQuery = entityManager.createQuery(
+                                "SELECT fc FROM PatientFeedbackClinic fc " +
+                                                "WHERE fc.ratings >= 4 AND fc.clinicFeedback = :clinic " +
+                                                "ORDER BY RAND() " +
+                                                "LIMIT 1",
+                                Object[].class);
 
-                    result.put("clinic", fd.getClinicFeedback().getClinicName()
-                            + " (avg rating : " + avgRating + ")");
-                    result.put("content", fd.getFeedback());
-                    result.put("ratings", fd.getPatientClinicFeedback().getName() + " - " + fd.getRatings());
+                List<Map<String, Object>> allResults = clinicQuery
+                                .getResultStream()
+                                .map(obj -> {
+                                        Map<String, Object> result = new HashMap<>();
+                                        Clinic clinic = (Clinic) obj[0];
+                                        Double avgRating = (Double) obj[1];
 
-                    return result;
-                }).collect(Collectors.toList());
+                                        feedbackQuery.setParameter("clinic", clinic);
+                                        Object[] feedbackRes = feedbackQuery.getSingleResult();
+                                        PatientFeedbackClinic pfc = (PatientFeedbackClinic) feedbackRes[0];
 
-        return allResults;
-    }
+                                        result.put("clinic", clinic.getClinicName()
+                                                        + " (avg rating : " + avgRating + ")");
+                                        result.put("content", pfc.getFeedback());
+                                        result.put("ratings", pfc.getPatientClinicFeedback().getName() + " - "
+                                                        + pfc.getRatings());
+
+                                        return result;
+                                }).collect(Collectors.toList());
+
+                return allResults;
+        }
 }

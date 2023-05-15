@@ -9,6 +9,7 @@ import ViewArticles from "../../components/ViewArticles";
 function Dashboard() {
   const axiosPrivate = useAxiosPrivate();
   const [value, setValue] = useState<any>(new DateObject());
+  const [editable, setEditable] = useState(false);
   const [data, setData] = useState<any>({
     patientList: [],
     noOfPatients: 0,
@@ -27,6 +28,14 @@ function Dashboard() {
           }
         );
 
+        const selectedDate = new Date(value);
+        selectedDate.setHours(0, 0, 0, 0);
+
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0);
+
+        isMounted &&
+          setEditable(currentDate.getTime() === selectedDate.getTime());
         isMounted && setData(response.data);
       } catch (err) {
         console.log(err);
@@ -79,7 +88,7 @@ function Dashboard() {
           </div>
         </div>
         <div className="mt-3">
-          <PatientList apptDetails={data.patientList} />
+          <PatientList editable={editable} apptDetails={data.patientList} />
         </div>
       </div>
     </>
