@@ -74,7 +74,7 @@ export default function ViewPersonalDetails() {
                   id="height"
                   name="height"
                   readOnly
-                  value={`${patientData.height || ""}`}
+                  value={`${patientData.height || 0}`}
                 />
               </div>
               <div className="col-md-4">
@@ -87,7 +87,7 @@ export default function ViewPersonalDetails() {
                   id="weight"
                   name="weight"
                   readOnly
-                  value={`${patientData.weight || ""}`}
+                  value={`${patientData.weight || 0}`}
                 />
               </div>
 
