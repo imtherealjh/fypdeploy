@@ -1,12 +1,18 @@
 import { useState, useEffect, ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CgSearch } from "react-icons/cg";
 
 import useAxiosPrivate from "../../lib/useAxiosPrivate";
+import Step2 from "../AppointmentComponents/Step2";
 
 function PatientListPage() {
   const axiosPrivate = useAxiosPrivate();
   const [searchInput, setSearchInput] = useState("");
+
+  const [formData, setFormData] = useState({});
+  const navigate = useNavigate();
+
+  const [doctor, setDoctor] = useState([]);
   const [patientList, setPatientList] = useState([]);
 
   useEffect(() => {
@@ -19,10 +25,14 @@ function PatientListPage() {
           signal: controller.signal,
         });
 
+        const doctorResponse = await axiosPrivate.get("/clerk/getAllDoctors", {
+          signal: controller.signal,
+        });
+
         isMounted && setPatientList(response.data);
+        isMounted && setDoctor(doctorResponse.data);
       } catch (error) {
-        console.log(error);
-        console.error("Error fetching patient list:", error);
+        console.error(error);
       }
     };
 
@@ -33,6 +43,8 @@ function PatientListPage() {
       controller.abort();
     };
   }, []);
+
+  console.log(formData);
 
   return (
     <>
@@ -91,14 +103,107 @@ function PatientListPage() {
                   <td className="align-middle">{data.email}</td>
                   <td className="align-middle">{data.contactNo}</td>
                   <td>
-                    <Link to="details" state={data}>
-                      <button className="btn btn-primary">View</button>
-                    </Link>
+                    <div className="d-flex gap-2">
+                      <Link to="details" state={data}>
+                        <button className="btn btn-primary">
+                          View Records
+                        </button>
+                      </Link>
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modal"
+                        onClick={() =>
+                          setFormData((prev: any) => ({
+                            ...prev,
+                            patientId: data.patientId,
+                          }))
+                        }
+                      >
+                        Book Appointment
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
           </tbody>
         </table>
+        <div
+          className="modal fade"
+          id="modal"
+          data-bs-keyboard="false"
+          tabIndex={-1}
+          aria-labelledby="modal"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content py-3">
+              <div className="modal-header">
+                <h5 className="modal-title">Book appointment</h5>
+                <button
+                  id="closeModalBtn"
+                  style={{ display: "none" }}
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div className="modal-body d-flex gap-2 flex-column">
+                <select
+                  className="form-select"
+                  defaultValue={"DEFAULT"}
+                  aria-label="Open this to select doctor"
+                  onChange={(event: ChangeEvent<HTMLSelectElement>) =>
+                    setFormData((prev: any) => {
+                      return {
+                        ...prev,
+                        doctorId: event.target.value,
+                        originalApptId: event.target.value,
+                      };
+                    })
+                  }
+                >
+                  <option value="DEFAULT" disabled>
+                    Open this to select doctor
+                  </option>
+                  {doctor.map((val: any, idx: number) => (
+                    <option key={idx} value={val.doctorId}>
+                      {val.name}
+                    </option>
+                  ))}
+                </select>
+                <Step2 formData={formData} setFormData={setFormData} />
+                <button
+                  className="btn btn-primary"
+                  onClick={async () => {
+                    try {
+                      await axiosPrivate.post(
+                        `/clerk/bookAppointment`,
+                        formData
+                      );
+
+                      alert("Appointment successfully created...");
+                      document.getElementById("closeModalBtn")?.click();
+                      navigate(0);
+                    } catch (err: any) {
+                      if (!err?.response) {
+                        alert("No Server Response");
+                      } else if (err.response?.status === 400) {
+                        alert(err.response?.data.errors);
+                      } else {
+                        alert("Unknown error occured...");
+                      }
+                    }
+                  }}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

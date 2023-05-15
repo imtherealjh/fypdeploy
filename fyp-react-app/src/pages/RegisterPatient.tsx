@@ -152,7 +152,7 @@ export default function RegisterPatient() {
 
           <div className="form-floating mb-3">
             <input
-              type="text"
+              type="number"
               className="form-control"
               name="emergencyContactNo"
               placeholder="emergencyContactNo..."

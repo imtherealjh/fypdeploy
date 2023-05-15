@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.uow.FYP_23_S1_11.domain.request.RegisterFrontDeskRequest;
+import com.uow.FYP_23_S1_11.service.AppointmentService;
 import com.uow.FYP_23_S1_11.service.ClerkService;
+import com.uow.FYP_23_S1_11.constraints.OnStaffUpdate;
 import com.uow.FYP_23_S1_11.constraints.OnUpdate;
+import com.uow.FYP_23_S1_11.domain.request.BookUpdateAppointmentRequest;
 import com.uow.FYP_23_S1_11.domain.request.EducationalMaterialRequest;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -32,9 +35,23 @@ public class ClerkController {
     @Autowired
     private ClerkService clerkService;
 
+    @Autowired
+    private AppointmentService apptService;
+
     @GetMapping("/getProfile")
     public ResponseEntity<?> getProfile() {
         return ResponseEntity.ok(clerkService.getProfile());
+    }
+
+    @GetMapping("/getAllDoctors")
+    public ResponseEntity<?> getAllDoctors() {
+        return ResponseEntity.ok(clerkService.getDoctorList());
+    }
+
+    @Validated(OnStaffUpdate.class)
+    @PostMapping("/bookAppointment")
+    public ResponseEntity<?> bookAppointment(@RequestBody @Valid BookUpdateAppointmentRequest apptReq) {
+        return ResponseEntity.ok(apptService.bookAvailableAppointment(apptReq));
     }
 
     @Validated(OnUpdate.class)

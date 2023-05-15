@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.uow.FYP_23_S1_11.domain.Appointment;
 import com.uow.FYP_23_S1_11.domain.Clinic;
+import com.uow.FYP_23_S1_11.domain.Doctor;
 import com.uow.FYP_23_S1_11.domain.EducationalMaterial;
 import com.uow.FYP_23_S1_11.domain.FrontDesk;
 import com.uow.FYP_23_S1_11.domain.request.EducationalMaterialRequest;
@@ -48,6 +49,23 @@ public class ClerkServiceImpl implements ClerkService {
     public Object getProfile() {
         UserAccount user = Constants.getAuthenticatedUser();
         return user.getFrontDesk();
+    }
+
+    @Override
+    public List<Doctor> getDoctorList() {
+        UserAccount user = Constants.getAuthenticatedUser();
+        Clinic clinic = user.getFrontDesk().getFrontDeskClinic();
+        TypedQuery<Doctor> query = entityManager.createQuery(
+                "SELECT p FROM Doctor p " +
+                        "JOIN p.doctorClinic dc " +
+                        "JOIN p.doctorAccount da " +
+                        "WHERE NOT p.doctorAppt IS EMPTY " +
+                        "AND da.isEnabled = 1 " +
+                        "AND dc.status = 'APPROVED' " +
+                        "AND dc = :clinic",
+                Doctor.class);
+        query.setParameter("clinic", clinic);
+        return query.getResultList();
     }
 
     @Override
