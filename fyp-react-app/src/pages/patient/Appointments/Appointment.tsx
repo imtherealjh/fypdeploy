@@ -126,6 +126,7 @@ export default function Appointment() {
               <th scope="col">Doctor</th>
               <th scope="col">Date</th>
               <th scope="col">Time</th>
+              {past && <th scope="col">Diagnostic</th>}
               <th scope="col"></th>
               <th scope="col"></th>
             </tr>
@@ -145,6 +146,9 @@ export default function Appointment() {
                 <td className="align-middle">{value.doctorName}</td>
                 <td className="align-middle">{value.apptDate}</td>
                 <td className="align-middle">{value.apptTime}</td>
+                {past && (
+                  <td className="align-middle">{value.diagnostic || "-"}</td>
+                )}
                 <td colSpan={2}>
                   <div className="d-flex justify-content-end gap-2 flex-wrap">
                     {!past && value.status !== "COMPLETED" && (
