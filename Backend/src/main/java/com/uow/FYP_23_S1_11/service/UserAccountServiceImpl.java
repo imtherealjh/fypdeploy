@@ -351,7 +351,6 @@ public class UserAccountServiceImpl implements UserAccountService {
             userQuery.setParameter("email", resetPasswordReq.getEmail());
 
             UserAccount account = userQuery.getSingleResult();
-            account.setIsEnabled(false);
             account.setVerificationCode(verificationCode);
             userAccRepo.save(account);
 
@@ -376,7 +375,6 @@ public class UserAccountServiceImpl implements UserAccountService {
             throw new IllegalArgumentException("Code not valid...");
         }
 
-        account.setIsEnabled(true);
         account.setVerificationCode(null);
         account.setPassword(passwordEncoder.encode(resetPasswordConfirmReq.getPassword()));
         userAccRepo.save(account);
