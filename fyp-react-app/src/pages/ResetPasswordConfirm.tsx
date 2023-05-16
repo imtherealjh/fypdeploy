@@ -53,7 +53,7 @@ export default function ResetPasswordConfirm() {
                     Confirm Password
                   </label>
                   <input
-                    type="cfmPassword"
+                    type="password"
                     id="cfmPassword"
                     className="form-control"
                     name="cfmPassword"

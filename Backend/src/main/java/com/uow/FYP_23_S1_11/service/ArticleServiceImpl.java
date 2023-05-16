@@ -54,7 +54,7 @@ public class ArticleServiceImpl implements ArticleService {
             EducationalMaterial material = materialOptional.get();
             Map<String, Object> response = new HashMap<>();
             response.put("content", material);
-            response.put("editable", material.getClinic().getClinicId() == clinic.getClinicId());
+            response.put("editable", clinic != null && material.getClinic().getClinicId() == clinic.getClinicId());
 
             return response;
         } catch (Exception e) {
