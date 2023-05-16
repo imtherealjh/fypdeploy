@@ -16,7 +16,24 @@ export default function Articles() {
         article
       );
       alert("Article saved successfully");
-      navigate(0);
+      navigate("/clerk/articles");
+    } catch (err: any) {
+      if (!err?.response) {
+        alert("No Server Response");
+      } else if (err.response?.status === 400) {
+        alert(err.response?.data.errors);
+      } else {
+        alert("Unknown error occured...");
+      }
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axiosPrivate.delete(`/clerk/deleteEduMaterial?id=${materialId}`);
+      alert("Article deleted successfully");
+      navigate("/clerk/articles");
     } catch (err: any) {
       if (!err?.response) {
         alert("No Server Response");
@@ -98,13 +115,20 @@ export default function Articles() {
         </div>
         {isEditable && (
           <>
-            <div className="d-grid">
+            <div className="d-grid gap-2">
               <button
-                className="btn btn-primary"
+                className="btn btn-warning"
                 type="button"
                 onClick={handleSubmit}
               >
                 Update
+              </button>
+              <button
+                className="btn btn-danger"
+                type="button"
+                onClick={handleDelete}
+              >
+                Delete
               </button>
             </div>
           </>

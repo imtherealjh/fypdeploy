@@ -51,9 +51,10 @@ public class ArticleServiceImpl implements ArticleService {
                 throw new IllegalArgumentException("Educational material does not exist..");
             }
 
+            EducationalMaterial material = materialOptional.get();
             Map<String, Object> response = new HashMap<>();
-            response.put("content", materialOptional.get());
-            response.put("editable", clinic != null ? true : false);
+            response.put("content", material);
+            response.put("editable", material.getClinic().getClinicId() == clinic.getClinicId());
 
             return response;
         } catch (Exception e) {

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,6 +76,11 @@ public class ClerkController {
     public ResponseEntity<Boolean> updateEduMaterial(@NotNull @RequestParam Integer id,
             @RequestBody @Valid EducationalMaterialRequest eduMaterialRequest) {
         return ResponseEntity.ok(clerkService.updateEduMaterial(id, eduMaterialRequest));
+    }
+
+    @DeleteMapping("/deleteEduMaterial")
+    public ResponseEntity<Boolean> deleteEduMaterial(@NotNull @RequestParam Integer id) {
+        return ResponseEntity.ok(clerkService.deleteEduMaterial(id));
     }
 
 }
