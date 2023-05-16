@@ -21,7 +21,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-
 public class PatientFeedbackClinic implements Serializable {
     @Id
     private Integer clinicFeedbackId;

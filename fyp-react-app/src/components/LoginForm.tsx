@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import { CgLock, CgProfile } from "react-icons/cg";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import useAuth from "../lib/useAuth";
 import { axiosPrivate } from "../api/axios";
@@ -157,8 +157,16 @@ export default function LoginForm() {
                     />
                   </div>
                 </div>
-                <div>
+                <div className="d-flex flex-column gap-2">
                   <button className="btn btn-success btn-lg">Login</button>
+                  <Link
+                    onClick={() =>
+                      document.getElementById("closeModalBtn")?.click()
+                    }
+                    to="/reset-password"
+                  >
+                    Forget password? Click here
+                  </Link>
                 </div>
               </form>
             </div>

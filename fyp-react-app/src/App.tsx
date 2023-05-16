@@ -17,6 +17,8 @@ import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 import RequireVerifyPage from "./pages/RequireVerify";
 import Queue from "./pages/Queue";
+import ResetPassword from "./pages/ResetPassword";
+import ResetPasswordConfirm from "./pages/ResetPasswordConfirm";
 
 const ClinicRoutes = lazy(() => import("./routes/ClinicRoutes"));
 const DoctorRoutes = lazy(() => import("./routes/DoctorRoutes"));
@@ -35,6 +37,11 @@ function App() {
             <Route path="/registerClinic" element={<RegisterClinic />} />
             <Route path="/registerPatient" element={<RegisterPatient />} />
             <Route path="/queue" element={<Queue />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route
+              path="/reset-password/:code"
+              element={<ResetPasswordConfirm />}
+            />
             <Route path="/requireVerify" element={<RequireVerifyPage />} />
             <Route path="/verify/:code" element={<VerifyEmail />} />
             <Route path="/unauthorized" element={<Unauthorized />} />

@@ -25,8 +25,6 @@ export default function Home() {
           signal: controller.signal,
         });
 
-        console.log(response);
-
         isMounted && setFeedback(response.data);
       } catch (err) {
         console.error(err);

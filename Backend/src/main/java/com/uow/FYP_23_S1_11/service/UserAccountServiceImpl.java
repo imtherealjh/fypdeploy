@@ -28,6 +28,8 @@ import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.RegisterClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.LoginRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
+import com.uow.FYP_23_S1_11.domain.request.ResetPasswordConfirmReq;
+import com.uow.FYP_23_S1_11.domain.request.ResetPasswordReq;
 import com.uow.FYP_23_S1_11.domain.response.AuthResponse;
 import com.uow.FYP_23_S1_11.enums.ETokenType;
 import com.uow.FYP_23_S1_11.enums.ERole;
@@ -326,6 +328,58 @@ public class UserAccountServiceImpl implements UserAccountService {
         user.setIsEnabled(true);
         userAccRepo.save(user);
         return true;
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordReq resetPasswordReq)
+            throws UnsupportedEncodingException, MessagingException {
+        TypedQuery<String> query = entityManager.createNamedQuery("findEmailInTables", String.class);
+        query.setParameter("email", resetPasswordReq.getEmail());
+
+        if (query.getResultList().size() > 0) {
+            String verificationCode = generateVerificationCode();
+
+            TypedQuery<UserAccount> userQuery = entityManager.createQuery(
+                    "SELECT p FROM UserAccount p " +
+                            "LEFT JOIN p.clinic c1 " +
+                            "LEFT JOIN p.patient c2 " +
+                            "LEFT JOIN p.doctor c3 " +
+                            "LEFT JOIN p.nurse c4 " +
+                            "LEFT JOIN p.frontDesk c5 " +
+                            "WHERE c1.email = :email OR c2.email = :email OR c3.email = :email OR c4.email = :email OR c5.email = :email",
+                    UserAccount.class);
+            userQuery.setParameter("email", resetPasswordReq.getEmail());
+
+            UserAccount account = userQuery.getSingleResult();
+            account.setIsEnabled(false);
+            account.setVerificationCode(verificationCode);
+            userAccRepo.save(account);
+
+            String senderName = "GoDoctor";
+            String subject = "Reset password for your account";
+            String content = "Please click the link below to reset your account password:"
+                    + "<h3 style='margin: 0'><a href=\"[[URL]]\" target=\"_self\">[[URL]]</a></h3><br/>"
+                    + "Thank you,<br/>"
+                    + "GoDoctor.";
+
+            String verifyURL = frontendUrl + "reset-password/" + verificationCode;
+            content = content.replace("[[URL]]", verifyURL);
+
+            emailService.sendEmail(sender, senderName, resetPasswordReq.getEmail(), subject, content);
+        }
+    }
+
+    @Override
+    public void resetPasswordConfirm(ResetPasswordConfirmReq resetPasswordConfirmReq) {
+        UserAccount account = userAccRepo.findByVerificationCode(resetPasswordConfirmReq.getCode());
+        if (account == null) {
+            throw new IllegalArgumentException("Code not valid...");
+        }
+
+        account.setIsEnabled(true);
+        account.setVerificationCode(null);
+        account.setPassword(passwordEncoder.encode(resetPasswordConfirmReq.getPassword()));
+        userAccRepo.save(account);
     }
 
 }

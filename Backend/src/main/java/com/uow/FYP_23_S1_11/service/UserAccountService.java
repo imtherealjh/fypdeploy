@@ -1,6 +1,7 @@
 package com.uow.FYP_23_S1_11.service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
@@ -8,8 +9,11 @@ import com.uow.FYP_23_S1_11.domain.UserAccount;
 import com.uow.FYP_23_S1_11.domain.request.RegisterClinicRequest;
 import com.uow.FYP_23_S1_11.domain.request.LoginRequest;
 import com.uow.FYP_23_S1_11.domain.request.RegisterPatientRequest;
+import com.uow.FYP_23_S1_11.domain.request.ResetPasswordConfirmReq;
+import com.uow.FYP_23_S1_11.domain.request.ResetPasswordReq;
 import com.uow.FYP_23_S1_11.enums.ERole;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -32,4 +36,9 @@ public interface UserAccountService {
                         HttpServletResponse response, String token);
 
         public Boolean verify(String verificationCode);
+
+        public void resetPassword(ResetPasswordReq resetPasswordReq)
+                        throws UnsupportedEncodingException, MessagingException;
+
+        public void resetPasswordConfirm(ResetPasswordConfirmReq resetPasswordConfirmReq);
 }
