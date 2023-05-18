@@ -42,7 +42,8 @@ export default function QueueStatus({ appointmentId, room }: Props) {
       var hours = dt.getHours(); // gives the value in 24 hours format
       var AmOrPm = hours >= 12 ? "pm" : "am";
       hours = hours % 12 || 12;
-      var minutes = dt.getMinutes();
+      var minutes =
+        dt.getMinutes() < 10 ? `0${dt.getMinutes()}` : dt.getMinutes();
       var finalTime = hours + ":" + minutes + " " + AmOrPm;
       setTime(finalTime);
     }, 1000);

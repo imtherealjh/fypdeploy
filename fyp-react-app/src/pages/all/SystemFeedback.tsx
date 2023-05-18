@@ -32,8 +32,6 @@ export default function SystemFeedback() {
 
         const { content, current_page, total_pages } = response.data;
 
-        console.log(response);
-
         isMounted && setFeedbacks(content);
         isMounted && setPage(current_page);
         isMounted && setTotalPage(total_pages);
