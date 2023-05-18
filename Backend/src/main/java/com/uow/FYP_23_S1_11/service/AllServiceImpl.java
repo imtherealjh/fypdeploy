@@ -1,6 +1,7 @@
 package com.uow.FYP_23_S1_11.service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +69,9 @@ public class AllServiceImpl implements AllService {
                         map.put("name", name);
                         map.put("clinic", clinic != null ? clinic.getClinicName() : "-");
                     }
-                    map.put("datetime", obj.getLocalDateTime());
+                    map.put("datetime",
+                            obj.getLocalDateTime().toLocalDate() + " "
+                                    + obj.getLocalDateTime().truncatedTo(ChronoUnit.SECONDS).toLocalTime());
                     map.put("feedback", obj.getFeedback());
                     map.put("status", obj.getStatus());
                     return map;

@@ -73,10 +73,10 @@ export default function SystemFeedback() {
             <tr>
               <th scope="col">#</th>
               {auth.role.toLowerCase() === "system_admin" && (
-                <th scope="col">Name</th>
-              )}
-              {auth.role.toLowerCase() === "system_admin" && (
-                <th scope="col">Clinic</th>
+                <>
+                  <th scope="col">Name</th>
+                  <th scope="col">Clinic</th>
+                </>
               )}
               <th scope="col">Date/Time</th>
               <th scope="col">Feedback</th>
