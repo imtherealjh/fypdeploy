@@ -1,13 +1,18 @@
 import { Link } from "react-router-dom";
-import Carousel from "../components/carousel";
+
 import { useEffect, useState } from "react";
 
-import "../css/home.css";
 import axios from "../api/axios";
+import Carousel from "../components/carousel";
 import { CarouselItems } from "../hooks/types";
 
+import PatientDemo from "../assets/PatientDemo.mp4";
+import ClinicDemo from "../assets/ClinicDemo.mp4";
+
+import "../css/home.css";
+
 export default function Home() {
-  const [current, setCurrent] = useState("patient");
+  const [current, setCurrent] = useState<"patient" | "clinic">("patient");
   const [feedback, setFeedback] = useState<CarouselItems[]>([]);
   const classList = "btn btn-outline-dark btn-lg";
 
@@ -43,7 +48,12 @@ export default function Home() {
     <>
       <div className="homepage-wrapper d-flex flex-column">
         <div className="video-container w-100">
-          <video src="video.mp4" controls></video>
+          {current === "patient" && (
+            <video src={PatientDemo} autoPlay controls></video>
+          )}
+          {current === "clinic" && (
+            <video src={ClinicDemo} autoPlay controls></video>
+          )}
           <div>
             {/* <p>Your Best Value Proposition</p> */}
             <p>
