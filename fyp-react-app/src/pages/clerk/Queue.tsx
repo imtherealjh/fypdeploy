@@ -58,59 +58,55 @@ function Queue() {
       <h1>Queue</h1>
       <div>
         <div className="d-flex flex-column justify-content-center gap-2">
-          <span style={{ fontSize: "1.1rem", textAlign: "center" }}>
-            <div className="appointment-list">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Patient Name</th>
-                    <th>Doctor</th>
-                    <th>Time</th>
-                    <th>Status</th>
-                    {new Date().toDateString() ===
-                      new Date(data.patientList[0]?.date).toDateString() && (
-                      <>
-                        <th>Action</th>
-                      </>
-                    )}
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.patientList.length < 1 && (
-                    <tr>
-                      <td colSpan={6}>No data available...</td>
-                    </tr>
+          <table className="table table-striped">
+            <thead>
+              <tr>
+                <th>Patient Name</th>
+                <th>Doctor</th>
+                <th>Time</th>
+                <th>Status</th>
+                {new Date().toDateString() ===
+                  new Date(data.patientList[0]?.date).toDateString() && (
+                  <>
+                    <th>Action</th>
+                  </>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {data.patientList.length < 1 && (
+                <tr>
+                  <td colSpan={6}>No data available...</td>
+                </tr>
+              )}
+              {data.patientList.map((appointment: any, idx: number) => (
+                <tr key={idx}>
+                  <td>{appointment.patientName}</td>
+                  <td>{appointment.doctorName}</td>
+                  <td>{appointment.apptTime}</td>
+                  <td>{appointment.status}</td>
+                  {new Date().toDateString() ===
+                    new Date(appointment?.date).toDateString() && (
+                    <>
+                      <td>
+                        {appointment.status === "BOOKED" && (
+                          <button
+                            className="btn btn-primary"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCheckIn(appointment.id);
+                            }}
+                          >
+                            Check In
+                          </button>
+                        )}
+                      </td>
+                    </>
                   )}
-                  {data.patientList.map((appointment: any, idx: number) => (
-                    <tr key={idx}>
-                      <td>{appointment.patientName}</td>
-                      <td>{appointment.doctorName}</td>
-                      <td>{appointment.apptTime}</td>
-                      <td>{appointment.status}</td>
-                      {new Date().toDateString() ===
-                        new Date(appointment?.date).toDateString() && (
-                        <>
-                          <td>
-                            {appointment.status === "BOOKED" && (
-                              <button
-                                className="btn btn-primary"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleCheckIn(appointment.id);
-                                }}
-                              >
-                                Check In
-                              </button>
-                            )}
-                          </td>
-                        </>
-                      )}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </span>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </>

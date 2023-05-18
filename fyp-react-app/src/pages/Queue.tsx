@@ -78,9 +78,6 @@ export default function Queue() {
             </tbody>
           </table>
         )}
-      </div>
-
-      <div>
         {connected && (
           <QueueStatus
             appointmentId={appointmentId}

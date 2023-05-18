@@ -13,6 +13,7 @@ import Faq from "../pages/patient/Faq";
 import Contact from "../pages/patient/ContactUs";
 import SystemFeedback from "../pages/all/SystemFeedback";
 import ViewSingleArticle from "../components/ViewSingleArticle";
+import Queue from "../pages/Queue";
 
 export default function PatientRoutes() {
   return (
@@ -29,6 +30,7 @@ export default function PatientRoutes() {
                     link: "search-clinic",
                   },
                   { name: "Appointment", link: "appointment", end: false },
+                  { name: "Queue", link: "queue" },
                   {
                     name: "Medical Records",
                     link: "medical-records",
@@ -53,6 +55,7 @@ export default function PatientRoutes() {
             <Route index path="" element={<SystemFeedback />} />
             <Route path="submit" element={<Feedback />} />
           </Route>
+          <Route path="queue" element={<Queue />} />
           <Route path="faq" element={<Faq />} />
           <Route path="contact-us" element={<Contact />} />
           <Route path="*" element={<NotFound />} />
