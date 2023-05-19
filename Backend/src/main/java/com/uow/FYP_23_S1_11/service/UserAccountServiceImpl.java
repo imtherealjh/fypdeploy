@@ -370,6 +370,10 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     @Override
     public void resetPasswordConfirm(ResetPasswordConfirmReq resetPasswordConfirmReq) {
+        if (!resetPasswordConfirmReq.getPassword().equals(resetPasswordConfirmReq.getCfmPassword())) {
+            throw new IllegalArgumentException("Password does not match...");
+        }
+
         UserAccount account = userAccRepo.findByVerificationCode(resetPasswordConfirmReq.getCode());
         if (account == null) {
             throw new IllegalArgumentException("Code not valid...");
