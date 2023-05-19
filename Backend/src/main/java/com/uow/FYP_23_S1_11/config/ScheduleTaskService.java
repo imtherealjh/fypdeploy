@@ -68,7 +68,6 @@ public class ScheduleTaskService {
             String output = dow.getDisplayName(TextStyle.FULL, Locale.US);
             EWeekdays day = EWeekdays.valueOf(output.toUpperCase());
 
-            System.out.println(date);
             List<Clinic> clinics = clinicRepo.findByClinicsWithSchedule(date, day);
             if (clinics.size() > 0) {
                 List<Appointment> appointmentList = new ArrayList<Appointment>();

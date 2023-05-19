@@ -31,7 +31,7 @@ public class SecurityConfig {
         @Autowired
         private AccessDeniedHandler accessDeniedHandler;
 
-        @Value("CLIENT.URL")
+        @Value("${CLIENT.URL}")
         private String clientURL;
 
         @Bean
@@ -64,7 +64,7 @@ public class SecurityConfig {
                 final CorsConfiguration configuration = new CorsConfiguration();
 
                 configuration.setAllowedOrigins(
-                                Arrays.asList("http://localhost:5173", "http://127.0.0.1:5173",
+                                Arrays.asList("http://localhost:5173", "http://127.0.0.1:5173", clientURL,
                                                 "https://fypdeploy-imtherealjh.vercel.app/",
                                                 "https://fypdeploy.vercel.app/",
                                                 "https://fypdeploy-git-auth-imtherealjh.vercel.app/"));
