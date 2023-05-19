@@ -154,6 +154,10 @@ public class ClerkServiceImpl implements ClerkService {
         }
 
         Appointment appt = appOptional.get();
+        if (appt.getStatus() != EAppointmentStatus.BOOKED) {
+            throw new IllegalArgumentException("Appointment should not be checked in");
+        }
+
         List<Appointment> apptList = apptRepo.findAvailableApptByDoctorAndDay(appt.getApptDoctor().getDoctorId(),
                 EAppointmentStatus.CHECKED_IN, LocalDate.now());
         if (apptList.size() > 0) {
