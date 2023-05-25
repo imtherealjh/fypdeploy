@@ -18,7 +18,7 @@ function Queue() {
 
     const fetchData = async () => {
       let response = await axiosPrivate.get(
-        `/staff/getPatientsByDate?apptDate=${new DateObject().format(
+        `/staff/getPatientsByDate?apptDate=${new DateObject().toUTC().format(
           "YYYY-MM-DD"
         )}`,
         {
