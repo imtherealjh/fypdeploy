@@ -65,12 +65,7 @@ function Queue() {
                 <th>Doctor</th>
                 <th>Time</th>
                 <th>Status</th>
-                {new Date().toDateString() ===
-                  new Date(data.patientList[0]?.date).toDateString() && (
-                  <>
-                    <th>Action</th>
-                  </>
-                )}
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -85,24 +80,19 @@ function Queue() {
                   <td>{appointment.doctorName}</td>
                   <td>{appointment.apptTime}</td>
                   <td>{appointment.status}</td>
-                  {new Date().toDateString() ===
-                    new Date(appointment?.date).toDateString() && (
-                    <>
-                      <td>
-                        {appointment.status === "BOOKED" && (
-                          <button
-                            className="btn btn-primary"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleCheckIn(appointment.id);
-                            }}
-                          >
-                            Check In
-                          </button>
-                        )}
-                      </td>
-                    </>
-                  )}
+                  <td>
+                    {appointment.status === "BOOKED" && (
+                      <button
+                        className="btn btn-primary"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCheckIn(appointment.id);
+                        }}
+                      >
+                        Check In
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
