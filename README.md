@@ -1,3 +1,7 @@
+On how to run backend
+
+Any folder that is the parent of the backend folder cannot contains spacebar
+
 # [321 - Appointment System Application]
 
 Our project is a web-based platform that allows patients to book appointments with clinics and medical professionals online. The platform is designed to make healthcare more accessible and convenient for patients, while also providing healthcare providers with a more efficient way to manage their appointments and patient records.
